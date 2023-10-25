@@ -34,24 +34,31 @@ const anti_deuteron     = FundamentalSpecies("anti_deuteron")
 const anti_neutron      = FundamentalSpecies("anti_neutron")
 const anti_ref_species  = FundamentalSpecies("anti_ref_species")
 
-const atomic_name = [
-                    'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 
-                    'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 
-                    'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 
-                    'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr', 'Y', 'Zr', 
-                    'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 
-                    'Sb', 'Te', 'I', 'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 
-                    'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 
-                    'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 
-                    'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 
-                    'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 
-                    'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds',  
-                    'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og']
+const atomic_name = [ # vector of symbols from the periodic table of elements
+                    "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", 
+                    "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", 
+                    "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", 
+                    "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", 
+                    "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", 
+                    "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", 
+                    "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", 
+                    "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", 
+                    "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", 
+                    "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", 
+                    "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds",  
+                    "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
+                    ]
 
 struct AtomicMass
-  name::String
-  z_offset::Int32
-  mass::Vector{Float64}
+      Z::Int32                # positive charge of the nucleus
+      name::String            # periodic table element symbot
+      z_offset::Int32         # number of neutrons in the common stable isotope
+      mass::Vector{Float64}   # isotope masses in units of the unified atomic mass
+                              #= 
+                              mass[1] is the nominal atomic mass,
+                              mass[n-1] (n>=2) is the mass of isotope n-1, 
+                              or Z protons + n-2 neutrons  
+                              =#
 end
 
 
@@ -509,4 +516,4 @@ atomic_mass = [atm1, atm2, atm3, atm4, atm5, atm6, atm7, atm8, atm9, atm10, atm1
       atm80, atm81, atm82, atm83, atm84, atm85, atm86, atm87, atm88, atm89, atm90, atm91, atm92, atm93, atm94, atm95, atm96, atm97, atm98, atm99, atm100, 
       atm101, atm102, atm103, atm104, atm105, atm106, atm107, atm108, atm109, atm110, atm111, atm112, atm113, atm114, atm115, atm116, atm117, atm118]
 
-end module
+end
