@@ -36,7 +36,7 @@ end; export SubatomicSpecies
 
 
 #=
-Subatomicc_Particles is a dictionary of 
+Subatomic_Particles is a dictionary of 
 all the available subatomic species, 
 
 The key is the particle's name,
