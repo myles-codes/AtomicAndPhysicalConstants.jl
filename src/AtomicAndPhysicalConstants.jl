@@ -2,8 +2,8 @@ module AtomicAndPhysicalConstants
 
 using PyFormattedStrings
 
-include("physical_constants.jl")
-include("particle_species.jl")
-include("particle_functions.jl")
+include("PhysicalConstants.jl")
+include("ParticleSpecies.jl")
+include("ParticleFunctions.jl")
 
 end
