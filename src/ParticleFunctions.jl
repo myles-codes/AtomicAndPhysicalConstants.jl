@@ -4,11 +4,11 @@
 
 
 
-"""set_ref is a function to pull information from the 'ParticleSpecies' library
+"""setref is a function to pull information from the 'ParticleSpecies' library
 (with a possible charge assignment for atomic particles) and assign that 
-information to an immutable struct 'RefSpecies'""" setRef
+information to an immutable struct 'RefSpecies'""" setref
 
-function setRef(name::String = "electron", isotope::Int32 = -1, newcharge::Int32 = 0)
+function setref(name::String = "electron", isotope::Int = -1, newcharge::Int = 0)
   #=
   first check if we have a known subatomic particle
   and grab its qualities
@@ -27,7 +27,7 @@ function setRef(name::String = "electron", isotope::Int32 = -1, newcharge::Int32
   elseif haskey(Atomic_Particles, name)
     ref = Atomic_Particles[name] # pull in the info so we don't make a jillion dictionary calls
     # set the reference particle
-    reference_particle = AtomicSpecies(ref.name, newcharge, ref.mass[isotope])
+    reference_particle = AtomicSpecies(ref.name, ref.Z, newcharge, ref.mass[isotope])
   end
   # return the static reference particle
   return reference_particle

@@ -34,6 +34,7 @@ for tracking""" AtomicSpecies
 struct AtomicSpecies <: AbstractSpecies
   name::String
   Z::Int32
+  charge::Int32
   mass::Float64
 end;
 
