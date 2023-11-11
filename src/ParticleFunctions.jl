@@ -40,7 +40,7 @@ end
 note the isotope key is the number of neutrons in the atomic nucleus;
 function returns the charge of the particle divided by its mass""" chargePerMass
 
-function chargePerMass(name::String = "electron", charge::Int32 = 0, isotope::Int32 = -1)
+function charge_per_mass(name::String = "electron", charge::Int32 = 0, isotope::Int32 = -1)
   if haskey(Subatomic_Particles, lowercase(name)) == true
     return Subatomic_Particles[name].charge/Subatomic_Particles[name].mass
   elseif haskey(Atomic_Particles, name) == true
