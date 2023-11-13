@@ -31,7 +31,7 @@ function setref(name::String = "electron", isotope::Int = -1, newcharge::Int = 0
   end
   # return the static reference particle
   return reference_particle
-end
+end; export setref
 
 
 
@@ -46,7 +46,7 @@ function charge_per_mass(name::String = "electron", charge::Int32 = 0, isotope::
   elseif haskey(Atomic_Particles, name) == true
     return charge/Atomic_Particles[name].mass[isotope]
   end
-end
+end; export charge_per_mass
 
 
 

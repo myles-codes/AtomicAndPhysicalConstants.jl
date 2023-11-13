@@ -4,7 +4,7 @@
 
 
 
-abstract type AbstractSpecies end
+abstract type AbstractSpecies end; export AbstractSpecies
 
 
 
@@ -25,7 +25,7 @@ struct SubatomicSpecies <: AbstractSpecies
   charge::Int32
   mass::Float64
   other::Dict{String,Float64}
-end;
+end; export SubatomicSpecies
 
 """Here's an immutable struct to 
 store the qualities of an atom 
@@ -36,9 +36,17 @@ struct AtomicSpecies <: AbstractSpecies
   Z::Int32
   charge::Int32
   mass::Float64
-end;
+end; export AtomicSpecies
 
 
+
+
+mutable struct MolecularSpeciesData
+  name::String
+  charge::Float64
+  # mass::
+  # other::Dict()
+end
 
 
 # -----------------------------------------------------------------------------------------------
@@ -60,7 +68,8 @@ mutable struct SubatomicSpeciesData
   mass::Float64                     # mass of the particle in [eV/c^2]
   anomalous_moment::Float64         # anomalous magnetic moment 
   spin::Float64                     # spin magnetic moment in [ħ]
-end
+end; export SubatomicSpeciesData
+
 
 
 """AtomicSpecies is a type that contains all the
@@ -77,7 +86,7 @@ mutable struct AtomicSpeciesData
   keyvalue n ∈ {0} ∪ N is the number of neutrons
         which gives the mass value
   =#
-end
+end; export AtomicSpeciesData
 
 
 
@@ -114,7 +123,7 @@ Subatomic_Particles = Dict(
   "anti_deuteron"     => SubatomicSpeciesData("anti-deuteron", -1, m_deuteron, anom_mag_moment_deuteron, 1.0),
   "anti_neutron"      => SubatomicSpeciesData("anti-neutron", 0, m_neutron, anom_mag_moment_neutron, 0.5)
   # const anti_ref_species  = SubatomicSpeciesData("Anti_Ref_Particle", "Garbage!", 0, 0.0, 0.0, NaN)
-)
+); export Subatomic_Particles
 
 
 
@@ -791,18 +800,12 @@ Atomic_Particles = Dict{String, AtomicSpeciesData}(
 "Ts"    => AtomicSpeciesData(117, "Ts", Dict{Int32,Float64}(176 => 293.20824, 175 => 292.20746, -1 => 293.0, 174 => 291.20553, 177 => 294.21046)),
 
 "Og"    => AtomicSpeciesData(118, "Og", Dict{Int32,Float64}(176 => 294.21392, 175 => 293.21356, -1 => 294.0, 177 => 295.21624))
-)
+); export Atomic_Particles
 
 
 
 
 
 
-mutable struct MolecularSpeciesData
-  name::String
-  charge::Float64
-  # mass::
-  # other::Dict()
-end
 
 
