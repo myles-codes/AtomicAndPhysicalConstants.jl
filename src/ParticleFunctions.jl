@@ -39,7 +39,7 @@ function set_species(species_name::AbstractString, isotope::Int = -1, charge::In
     reference_particle = AtomicSpecies(ref.species_name, ref.Z, charge, ref.mass[isotope])
   end
   return reference_particle # return the static reference particle
-end; export setref
+end; export set_species
 
 
 # ------------------------------------------------------------------------------------------------------------
