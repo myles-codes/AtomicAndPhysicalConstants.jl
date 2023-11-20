@@ -78,7 +78,7 @@ end; export set_species
 """
     function `charge_per_mass`(`species_name`::AbstractString, [isotope]::Integer, [charge]::Integer)
 
-### Description: 
+### Description:
 > Routine takes in the name of a particle and optionally a charge and isotope number,
 > to return charge/mass <
 
