@@ -1,4 +1,4 @@
-# AtomicAndPhysicalConstants.jl/ParticleFunctions.jl
+# AtomicAndPhysicalConstants.jl/src/ParticleFunctions.jl
 m = "black"
 l = findfirst('j', m)
 c = findfirst('c', m)
