@@ -4,13 +4,12 @@
 
 # 2018 CODATA
 
-m_electron                  = 0.51099895000e6                 # Mass [eV]/c^2
-m_proton                    = 0.93827208816e9                 # Mass [eV]/c^2
-m_neutron                   = 0.93956542052e9                 # Mass [eV]/c^2
-m_muon                      = 105.6583755e6                   # Mass [eV]
-m_helion                    = 2.808391607035771e9             # Mass He3 nucleus [eV]/c^2
-m_deuteron                  = 1.87561294257e9                 # Mass [eV]/c^2
-atomic_mass_unit            = 931.49410242e6                  # unified atomic mass unit u (or dalton) in [eV]/c^2
+m_electron                  = 0.51099895000e6                 # Electron Mass [eV]/c^2
+m_proton                    = 0.93827208816e9                 # Proton Mass [eV]/c^2
+m_neutron                   = 0.93956542052e9                 # Neutron Mass [eV]/c^2
+m_muon                      = 105.6583755e6                   # Muon Mass [eV]
+m_helion                    = 2.808391607035771e9             # Helion Mass He3 nucleus [eV]/c^2
+m_deuteron                  = 1.87561294257e9                 # Deuteron Mass [eV]/c^2
 c_light                     = 2.99792458e8                    # speed of light [m/s]
 h_planck                    = 4.135667696e-15                 # Planck's ant [eV*sec]
 r_e                         = 2.8179403262e-15                # classical electron radius [m]
@@ -21,8 +20,8 @@ e_charge                    = 1.602176634e-19                 # elementary charg
 fine_structure_ant          = 7.2973525693e-3                 # fine structure constant
 anom_mag_moment_electron    = 1.15965218128e-3                # anomalous mag. mom. of the electron
 anom_mag_moment_muon        = 1.16592089e-3                   # ~fine_structure_ant / twopi
-
-
+kg_per_amu                  = 1.66053906660e-27               # kg per standard atomic mass unit (dalton)
+eV_per_amu                  = 9.3149410242e8                  # eV per standard atomic mass unit (dalton)
 
 # values calculated from other constants in this collection
 
@@ -31,6 +30,7 @@ classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) 
                                                 # Is same for all particles of charge +/- 1.
 r_p                     = r_e * m_electron / m_proton      # proton radius [m] 
 h_bar_planck            = h_planck / 2pi                   # h_planck/twopi [eV*sec]
+kg_per_eV               = kg_per_amu / eV_per_amu
 
 
 

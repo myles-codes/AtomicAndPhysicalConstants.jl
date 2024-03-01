@@ -4,10 +4,13 @@ include("PhysicalConstants.jl")
 include("ParticleTypes.jl")
 using PyFormattedStrings
 using Dates
-kg_to_eV = 5.6095886e35; # eV/c^2 per kilogram
-u_to_eV = 9.31494102e8;# eV/c^2 per unified AMU
 
-"""download the current ascii table of isotopic data"""
+
+"""downloadIsos() downloads the current  \n\
+ascii table of isotopic data as NIST  \n\
+doesn't appear to make old releases  \n\
+available""" downloadIsos
+
 function downloadIsos()
   url = "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=&ascii=ascii2&isotype=all"
   path = download(url)
@@ -15,7 +18,13 @@ function downloadIsos()
 end;
 
 
-"""Extract the masses, etc. from the ascii table of isotopic data located at path"""
+"""getIsos(path::AbstractString) opens the file at  \n\
+path (which is expected to be a linearized table  \n\
+of isotopes from NIST) and writes the information  \n\
+for each isotope to a dictionary. The function  \n\
+returns a vector containing all these dictionaries  \n\
+for further processing.""" getIsos
+
 function getIsos(path::AbstractString)
   f = open(path)
   everyline = readlines(f)
@@ -43,42 +52,106 @@ end;
 
 
 
-"""buildIsoDict takes the list of individual isotopes and 
-builds a dictionary of the elements with each of their isotopes 
-listed by mass, as well as the isotopic average mass:
-specifically what is written out is a dictionary with 
-nuclear charges as keys, and 'AtomicSpeciesData' structs as values""" buildIsoDict
+"""buildIsoDict(List::Vector{Any}) takes the list  \n\
+of individual isotopes and builds a dictionary of  \n\
+the elements with each of their isotopes listed  \n\
+by mass, as well as the isotopic average mass:  \n\
+specifically what is written out is a dictionary  \n\
+with Atomic Numbers as keys, and AtomicSpeciesData  \n\
+structs as values""" buildIsoDict
 
-function buildIsoDict(List::Vector{Dict{AbstractString, Any}})
-	Atomic_Particles = Dict{Int64, AtomicSpeciesData}()
+function buildIsoDict(List::Vector{Any})
+	Elements = Dict{Int64, AtomicSpeciesData}()
 
 	for isotope in List
 		# first check if the list has an entry for the appropriate element
-		if haskey(Atomic_Particles, isotope["Atomic Number"]) == false
+		if haskey(Elements, isotope["Atomic Number"]) == false
 			# if not, create one
-			(Atomic_Particles[isotope["Atomic Number"]] = 
+			(Elements[isotope["Atomic Number"]] = 
 			AtomicSpeciesData(
 				isotope["Atomic Number"], 
 				isotope["Atomic Symbol"], 
 				Dict(-1 => 0, isotope["Mass Number"] => isotope["Relative Atomic Mass"])))
+      # update the average mass entry
+		  if typeof(isotope["Isotopic Composition"]) == Float64
+			  (Elements[isotope["Atomic Number"]].mass[-1] += 
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
+		  end
 		
 		else # if the element exists, update the list of isotopes
-			(Atomic_Particles[isotope["Atomic Symbol"]].mass[isotope["Mass Number"]] = 
+			(Elements[isotope["Atomic Number"]].mass[isotope["Mass Number"]] = 
 			isotope["Relative Atomic Mass"])
-		end
-
-		# update the average mass entry
-		if typeof(isotope["Isotopic Composition"]) == Float64
-			(Atomic_Particles[isotope["Atomic Symbol"]].mass[-1] += 
-			isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
-		end
+		  if typeof(isotope["Isotopic Composition"]) == Float64
+			  (Elements[isotope["Atomic Number"]].mass[-1] += 
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
+		  end
+    end
 	end
-	return Atomic_Particles
+	return Elements
 end;
 	
 
 
+"""writeIsos(Elements::Dict{Int64, AtomicSpeciesData}) takes \n\
+as input a dictionary of the elements with nuclear charges \n\
+as keys, and writes the same dictionary with the keys swapped \n\
+for the atomic symbol (eg "H", "He", etc.) to a file named \n\
+yyyy-mm-dd_AtomicSpecies.jl located in the src folder.""" writeIsos
+
+function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
+	date = today()
+
+  Z_eles = 1:1:118
+  topmat = """# AtomicAndPhysicalConstants.jl/ParticleSpecies.jl\n\n\ninclude("ParticleTypes.jl")"""*"\n"
+  brek = """\n\n\n# -------------------------------------------------------\n\n\n\n"""
+  qs = '"'
+  docplus = qs*qs*qs*"""Atomic_Particles \n\
+  Isotopes from NIST data $date \n\
+  a dictionary of all the available atomic species, \n\
+  with all the NIST isotopes included; \n\
+  the key is the element's atomic number \n\
+  n the periodic table, and the value is the relevant \n\
+  AtomicSpecies struct, _eg_  \n\
+    \n\
+  Atomic_Particles["He"] = AtomicSpeciesData(2, "He", ...)"""*qs*qs*qs*" Atomic_Particles \n\
+  \n\
+  Atomic_Particles = Dict{AbstractString, AtomicSpeciesData}(\n"
+	
+  f = open(pwd() * f"/src/{date}_AtomicSpecies.jl", "w")
+  write(f, topmat)
+  write(f, brek)
+  write(f, docplus)
+  for Z in Z_eles
+    nlen = length(Elements[Z].species_name)
+    space = repeat(" ", 7-nlen)
+    
+    atom_entry = f"{Elements[Z].species_name}"*space*"=>    {Elements[Z]}"
+    write(f, atom_entry)
+
+    if Z < 118
+      write(f, "\n\n")
+    else
+      write(f, "\n); export Atomic_Particles")
+    end
+  end
+
+  close(f)
+
+end;
 
 
-# write a function to print the isotopes library to a julia file
+"""setIsos() uses the functions \n\
+downloadIsos(), \n\
+getIsos(path), \n\
+buildIsoDict(List), and \n\
+writeisos(Elements) \n\
+to write a Julia file containing a \n\
+usable dictionary of each element  \n\
+with all of their isotopes""" setIsos
 
+function setIsos()
+  path = downloadIsos()
+  vec = getIsos(path)
+  numdict = buildIsoDict(vec)
+  writeIsos(numdict)
+end; export setIsos()
