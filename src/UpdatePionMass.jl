@@ -1,8 +1,6 @@
 
 # Including packages
-using Pkg
-Pkg.add("HTTP")
-Pkg.add("JSON")
+
 using HTTP
 using JSON
 
