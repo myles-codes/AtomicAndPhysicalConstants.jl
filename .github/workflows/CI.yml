@@ -1,14 +1,15 @@
-name: PR
+name: CI
 on:
+  push:
+    branches:
+      - main
+    tags: ['*']
   pull_request:
-  
-
 concurrency:
   # Skip intermediate builds: always.
   # Cancel intermediate builds: only if it is a pull request build.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
-
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
@@ -19,13 +20,12 @@ jobs:
         version:
           - '1.9'
           - '1.10'
-          - 'nightly'
         os:
           - ubuntu-latest
         arch:
           - x64
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
