@@ -4,6 +4,8 @@
 # include("PhysicalConstants.jl")
 # include("ParticleTypes.jl")
 using PyFormattedStrings
+using Pkg
+Pkg.add("Dates")
 using Dates
 
 """This is a dictionary that associates \n\
