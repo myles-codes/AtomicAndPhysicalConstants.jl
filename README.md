@@ -14,19 +14,43 @@ from the speed of light and Planck's constant to 'fundamental' particle masses. 
 are kept as isolated named constants rather than in a dictionary for ease of access throughout 
 the rest of this and other packages.
 
-ParticleSpecies.jl 
-defines particle species types and information. 
+ParticleTypes.jl 
+defines particle species types for managing information. 
 It defines 'SubatomicSpecies,' 'AtomicSpecies,' and 'MolecularSpecies:' 
 immutable structs to hold specific reference particle info for use in simulation or computation.
 Following are mutable structs 'SubatomicSpeciesData,' and 'AtomicSpeciesData,' which hold
 all the available information about the particle in question, including degeneracies.
-Finally there are dictionaries 'Subatomic_Particles' and 'Atomic_Particles' which connect 
-the mutable structs holding particle data to the names of the particles.
+
+AtomicSpecies.jl
+contains a dictionary of 118 atomic elements and all of their known isotopes, along with 
+the 'isotopic average'
+The dictionary is keyed with atomic symbols as strings, *eg* "He", and has 
+'AtomicSpeciesData' structs as values
+
+SubatomicSpecies.jl
+contains a dictionary of the subatomic particles accessible with this package
+The dictionary is keyed with the name of the particle as a string, *eg* "pion0", "proton", or "anti_neutron",
+and has 'SubatomicSpeciesData' structs as values
 
 ParticleFunctions.jl
-functions to be performed on an SpeciesData or AbstractSpecies struct.
+functions to be performed on a ---SpeciesData or AbstractSpecies struct.
 setref takes in a mutable struct and other parameters and returns an immutable reference particle
 charge_per_mass takes in a particle and returns the ratio charge/mass
+
+UpdateCODATA.jl
+updates the values in PhysicalConstants.jl with the data from a specified CODATA release
+There are some values it doesn't get, namely the pion masses and a few anomalous magnetic momenta
+Currently, it doesn't overwrite PhysicalConstants.jl but writes a new file yyyy-mm-dd_Constants.jl,
+where yyyy-mm-dd is 'today's' date
+
+UpdateIsoMasses.jl
+updates the properties of the atoms in AtomicSpecies.jl: it grabs the linearized list of every 
+isotope of every element from the NIST database and writes out a new file called yyyy-mm-dd_AtomicSpecies.jl
+
+UpdatePionMass.jl
+defines a function download_pdg_pion_mass thet gets the mass of charged and uncharged pions from the PDG and 
+returns a vector [mass_of_pi0, mass_of_pi+-]
+this function will be integrated into the update of physical constants
 
 AtomicAndPhysicalConstants.jl
 imports all of the above files and defines a module with all of the functionality
