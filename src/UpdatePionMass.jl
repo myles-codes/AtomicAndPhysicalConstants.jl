@@ -35,6 +35,6 @@ function download_pdg_pion_masses()
     end
 
     # return the mass of pion 0, pion +, pion -
-    return [mass["pi0 MASS"],mass["pi+- MASS"],mass["pi+- MASS"]] 
+    return [mass["pi0 MASS"],mass["pi+- MASS"]] 
 
 end
