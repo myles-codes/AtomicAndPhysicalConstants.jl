@@ -91,7 +91,6 @@ function buildIsoDict(List::Vector{Any})
 end;
 	
 
-
 """writeIsos(Elements::Dict{Int64, AtomicSpeciesData}) takes \n\
 as input a dictionary of the elements with nuclear charges \n\
 as keys, and writes the same dictionary with the keys swapped \n\
@@ -122,14 +121,15 @@ function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
   write(f, brek)
   write(f, docplus)
   for Z in Z_eles
-    nlen = length(Elements[Z].species_name)
+    sym = Elements[Z].species_name
+    nlen = length(sym)
     space = repeat(" ", 7-nlen)
     
-    atom_entry = f"{Elements[Z].species_name}"*space*"=>    {Elements[Z]}"
+    atom_entry = qs*Elements[Z].species_name*qs*space*f"=>    {Elements[Z]}"
     write(f, atom_entry)
 
     if Z < 118
-      write(f, "\n\n")
+      write(f, ",\n\n")
     else
       write(f, "\n); export Atomic_Particles")
     end
@@ -154,4 +154,7 @@ function setIsos()
   vec = getIsos(path)
   numdict = buildIsoDict(vec)
   writeIsos(numdict)
-end; export setIsos()
+end; export setIsos
+
+
+
