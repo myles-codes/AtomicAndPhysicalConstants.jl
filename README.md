@@ -1,6 +1,6 @@
 # AtomicAndPhysicalConstants
 
-[![Build Status](https://github.com/DavidSagan/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/DavidSagan/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build Status](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
 Version 0.1.0 release notes and doc
