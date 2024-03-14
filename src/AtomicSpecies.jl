@@ -1,7 +1,7 @@
 # AtomicAndPhysicalConstants.jl/ParticleSpecies.jl
 
 
-include("ParticleTypes.jl")
+# include("ParticleTypes.jl")
 
 
 
