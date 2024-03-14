@@ -10,7 +10,7 @@ using JSON
 pdg_pion_masses() gets the masses of pion from Particle Data Group.
 It returns the mass of pion 0, pion +, pion - in order as a tuple, the unit is eV/c^2
 """
-function pdg_pion_masses()
+function download_pdg_pion_masses()
     # extracting informations from the S009 json file
     url = "https://pdgapi.lbl.gov/summaries/S009"
     response = HTTP.get(url)
