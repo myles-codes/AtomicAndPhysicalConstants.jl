@@ -4,7 +4,7 @@ using PyFormattedStrings
 
 include("PhysicalConstants.jl")
 include("ParticleTypes.jl")
-include("AtomicSpecies.jl")
+include("AtomicIsotopes.jl")
 include("SubatomicSpecies.jl")
 include("ParticleFunctions.jl")
 include("UpdateCODATA.jl")
