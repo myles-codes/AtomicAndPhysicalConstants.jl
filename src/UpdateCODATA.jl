@@ -25,9 +25,13 @@ CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
 	"Avogadro constant" => Dict("N_avogadro" => N_avogadro), 
 	"vacuum electric permittivity" => Dict("eps_0_vac" => eps_0_vac), 
 	"vacuum mag. permeability" => Dict("mu_0_vac" => mu_0_vac), 
-	"fine-structure constant" => Dict("fine_structure_ant" => fine_structure_ant), 
+	"fine-structure constant" => Dict("fine_structure" => fine_structure), 
 	"muon mag. mom. anomaly" => Dict("anom_mag_moment_muon" => anom_mag_moment_muon), 
 	"electron mag. mom. anomaly" => Dict("anom_mag_moment_electron" => anom_mag_moment_electron), 
+	"proton mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_proton" => anom_mag_moment_proton), 
+	"deuteron mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_deuteron" => anom_mag_moment_deuteron), 
+	"neutron mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_neutron" => anom_mag_moment_neutron), 
+	"helion mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_He3" => anom_mag_moment_He3), 
 	"elementary charge" => Dict("e_charge" => e_charge),
 	"atomic mass unit-kilogram relationship" => Dict("kg_per_amu" => kg_per_amu),
 	"atomic mass unit-electron volt relationship" => Dict("eV_per_amu" => eV_per_amu)
@@ -68,26 +72,34 @@ function getCODATA(path::AbstractString)
 	f = open(path)
 	everyline = readlines(f)
 	for l in everyline
-			line = split(l, "   ")
-			sp = findall(x->x=="", line)
-			line = deleteat!(line, sp)
-			if length(line) != 0
-					if haskey(CODATA_Consts, line[1]) == true
-							if occursin(' ', line[2]) == true
-									line[2] = replace(line[2], ' ' => "")
-							end
-							if occursin("...", line[2]) == true
-									line[2] = replace(line[2], "..." => "")
-							end
-							if line[1] == "unified atomic mass unit"
-									CODATA_Consts[line[1]]["atomic_mass_unit"] = kg_to_ev*parse(Float64, line[2])
-							elseif last(line) == "MeV"
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = 0.001*parse(Float64, line[2])
-							else
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
-							end
-					end
+		line = split(l, "   ")
+		sp = findall(x->x=="", line)
+		line = deleteat!(line, sp)
+		if length(line) != 0
+			if haskey(CODATA_Consts, line[1]) == true
+				if occursin(' ', line[2]) == true
+					line[2] = replace(line[2], ' ' => "")
+				end
+				if occursin("...", line[2]) == true
+					line[2] = replace(line[2], "..." => "")
+				end
+				if line[1] == "unified atomic mass unit"
+					CODATA_Consts[line[1]]["atomic_mass_unit"] = kg_to_ev*parse(Float64, line[2])
+				elseif last(line) == "MeV"
+					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = 0.001*parse(Float64, line[2])
+				elseif line[1] == "proton mag. mom. to nuclear magneton ratio"
+					CODATA_Consts[line[1]]["anom_mag_moment_proton"] = parse(Float64, line[2]) - 1
+				elseif line[1] == "deuteron mag. mom. to nuclear magneton ratio"
+					CODATA_Consts[line[1]]["anom_mag_moment_deuteron"] = parse(Float64, line[2]) - 1
+				elseif line[1] == "neutron mag. mom. to nuclear magneton ratio"
+					CODATA_Consts[line[1]]["anom_mag_moment_neutron"] = parse(Float64, line[2]) - 1
+				elseif line[1] == "helion mag. mom. to nuclear magneton ratio"
+					CODATA_Consts[line[1]]["anom_mag_moment_He3"] = parse(Float64, line[2]) - 2
+				else
+					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
+				end
 			end
+		end
 	end
 	close(f)
 end;
@@ -103,10 +115,10 @@ from the CODATA set of the year given in the \n\
 argument""" writeCODATA
 
 function writeCODATA(year::Int)
-	date = today()
+	
 	f = open(pwd()*"/src/PhysicalConstants.jl", "r")
 	everyline = readlines(f) 
-	newf = open(pwd() * f"/src/{date}_Constants.jl", "a+")
+	newf = open(pwd() * f"/src/{year}Constants.jl", "a+")
 	newlines = []
 	for l in everyline
 		line = split(l, "  ")   
@@ -128,7 +140,7 @@ function writeCODATA(year::Int)
 		push!(newlines, line)
 	end
 	seekstart(newf)
-	newlines[1] = f"# {date}_Constants.jl"
+	newlines[1] = f"# AtomicAndPhysicalConstants/src/{year}Constants.jl"
 	for line in newlines
 		if line[1] == "\n" 
 			println(newf, "\n")

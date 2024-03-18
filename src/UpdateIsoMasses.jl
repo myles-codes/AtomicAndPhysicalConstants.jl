@@ -1,4 +1,4 @@
-# AtomicAndPhysicalConstants/UpdateIsoMasses.jl
+# AtomicAndPhysicalConstants/src/UpdateIsoMasses.jl
 
 # include("PhysicalConstants.jl")
 # include("ParticleTypes.jl")
@@ -41,7 +41,7 @@ function getIsos(path::AbstractString)
       isos[i][line[1]] = tryparse(Int64, line[2])
     elseif line[1] == "Relative Atomic Mass"
       ram = split(line[2], '(')[1]
-      isos[i][line[1]] = tryparse(Float64, ram) # get mass in u
+      isos[i][line[1]] = tryparse(Float64, ram) # get mass in amu
     elseif line[1] == "Isotopic Composition"
       num = split(line[2], '(')[1]
       isos[i][line[1]] = tryparse(Float64, num)
@@ -71,19 +71,19 @@ function buildIsoDict(List::Vector{Any})
 			AtomicSpeciesData(
 				isotope["Atomic Number"], 
 				isotope["Atomic Symbol"], 
-				Dict(-1 => 0, isotope["Mass Number"] => isotope["Relative Atomic Mass"])))
+				Dict(-1 => 0, isotope["Mass Number"] => isotope["Relative Atomic Mass"]*eV_per_amu)))
       # update the average mass entry
 		  if typeof(isotope["Isotopic Composition"]) == Float64
 			  (Elements[isotope["Atomic Number"]].mass[-1] += 
-			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"]*eV_per_amu)
 		  end
 		
 		else # if the element exists, update the list of isotopes
 			(Elements[isotope["Atomic Number"]].mass[isotope["Mass Number"]] = 
-			isotope["Relative Atomic Mass"])
+			isotope["Relative Atomic Mass"]*eV_per_amu)
 		  if typeof(isotope["Isotopic Composition"]) == Float64
 			  (Elements[isotope["Atomic Number"]].mass[-1] += 
-			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"]*eV_per_amu)
 		  end
     end
 	end
@@ -101,14 +101,14 @@ function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
 	date = today()
 
   Z_eles = 1:1:118
-  topmat = """# AtomicAndPhysicalConstants.jl/ParticleSpecies.jl\n\n\ninclude("ParticleTypes.jl")"""*"\n"
+  topmat = """# AtomicAndPhysicalConstants.jl/src/AtomicIsotopes.jl\n\n\n\n"""
   brek = """\n\n\n# -------------------------------------------------------\n\n\n\n"""
   qs = '"'
   docplus = qs*qs*qs*"""Atomic_Particles \n\
   Isotopes from NIST data $date \n\
   a dictionary of all the available atomic species, \n\
   with all the NIST isotopes included; \n\
-  the key is the element's atomic number \n\
+  the key is the element's atomic symbol \n\
   n the periodic table, and the value is the relevant \n\
   AtomicSpecies struct, _eg_  \n\
     \n\
@@ -116,7 +116,7 @@ function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
   \n\
   Atomic_Particles = Dict{AbstractString, AtomicSpeciesData}(\n"
 	
-  f = open(pwd() * f"/src/{date}_AtomicSpecies.jl", "w")
+  f = open(pwd() * f"/src/{date}_AtomicIsotopes.jl", "w")
   write(f, topmat)
   write(f, brek)
   write(f, docplus)
@@ -150,11 +150,11 @@ usable dictionary of each element  \n\
 with all of their isotopes""" setIsos
 
 function setIsos()
+  println(eV_per_amu)
   path = downloadIsos()
   vec = getIsos(path)
   numdict = buildIsoDict(vec)
   writeIsos(numdict)
 end; export setIsos
-
 
 
