@@ -1,10 +1,7 @@
 # AtomicAndPhysicalConstants.jl/src/ParticleFunctions.jl
-m = "black"
-l = findfirst('j', m)
-c = findfirst('c', m)
-l>c
 
-tryparse(Int, "++")
+
+
 # ------------------------------------------------------------------------------------------------------------
 
 
