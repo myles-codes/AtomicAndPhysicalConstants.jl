@@ -1,4 +1,5 @@
 include("PhysicalConstants.jl")
+include("Global.jl")
 
 """
     Unit
@@ -9,6 +10,137 @@ include("PhysicalConstants.jl")
 """ Unit
 
 abstract type Unit end
+
+# scaling functions that turns unit to kilo-unit, mega-unit, etc
+
+"""
+    k
+
+    ### Description:
+    > takes in a Unit 'unit' and return kilo-'unit' <
+    > puts a k in its name and make unit.conversion into unit.conversion/10^3
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" k
+
+function k(unit::T) where T <: Unit
+    return T("k"*unit.name,unit.conversion/10^3)
+end
+
+"""
+    m
+
+    ### Description:
+    > takes in a Unit 'unit' and return mega-'unit' <
+    > puts a M in its name and make unit.conversion into unit.conversion/10^6
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" M
+
+function M(unit::T) where T <: Unit
+    return T("M"*unit.name,unit.conversion/10^6)
+end
+
+"""
+    G
+
+    ### Description:
+    > takes in a Unit 'unit' and return giga-'unit' <
+    > puts a G in its name and make unit.conversion into unit.conversion/10^9
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" G
+
+function G(unit::T) where T <: Unit
+    return T("G"*unit.name,unit.conversion/10^9)
+end
+
+"""
+    T
+
+    ### Description:
+    > takes in a Unit 'unit' and return tera-'unit' <
+    > puts a T in its name and make unit.conversion into unit.conversion/10^12
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" T
+
+function T(unit::U) where U <: Unit
+    return U("T"*unit.name,unit.conversion/10^12)
+end
+
+"""
+    m
+
+    ### Description:
+    > takes in a Unit 'unit' and return mili-'unit' <
+    > puts a m in its name and make unit.conversion into unit.conversion/10^-3
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" m
+
+function m(unit::T) where T <: Unit
+    return T("m"*unit.name,unit.conversion/10^-3)
+end
+
+"""
+    mu
+
+    ### Description:
+    > takes in a Unit 'unit' and return micro-'unit' <
+    > puts a mu- in its name and make unit.conversion into unit.conversion/10^-6
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" mu
+
+function mu(unit::T) where T <: Unit
+    return T("mu-"*unit.name,unit.conversion/10^-6)
+end
+
+"""
+    n
+
+    ### Description:
+    > takes in a Unit 'unit' and return nano-'unit' <
+    > puts a n in its name and make unit.conversion into unit.conversion/10^-9
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" n
+
+function n(unit::T) where T <: Unit
+    return T("n"*unit.name,unit.conversion/10^-9)
+end
+
+"""
+    p
+
+    ### Description:
+    > takes in a Unit 'unit' and return pico-'unit' <
+    > puts a p in its name and make unit.conversion into unit.conversion/10^-12
+
+    ### parameters:
+    - 'unit'                  -- subtype of Unit
+
+""" p
+
+function p(unit::T) where T <: Unit
+    return T("p"*unit.name,unit.conversion/10^-12)
+end
+
 
 """
     Mass<:Unit
@@ -23,7 +155,7 @@ abstract type Unit end
 
 """ Mass
 
-struct Mass<:Unit 
+struct Mass<:Unit
     name::AbstractString
     conversion::Float64
 end
@@ -32,17 +164,18 @@ end
     MASS
     ### Description:
     > a constant name tuple for storing all the units for mass<
-    > units includes: amu, kg, g, eV<
+    > units includes: amu, eV/c^2, keV/c^2, MeV/c^2, GeV/c^2, kg, g, mg<
 
     ### Example:
     MASS.amu is the unit 'amu', it refers the the struct Mass("amu",1.0)
 
 """ MASS
 
-const MASS = (amu = Mass("amu",1.0), 
-        kg = Mass("kg",kg_per_amu), 
-        eV = Mass("eV",eV_per_amu), 
-        g = Mass("g",kg_per_amu/1000))
+MASS = (amu = Mass("amu",1.0), 
+    eV = Mass("eV",__b_eV_per_amu),
+    kg = Mass("kg",__b_kg_per_amu), 
+    g = Mass("g",__b_kg_per_amu*10^3))
+
 
 """
     Length<:Unit
@@ -57,7 +190,7 @@ const MASS = (amu = Mass("amu",1.0),
 
 """ Length
 
-struct Length<:Unit 
+struct Length<:Unit
     name::AbstractString
     conversion::Float64
 end
@@ -66,14 +199,16 @@ end
     LENGTH
     ### Description:
     > a constant name tuple for storing all the units for length<
-    > units includes: m, cm<
+    > units includes: m, cm, mm, km<
 
     ### Example:
     LENGTH.m is the unit 'meter', it refers the the struct Length("m",1.0)
 
 """ LENGTH
 
-LENGTH = (m = Length("m",1.0), cm = Length("cm",100.0))
+LENGTH = (m = Length("m",1.0), 
+    cm = Length("cm",100.0),
+    A = Length("Å",10^10))
 
 """
     UnitSystem
@@ -92,9 +227,11 @@ struct UnitSystem
     length::Length
 end
 
-const PARTICLE_PHYSICS = UnitSystem(MASS.amu,LENGTH.m)
-const MKS = UnitSystem(MASS.kg,LENGTH.m)
-const CGS = UnitSystem(MASS.g,LENGTH.cm)
+PARTICLE_PHYSICS = UnitSystem(MASS.amu,LENGTH.m)
+MKS = UnitSystem(MASS.kg,LENGTH.m)
+CGS = UnitSystem(MASS.g,LENGTH.cm)
+
+
 
 """
     setunits
@@ -113,27 +250,13 @@ const CGS = UnitSystem(MASS.g,LENGTH.cm)
 """ setunits
 
 function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS; mass::Mass=unitsystem.mass, length::Length=unitsystem.length)
-    println(mass.name)
-    println(length.name)
+    
+    # convert all the mass variables
+    global m_electron = mass.conversion * __b_m_electron / __b_eV_per_amu     # Electron Mass 
+    global m_proton = mass.conversion * __b_m_proton / __b_eV_per_amu        # Proton Mass 
+    global m_neutron = mass.conversion * __b_m_neutron / __b_eV_per_amu       # Neutron Mass 
+    global m_muon = mass.conversion * __b_m_muon  / __b_eV_per_amu          # Muon Mass 
+    global m_helion = mass.conversion * __b_m_helion / __b_eV_per_amu        # Helion Mass He3 nucleus 
+    global m_deuteron = mass.conversion * __b_m_deuteron / __b_eV_per_amu      # Deuteron Mass 
+
 end
-
-#tests
-setunits()
-#prints: 
-#amu
-#m
-
-setunits(MKS)
-#prints: 
-#kg
-#m
-
-setunits(MKS,length=LENGTH.cm)
-#prints: 
-#kg
-#cm
-
-setunits(length=LENGTH.cm)
-#prints: 
-#amu
-#cm
