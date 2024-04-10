@@ -14,7 +14,7 @@ __b_c_light                     = 2.99792458e8                    # speed of lig
 __b_h_planck                    = 4.135667696e-15                 # Planck's constant [eV*s]
 __b_r_e                         = 2.8179403262e-15                # classical electron radius [m]
 __b_mu_0_vac                    = 1.25663706212e-6                # Vacuum permeability in [N/A^2] (newtons per ampere squared)
-__b_eps_0_vac                   = 1 / (c_light^2 * mu_0_vac)      # Permittivity of free space in [F/m]
+__b_eps_0_vac                   = 1 / (__b_c_light^2 * __b_mu_0_vac)      # Permittivity of free space in [F/m]
 
 __b_e_charge                    = 1.602176634e-19                 # elementary charge [Coul]
 __b_fine_structure              = 7.2973525693e-3                 # fine structure constant
