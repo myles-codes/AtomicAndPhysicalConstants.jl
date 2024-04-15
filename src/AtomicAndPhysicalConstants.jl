@@ -8,7 +8,7 @@ include("ParticleTypes.jl")
 include("AtomicIsotopes.jl")
 include("SubatomicSpecies.jl")
 include("ParticleFunctions.jl")
-include("UpdateCODATA.jl")
+include("UpdateConsts.jl")
 include("UpdateIsoMasses.jl")
 include("UpdatePionMass.jl")
 
