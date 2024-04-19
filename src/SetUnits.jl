@@ -19,7 +19,7 @@ Base.print(io::IO, unit::T) where T<: Unit = print(io, " \"",unit.name,"\" \t\t 
 # scaling functions that turns unit to kilo-unit, mega-unit, etc
 
 """
-    k
+    kilo
 
     ### Description:
     > takes in a Unit 'unit' and return kilo-'unit' <
@@ -28,14 +28,14 @@ Base.print(io::IO, unit::T) where T<: Unit = print(io, " \"",unit.name,"\" \t\t 
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" k
+""" kilo
 
-function k(unit::T) where T <: Unit
+function kilo(unit::T) where T <: Unit
     return T("k"*unit.name,unit.conversion/10^3)
 end
 
 """
-    m
+    mega
 
     ### Description:
     > takes in a Unit 'unit' and return mega-'unit' <
@@ -44,14 +44,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" M
+""" mega
 
-function M(unit::T) where T <: Unit
+function mega(unit::T) where T <: Unit
     return T("M"*unit.name,unit.conversion/10^6)
 end
 
 """
-    G
+    giga
 
     ### Description:
     > takes in a Unit 'unit' and return giga-'unit' <
@@ -60,14 +60,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" G
+""" giga
 
-function G(unit::T) where T <: Unit
+function giga(unit::T) where T <: Unit
     return T("G"*unit.name,unit.conversion/10^9)
 end
 
 """
-    T
+    tera
 
     ### Description:
     > takes in a Unit 'unit' and return tera-'unit' <
@@ -76,14 +76,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" T
+""" tera
 
-function T(unit::U) where U <: Unit
+function tera(unit::U) where U <: Unit
     return U("T"*unit.name,unit.conversion/10^12)
 end
 
 """
-    m
+    mili
 
     ### Description:
     > takes in a Unit 'unit' and return mili-'unit' <
@@ -92,14 +92,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" m
+""" mili
 
-function m(unit::T) where T <: Unit
+function mili(unit::T) where T <: Unit
     return T("m"*unit.name,unit.conversion/10^-3)
 end
 
 """
-    mu
+    micro
 
     ### Description:
     > takes in a Unit 'unit' and return micro-'unit' <
@@ -108,14 +108,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" mu
+""" micro
 
-function mu(unit::T) where T <: Unit
+function micro(unit::T) where T <: Unit
     return T("mu-"*unit.name,unit.conversion/10^-6)
 end
 
 """
-    n
+    nano
 
     ### Description:
     > takes in a Unit 'unit' and return nano-'unit' <
@@ -124,14 +124,14 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" n
+""" nano
 
-function n(unit::T) where T <: Unit
+function nano(unit::T) where T <: Unit
     return T("n"*unit.name,unit.conversion/10^-9)
 end
 
 """
-    p
+    pico
 
     ### Description:
     > takes in a Unit 'unit' and return pico-'unit' <
@@ -140,9 +140,9 @@ end
     ### parameters:
     - 'unit'                  -- subtype of Unit
 
-""" p
+""" pico
 
-function p(unit::T) where T <: Unit
+function pico(unit::T) where T <: Unit
     return T("p"*unit.name,unit.conversion/10^-12)
 end
 
@@ -511,6 +511,7 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
 end
 
 export setunits, printunits
-export Unit, Mass, Length, Time_, Speed, Energy
-export MASS,LENGTH,TIME,SPEED,ENERGY
+export Unit, Mass, Length, Time_, Speed, Energy, Charge
+export MASS,LENGTH,TIME,SPEED,ENERGY,CHARGE
+export kilo, mega, giga, tera, mili, micro, nano, pico
 export MKS,CGS,PARTICLE_PHYSICS
