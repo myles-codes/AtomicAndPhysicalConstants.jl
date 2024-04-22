@@ -24,10 +24,10 @@ amm, the anomalous magnetic moment of the tracked particle (which is set to 0 fo
 	
 struct TrackedSpecies
 	name::AbstractString # name of the particle to track
-	charge::Int # charge of the particle (important to consider ionized atoms)
-	mass::Float # mass of the particle
-	spin::Float # spin of the particle
-	amm::Float # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+	charge::Int32 # charge of the particle (important to consider ionized atoms)
+	mass::Float64 # mass of the particle
+	spin::Float64 # spin of the particle
+	amm::Float64 # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
 end; export TrackedSpecies
 
 	
@@ -71,7 +71,7 @@ function set_track(name::String, charge = 0, iso = -1)
 													Subatomic_Particles[name].mass, 
 													Subatomic_Particles[name].spin, 
 													Subatomic_Particles[name].anomalous_moment)
-													
+
 	else # handle the case where the given name is garbage
 		println("The specified particle name does not exist in this library.")
 		println("Available subatomic particles are: ")
