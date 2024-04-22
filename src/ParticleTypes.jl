@@ -7,13 +7,85 @@ abstract type AbstractSpecies end; export AbstractSpecies
 
 
 
-	# -----------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
+"""
+The TrackedSpecies struct is used for keeping track 
+of information specifice to the chosen particle.
+Its attributes are set using elements from the existing 
+particle libraries, but its structure is a little lighter
+and more flexible.
+TrackedSpecies has five attributes;
+name, the name (symbol) of the particle to track;
+charge, the net charge of the tracked particle;
+mass, the net mass of the tracked particle;
+spin, the net spin of the tracked particle; and
+amm, the anomalous magnetic moment of the tracked particle (which is set to 0 for atomic particles)
+""" TrackedSpecies
+	
+struct TrackedSpecies
+	name::AbstractString # name of the particle to track
+	charge::Int # charge of the particle (important to consider ionized atoms)
+	mass::Float # mass of the particle
+	spin::Float # spin of the particle
+	amm::Float # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+end; export TrackedSpecies
 
 	
-	
 
+
+"""
+set_track takes one positional argument (particle name), and two
+keyword arguments, charge and isotope number.
+
+if the particle name is in either atomic or subatomic particle libraries,
+set_track returns a TrackedSpecies object with the given attributes:
+in the case of an atomic element it modifies the mass and charge based 
+on the isotope and charge indicated, and in the case of a subatomic particle 
+it just copies over the particle information.
+Molecular particle functionality will be added as the particles are added to 
+the library.
+""" set_track
+
+function set_track(name::String, charge = 0, iso = -1)
+	if haskey(Atomic_Particles, name) # is the particle in the Atomic_Particles dictionary?
+		if iso ∉ keys(Atomic_Particles[name].mass) # error handling if the isotope isn't available
+			println("The isotope you specified is not available.")
+			println("Isotopes are specified by the atomic symbol and integer mass number.")
+			return
+		end
+		mass = begin
+			nmass = Atomic_Particles[name].mass[iso] # mass of the neutrally charged isotope in amu
+			nmass*(kg_per_amu/kg_per_eV) - m_electron*charge # put it in eV/c^2 and remove the electrons
+		end
+		if iso == -1 # if it's the average, make an educated guess at the spin
+			partonum = round(nmass)
+			spin = 0.5*partonum
+		else # otherwise, use the sum of proton and neutron spins
+			spin = 0.5*iso
+		end
+		return TrackedSpecies(name, charge, mass, spin, 0) # return the object to track
+
+	elseif haskey(Subatomic_Particles, name) # is the particle in the Subatomic_Particles dictionary?
+		# write the particle out directly
+		return TrackedSpecies(name, Subatomic_Particles[name].charge, 
+													Subatomic_Particles[name].mass, 
+													Subatomic_Particles[name].spin, 
+													Subatomic_Particles[name].anomalous_moment)
+													
+	else # handle the case where the given name is garbage
+		println("The specified particle name does not exist in this library.")
+		println("Available subatomic particles are: ")
+		for p in keys(Subatomic_Particles)
+			println(p)
+		end
+		println("Available atomic elements are")
+		for p in keys(Atomic_Particles)
+			println(p)
+		end
+		return
+	end
 	
-	
+end
 	
 
 

@@ -3,6 +3,7 @@
 # AtomicAndPhysicalConstants.jl/ParticleSpecies.jl
 
 # include("ParticleTypes.jl")
+# include("PhysicalConstants.jl")
 # -----------------------------------------------------------------------------------------------
 #=
 Below we have two dictionaries: Subatomic_Particles and Atomic_Particles:
@@ -40,6 +41,7 @@ Subatomic_Particles = Dict{AbstractString, SubatomicSpecies}(
   "anti_neutron"      => SubatomicSpecies("anti-neutron", 0, m_neutron, anom_mag_moment_neutron, 0.5)
   # const anti_ref_species  = SubatomicSpecies("Anti_Ref_Particle", "Garbage!", 0, 0.0, 0.0, NaN)
 ); export Subatomic_Particles
+
 
 
 
