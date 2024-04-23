@@ -510,8 +510,21 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
     return
 end
 
+function setu(;mass::Symbol)
+    Mass = MASS.amu
+    if mass == :kg
+        Mass = MASS.kg
+    elseif mass == :eV
+        Mass = MASS.eV
+    end
+    println(Mass.name)
+    println( Mass.conversion * __b_m_electron / __b_eV_per_amu)
+end
+
 export setunits, printunits
 export Unit, Mass, Length, Time_, Speed, Energy, Charge
 export MASS,LENGTH,TIME,SPEED,ENERGY,CHARGE
 export kilo, mega, giga, tera, mili, micro, nano, pico
 export MKS,CGS,PARTICLE_PHYSICS
+
+:MeV

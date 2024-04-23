@@ -120,6 +120,7 @@ function writeCODATA(year::Int)
 	everyline = readlines(f) 
 	newf = open(pwd() * f"/src/{year}Constants.jl", "a+")
 	newlines = []
+	pion_masses = download_pdg_pion_masses()
 	for l in everyline
 		line = split(l, "  ")   
 		if line[1] != ""
@@ -136,7 +137,12 @@ function writeCODATA(year::Int)
 		end
 		if line != "" && match(r"# .... CODATA", line[1]) == true
 			line[1] = "# "*parse(AbstractString, year)*" CODATA"
-		end			
+		end
+		if line != "" && line[1] ==	"m_pion_0"
+			line[2] = eqspace*"= "*f"{pion_masses[1]}"
+		elseif line != "" && line[1] == "m_pion_charged"
+			line[2] = eqspace*"= "*f"{pion_masses[2]}"
+		end	
 		push!(newlines, line)
 	end
 	seekstart(newf)

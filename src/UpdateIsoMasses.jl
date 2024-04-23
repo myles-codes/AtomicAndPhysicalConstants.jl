@@ -57,33 +57,33 @@ of individual isotopes and builds a dictionary of  \n\
 the elements with each of their isotopes listed  \n\
 by mass, as well as the isotopic average mass:  \n\
 specifically what is written out is a dictionary  \n\
-with Atomic Numbers as keys, and AtomicSpeciesData  \n\
+with Atomic Numbers as keys, and AtomicSpecies  \n\
 structs as values""" buildIsoDict
 
 function buildIsoDict(List::Vector{Any})
-	Elements = Dict{Int64, AtomicSpeciesData}()
+	Elements = Dict{Int64, AtomicSpecies}()
 
 	for isotope in List
 		# first check if the list has an entry for the appropriate element
 		if haskey(Elements, isotope["Atomic Number"]) == false
 			# if not, create one
 			(Elements[isotope["Atomic Number"]] = 
-			AtomicSpeciesData(
+			AtomicSpecies(
 				isotope["Atomic Number"], 
 				isotope["Atomic Symbol"], 
-				Dict(-1 => 0, isotope["Mass Number"] => isotope["Relative Atomic Mass"]*eV_per_amu)))
+				Dict(-1 => 0, isotope["Mass Number"] => isotope["Relative Atomic Mass"])))
       # update the average mass entry
 		  if typeof(isotope["Isotopic Composition"]) == Float64
 			  (Elements[isotope["Atomic Number"]].mass[-1] += 
-			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"]*eV_per_amu)
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
 		  end
 		
 		else # if the element exists, update the list of isotopes
 			(Elements[isotope["Atomic Number"]].mass[isotope["Mass Number"]] = 
-			isotope["Relative Atomic Mass"]*eV_per_amu)
+			isotope["Relative Atomic Mass"])
 		  if typeof(isotope["Isotopic Composition"]) == Float64
 			  (Elements[isotope["Atomic Number"]].mass[-1] += 
-			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"]*eV_per_amu)
+			  isotope["Isotopic Composition"] * isotope["Relative Atomic Mass"])
 		  end
     end
 	end
@@ -91,13 +91,13 @@ function buildIsoDict(List::Vector{Any})
 end;
 	
 
-"""writeIsos(Elements::Dict{Int64, AtomicSpeciesData}) takes \n\
+"""writeIsos(Elements::Dict{Int64, AtomicSpecies}) takes \n\
 as input a dictionary of the elements with nuclear charges \n\
 as keys, and writes the same dictionary with the keys swapped \n\
 for the atomic symbol (eg "H", "He", etc.) to a file named \n\
 yyyy-mm-dd_AtomicSpecies.jl located in the src folder.""" writeIsos
 
-function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
+function writeIsos(Elements::Dict{Int64, AtomicSpecies})
 	date = today()
 
   Z_eles = 1:1:118
@@ -112,9 +112,9 @@ function writeIsos(Elements::Dict{Int64, AtomicSpeciesData})
   n the periodic table, and the value is the relevant \n\
   AtomicSpecies struct, _eg_  \n\
     \n\
-  Atomic_Particles["He"] = AtomicSpeciesData(2, "He", ...)"""*qs*qs*qs*" Atomic_Particles \n\
+  Atomic_Particles["He"] = AtomicSpecies(2, "He", ...)"""*qs*qs*qs*" Atomic_Particles \n\
   \n\
-  Atomic_Particles = Dict{AbstractString, AtomicSpeciesData}(\n"
+  Atomic_Particles = Dict{AbstractString, AtomicSpecies}(\n"
 	
   f = open(pwd() * f"/src/{date}_AtomicIsotopes.jl", "w")
   write(f, topmat)
@@ -150,7 +150,7 @@ usable dictionary of each element  \n\
 with all of their isotopes""" setIsos
 
 function setIsos()
-  println(eV_per_amu)
+  # println(eV_per_amu)
   path = downloadIsos()
   vec = getIsos(path)
   numdict = buildIsoDict(vec)
