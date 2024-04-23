@@ -22,7 +22,7 @@ spin, the net spin of the tracked particle; and
 amm, the anomalous magnetic moment of the tracked particle (which is set to 0 for atomic particles)
 """ TrackedSpecies
 	
-struct TrackedSpecies
+struct Particle
 	name::AbstractString # name of the particle to track
 	charge::Int32 # charge of the particle (important to consider ionized atoms)
 	mass::Float64 # mass of the particle
