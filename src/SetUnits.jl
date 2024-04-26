@@ -1,5 +1,6 @@
 
 include("PhysicalConstants.jl")
+include("ParticleTypes.jl")
 """
     Unit
 
@@ -194,19 +195,18 @@ CGS = UnitSystem(UNIT["g"],UNIT["C"])
     ### Description:
     > return nothing<
     > users can specify the unit system and modify units in the system by keyword parameters<
-    > sets global unit and store them in current units
+    > sets global unit and store them in current units<
     
     ### default units
     mass: amu
-    length: m
-    time: s
+    charge: elementary charge
 
     ### positional parameters:
-    - 'unitsystem'                  -- type:UnitSystem, specify the unit system, default to PARTICLE_PHYSICS, it provides a convient way to set all the units
+    - 'unitsystem'                  -- type:Symbol, specify the unit system, default to PARTICLE_PHYSICS, it provides a convient way to set all the units
 
     ### keyword parameters:
-	- `mass`                        -- type:Mass, unit for mass, default to the mass unit in 'unitsystem'
-    - `charge`                      -- type:Energy, unit for energy, default to the energy unit in 'unitsystem'
+	- `mass`                        -- type:Symbol, unit for mass, default to the mass unit in 'unitsystem'
+    - `charge`                      -- type:Symbol, unit for energy, default to the energy unit in 'unitsystem'
 
 
 """ setunits
@@ -250,5 +250,49 @@ function setunits(unitsystem::Symbol = :default;
     return
 end
 
+"""
+    massof
+
+    ### Description:
+    > return mass of 'particle' in current unit or unit of the user's choice<
+
+    ### parameters:
+	- 'particle`                        -- type:particle, the particle whose mass you want to know
+    - `unit`                      -- type:Symbol, default to the unit set from setunits(), the unit of the mass variable
+
+""" massof
+
+function massof(particle::Particle, unit::Symbol =:default)
+    if(unit==:defualt)
+        return particle.mass*current_units[1].conversion
+    else
+        mass::Mass  = tounit(unit)
+        return particle.mass*mass.conversion
+    end
+end
+
+"""
+    chargeof
+
+    ### Description:
+    > return charge of 'particle' in current unit or unit of the user's choice<
+
+    ### parameters:
+	- 'particle`                        -- type:particle, the particle whose charge you want to know
+    - `unit`                      -- type:Symbol, default to the unit set from setunits(), the unit of the charge variable
+
+""" chargeof
+
+function chargeof(particle::Particle, unit::Symbol =:default)
+    if(unit==:defualt)
+        return particle.charge*current_units[2].conversion
+    else
+        charge::Charge  = tounit(unit)
+        return particle.charge*charge.conversion
+    end
+end
+
 export setunits, printunits
+export massof, chargeof
+
 
