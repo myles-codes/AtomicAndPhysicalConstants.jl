@@ -7,13 +7,14 @@ include("ParticleTypes.jl")
     ### Description:
     > abstract type for storing units <
 
-""" Unit
+"""
+Unit
 
 abstract type Unit end
 
 # overriding how Units are printed
 
-Base.print(io::IO, unit::T) where T<: Unit = print(io, " \"",unit.name,"\" \t\t where ",unit.conversion," ",unit.name,"\t = 1 ")
+Base.print(io::IO, unit::T) where {T<:Unit} = print(io, " \"", unit.name, "\" \t\t where ", unit.conversion, " ", unit.name, "\t = 1 ")
 
 """
     scale
@@ -21,10 +22,11 @@ Base.print(io::IO, unit::T) where T<: Unit = print(io, " \"",unit.name,"\" \t\t 
     ### Description:
     > return scaled units that has prefix 'prefix' and is scaled by 'factor' <
 
-""" scale
+"""
+scale
 
-function scale(unit::T,prefix::AbstractString,factor::Float64) where T<: Unit
-    return T(prefix*unit.name,unit.conversion/factor)
+function scale(unit::T, prefix::AbstractString, factor::Float64) where {T<:Unit}
+    return T(prefix * unit.name, unit.conversion / factor)
 end
 
 """
@@ -38,9 +40,10 @@ end
 	- `name`                        -- type:AbstractString, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 amu
 
-""" Mass
+"""
+Mass
 
-struct Mass<:Unit
+struct Mass <: Unit
     name::AbstractString
     conversion::Float64
 end
@@ -56,26 +59,14 @@ end
 	- `name`                        -- type:AbstractString, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 e
 
-""" Charge
+"""
+Charge
 
-struct Charge<:Unit
+struct Charge <: Unit
     name::AbstractString
     conversion::Float64
 end
 
-
-"""
-    current_units
-
-    ### Description:
-    > an array of type Unit that stores currently using units<
-
-    ### Note:
-    it is initialized when setunits() is called
-
-""" current_units
-
-current_units = Unit[]
 
 """
     printunits
@@ -85,16 +76,16 @@ current_units = Unit[]
     > prints the units for each dimensions<
     > prints the units of constants with speical dimenisions<
  
-""" printunits
+"""
+printunits
 
 function printunits()
-    if isempty(current_units) 
-        println("units are not set, call setunits() to initalize units and constants")
-        return 
+    if !@isdefined current_units
+        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
     end
     # prints the units for each dimensions
-    println("mass:\t",current_units[1],"amu")
-    println("charge:\t",current_units[2],"e")
+    println("mass:\t", current_units.mass, "amu")
+    println("charge:\t", current_units.charge, "e")
     return
 end
 
@@ -104,64 +95,56 @@ end
     ### Description:
     > dictionary that store how scaling factors relate to prefixs<
 
-""" prefix
+"""
+prefix
 
 prefix::Dict{AbstractString,Float64} = Dict(
-    "k" =>10^3,
-    "kilo" =>10^3,
-    "Kilo" =>10^3,
-    "M" =>10^6,
-    "mega" =>10^6,
-    "Mega" =>10^6,
-    "G" =>10^9,
-    "giga" =>10^9,
-    "Giga" =>10^9,
-    "T" =>10^12,
-    "tera" =>10^12,
-    "Tera" =>10^12,
-    "m" =>10^-3,
-    "mili" =>10^-3,
-    "mu" =>10^-6,
-    "micro" =>10^-6,
-    "n" =>10^9,
-    "nano" =>10^9,
-    "p" =>10^12,
-    "pico" =>10^-12,
+    "k" => 10^3,
+    "M" => 10^6,
+    "G" => 10^9,
+    "T" => 10^12,
+    "m" => 10^-3,
+    "u" => 10^-6,
+    "n" => 10^9,
+    "p" => 10^-12,
+    "f" => 10^-15,
+    "a" => 10^-18
 )
 
 UNIT::Dict{AbstractString,Unit} = Dict(
-    "amu" => Mass("amu",1.0), 
-    "eV"=> Mass("eV/c^2",eV_per_amu),
-    "eV/c^2"=> Mass("eV/c^2",eV_per_amu),
-    "g" => Mass("g",kg_per_amu*10^3), 
-    "kg" => Mass("kg",kg_per_amu),
+    "amu" => Mass("amu", 1.0),
+    "eV" => Mass("eV/c^2", eV_per_amu),
+    "eV/c^2" => Mass("eV/c^2", eV_per_amu),
+    "g" => Mass("g", kg_per_amu * 10^3),
+    "kg" => Mass("kg", kg_per_amu),
     "C" => Charge("C", e_charge),
-    "e" => Charge("e",1.0)
+    "e" => Charge("e", 1.0)
 )
 
 """
-    tounits
+    tounit
 
     ### Description:
     > return the correponding unit for the given symbol<
 
-    ### keyword parameters:
+    ### parameters:
 	- `unit`                        -- type: Symbol, name of the unit
 
 
-""" tounit
+"""
+tounit
 
 function tounit(unit::Symbol)
     name = string(unit)
-    for (key,value) in prefix
+    for (key, value) in prefix
         if startswith(name, key)
-            name_without_prefix = name[length(key) + 1:end]
-            if haskey(UNIT,name_without_prefix)
-                return scale(UNIT[name_without_prefix],key,value)
+            name_without_prefix = name[length(key)+1:end]
+            if haskey(UNIT, name_without_prefix)
+                return scale(UNIT[name_without_prefix], key, value)
             end
         end
     end
-    throw(ArgumentError("unit \""*string(unit)*"\" does not exist"))
+    throw(ArgumentError("unit \"" * name * "\" does not exist"))
 end
 
 """
@@ -178,19 +161,36 @@ end
     ### Note:
     'speed' is compute from 'length'/'time' so it is not included in the unitsystem
 
-""" UnitSystem
+"""
+UnitSystem
 
 struct UnitSystem
     mass::Mass
     charge::Charge
 end
 
-PARTICLE_PHYSICS = UnitSystem(UNIT["amu"],UNIT["e"])
-MKS = UnitSystem(UNIT["kg"],UNIT["C"])
-CGS = UnitSystem(UNIT["g"],UNIT["C"])
+PARTICLE_PHYSICS = UnitSystem(UNIT["eV"], UNIT["e"])
+MKS = UnitSystem(UNIT["kg"], UNIT["C"])
+CGS = UnitSystem(UNIT["g"], UNIT["C"])
 
 """
-    setunits
+    current_units :: UnitSystem
+
+    ### Description:
+    > a UnitSystem that stores currently using units<
+
+    ### Note:
+    it is initialized when setunits() is called
+
+"""
+current_units
+
+
+"""
+    function setunits(unitsystem::Symbol=:default;
+        mass::Symbol=:default,
+        charge::Symbol=:default,
+    )
 
     ### Description:
     > return nothing<
@@ -198,23 +198,25 @@ CGS = UnitSystem(UNIT["g"],UNIT["C"])
     > sets global unit and store them in current units<
     
     ### default units
-    mass: amu
+    mass: eV/c^2
     charge: elementary charge
 
     ### positional parameters:
-    - 'unitsystem'                  -- type:Symbol, specify the unit system, default to PARTICLE_PHYSICS, it provides a convient way to set all the units
+    - 'unitsystem'                  -- type:Symbol, specify the unit system, default to PARTICLE_PHYSICS{mass:eV/c^2,charge:e}
+                                        , it provides a convient way to set all the units
 
     ### keyword parameters:
 	- `mass`                        -- type:Symbol, unit for mass, default to the mass unit in 'unitsystem'
-    - `charge`                      -- type:Symbol, unit for energy, default to the energy unit in 'unitsystem'
+    - `charge`                      -- type:Symbol, unit for charge, default to the charge unit in 'unitsystem'
 
 
-""" setunits
+"""
+setunits
 
-function setunits(unitsystem::Symbol = :default; 
-    mass::Symbol = :default, 
-    charge::Symbol = :default,
-    )
+function setunits(unitsystem::Symbol=:default;
+    mass::Symbol=:default,
+    charge::Symbol=:default,
+)
     #stores unitsystem as a struct
     unit_system = PARTICLE_PHYSICS
     if unitsystem == :MKS
@@ -223,8 +225,8 @@ function setunits(unitsystem::Symbol = :default;
         unit_system = CGS
     elseif unitsystem == :ParticlePhysics || unitsystem == :default || unitsystem == :P
         unit_system = PARTICLE_PHYSICS
-    else 
-        throw(ArgumentError("unit system \""*string(unitsystem)*"\" does not exist"))
+    else
+        throw(ArgumentError("unit system \"" * string(unitsystem) * "\" does not exist"))
     end
 
     # get Unit struct from Symbol
@@ -234,19 +236,17 @@ function setunits(unitsystem::Symbol = :default;
     else
         mass_unit = tounit(mass)
     end
-        
+
     charge_unit::Charge = unit_system.charge
     if charge == :default
         charge_unit = unit_system.charge
     else
         charge_unit = tounit(charge)
     end
-    
+
     # record what units is currently being used
-    empty!(current_units)
-    push!(current_units,mass_unit)
-    push!(current_units,charge_unit)
-    
+    global current_units = UnitSystem(mass_unit, charge_unit)
+
     return
 end
 
@@ -258,16 +258,19 @@ end
 
     ### parameters:
 	- 'particle`                        -- type:particle, the particle whose mass you want to know
-    - `unit`                      -- type:Symbol, default to the unit set from setunits(), the unit of the mass variable
+    - `unit`                            -- type:Symbol, default to the unit set from setunits(), the unit of the mass variable
 
-""" massof
+"""
+massof
 
-function massof(particle::Particle, unit::Symbol =:default)
-    if(unit==:defualt)
-        return particle.mass*current_units[1].conversion
+function massof(particle::Particle, unit::Symbol=:default)
+    if !@isdefined current_units
+        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
+    elseif (unit == :default)
+        return particle.mass * current_units.mass.conversion #test if setunit is called
     else
-        mass::Mass  = tounit(unit)
-        return particle.mass*mass.conversion
+        mass::Mass = tounit(unit)
+        return particle.mass * mass.conversion
     end
 end
 
@@ -281,14 +284,17 @@ end
 	- 'particle`                        -- type:particle, the particle whose charge you want to know
     - `unit`                      -- type:Symbol, default to the unit set from setunits(), the unit of the charge variable
 
-""" chargeof
+"""
+chargeof
 
-function chargeof(particle::Particle, unit::Symbol =:default)
-    if(unit==:defualt)
-        return particle.charge*current_units[2].conversion
+function chargeof(particle::Particle, unit::Symbol=:default)
+    if !@isdefined current_units
+        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
+    elseif (unit == :default)
+        return particle.charge * current_units.charge.conversion
     else
-        charge::Charge  = tounit(unit)
-        return particle.charge*charge.conversion
+        charge::Charge = tounit(unit)
+        return particle.charge * charge.conversion
     end
 end
 
