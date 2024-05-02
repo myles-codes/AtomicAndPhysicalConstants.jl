@@ -13,28 +13,28 @@ fetched values so they can be written to \n\
 file""" CODATA_Consts
 
 CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
-	"electron mass energy equivalent in MeV" => Dict("m_electron" => m_electron), 
-	"proton mass energy equivalent in MeV" => Dict("m_proton" => m_proton), 
-	"neutron mass energy equivalent in MeV" => Dict("m_neutron" => m_neutron), 
-	"muon mass energy equivalent in MeV" => Dict("m_muon" => m_muon), 
-	"helion mass energy equivalent in MeV" => Dict("m_helion" => m_helion), 
-	"deuteron mass energy equivalent in MeV" => Dict("m_deuteron" => m_deuteron), 
-	"speed of light in vacuum" => Dict("c_light" => c_light), 
-	"Planck constant in eV/Hz" => Dict("h_planck" => h_planck), 
-	"classical electron radius" => Dict("r_e" => r_e), 
-	"Avogadro constant" => Dict("N_avogadro" => N_avogadro), 
-	"vacuum electric permittivity" => Dict("eps_0_vac" => eps_0_vac), 
-	"vacuum mag. permeability" => Dict("mu_0_vac" => mu_0_vac), 
-	"fine-structure constant" => Dict("fine_structure" => fine_structure), 
-	"muon mag. mom. anomaly" => Dict("anom_mag_moment_muon" => anom_mag_moment_muon), 
-	"electron mag. mom. anomaly" => Dict("anom_mag_moment_electron" => anom_mag_moment_electron), 
-	"proton mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_proton" => anom_mag_moment_proton), 
-	"deuteron mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_deuteron" => anom_mag_moment_deuteron), 
-	"neutron mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_neutron" => anom_mag_moment_neutron), 
-	"helion mag. mom. to nuclear magneton ratio" => Dict("anom_mag_moment_He3" => anom_mag_moment_He3), 
-	"elementary charge" => Dict("e_charge" => e_charge),
-	"atomic mass unit-kilogram relationship" => Dict("kg_per_amu" => kg_per_amu),
-	"atomic mass unit-electron volt relationship" => Dict("eV_per_amu" => eV_per_amu)
+	"electron mass energy equivalent in MeV" => Dict("__b_m_electron" => __b_m_electron), 
+	"proton mass energy equivalent in MeV" => Dict("__b_m_proton" => __b_m_proton), 
+	"neutron mass energy equivalent in MeV" => Dict("__b_m_neutron" => __b_m_neutron), 
+	"muon mass energy equivalent in MeV" => Dict("__b_m_muon" => __b_m_muon), 
+	"helion mass energy equivalent in MeV" => Dict("__b_m_helion" => __b_m_helion), 
+	"deuteron mass energy equivalent in MeV" => Dict("__b_m_deuteron" => __b_m_deuteron), 
+	"speed of light in vacuum" => Dict("__b_c_light" => __b_c_light), 
+	"Planck constant in eV/Hz" => Dict("__b_h_planck" => __b_h_planck), 
+	"classical electron radius" => Dict("__b_r_e" => __b_r_e), 
+	"Avogadro constant" => Dict("__b_N_avogadro" => __b_N_avogadro), 
+	"vacuum electric permittivity" => Dict("__b_eps_0_vac" => __b_eps_0_vac), 
+	"vacuum mag. permeability" => Dict("__b_mu_0_vac" => __b_mu_0_vac), 
+	"fine-structure constant" => Dict("__b_fine_structure" => __b_fine_structure), 
+	"muon mag. mom. anomaly" => Dict("__b_anom_mag_moment_muon" => __b_anom_mag_moment_muon), 
+	"electron mag. mom. anomaly" => Dict("__b_anom_mag_moment_electron" => __b_anom_mag_moment_electron), 
+	"proton mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_proton" => __b_anom_mag_moment_proton), 
+	"deuteron mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_deuteron" => __b_anom_mag_moment_deuteron), 
+	"neutron mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_neutron" => __b_anom_mag_moment_neutron), 
+	"helion mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_He3" => __b_anom_mag_moment_He3), 
+	"elementary charge" => Dict("__b_e_charge" => __b_e_charge),
+	"atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
+	"atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu)
 );
 
 
@@ -138,9 +138,9 @@ function writeCODATA(year::Int)
 		if line != "" && match(r"# .... CODATA", line[1]) == true
 			line[1] = "# "*parse(AbstractString, year)*" CODATA"
 		end
-		if line != "" && line[1] ==	"m_pion_0"
+		if line != "" && line[1] ==	"__b_m_pion_0"
 			line[2] = eqspace*"= "*f"{pion_masses[1]}"
-		elseif line != "" && line[1] == "m_pion_charged"
+		elseif line != "" && line[1] == "__b_m_pion_charged"
 			line[2] = eqspace*"= "*f"{pion_masses[2]}"
 		end	
 		push!(newlines, line)
