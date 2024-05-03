@@ -10,5 +10,6 @@ include("ParticleFunctions.jl")
 include("UpdateConsts.jl")
 include("UpdateIsoMasses.jl")
 include("UpdatePionMass.jl")
+include("SetUnits.jl")
 
 end
