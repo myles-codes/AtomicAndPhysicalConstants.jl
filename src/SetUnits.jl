@@ -264,10 +264,12 @@ end
 massof
 
 function massof(particle::Particle, unit::Symbol=:default)
-    if !@isdefined current_units
-        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-    elseif (unit == :default)
-        return particle.mass * current_units.mass.conversion #test if setunit is called
+    if (unit == :default)
+        if !@isdefined current_units
+            throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
+        else
+            return particle.mass * current_units.mass.conversion
+        end
     else
         mass::Mass = tounit(unit)
         return particle.mass * mass.conversion
@@ -288,10 +290,12 @@ end
 chargeof
 
 function chargeof(particle::Particle, unit::Symbol=:default)
-    if !@isdefined current_units
-        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-    elseif (unit == :default)
-        return particle.charge * current_units.charge.conversion
+    if (unit == :default)
+        if !@isdefined current_units
+            throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
+        else
+            return particle.charge * current_units.charge.conversion
+        end
     else
         charge::Charge = tounit(unit)
         return particle.charge * charge.conversion
