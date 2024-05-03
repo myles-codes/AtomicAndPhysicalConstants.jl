@@ -230,6 +230,9 @@ tounit
 
 function tounit(unit::Symbol)
     name = string(unit)
+    if haskey(UNIT, name)
+        return scale(UNIT[name], key, value)
+    end
     for (key, value) in prefix
         if startswith(name, key)
             name_without_prefix = name[length(key)+1:end]
