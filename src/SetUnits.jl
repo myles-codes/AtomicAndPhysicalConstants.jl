@@ -197,7 +197,7 @@ prefix::Dict{AbstractString,Float64} = Dict(
 
 UNIT::Dict{AbstractString,Unit} = Dict(
     "amu" => Mass("amu", 1.0),
-    "eV/c^2" => Mass("eV/c^2", __b_eV_per_amu),
+    "eV / c ^ 2" => Mass("eV/c^2", __b_eV_per_amu),
     "g" => Mass("g", __b_kg_per_amu * 10^3),
     "kg" => Mass("kg", __b_kg_per_amu),
     "C" => Charge("C", __b_e_charge),
@@ -206,32 +206,32 @@ UNIT::Dict{AbstractString,Unit} = Dict(
     "cm" => Length("cm", 100.0),
     "A" => Length("Å", 10^10),
     "s" => Time_("s", 1.0),
-    "minute" => Time_("minute", 1 / 60),
-    "hour" => Time_("hour", 1 / 3600),
+    "min" => Time_("min", 1 / 60),
+    "h" => Time_("h", 1 / 3600),
     "c" => Speed("c", 1 / __b_c_light),
-    "m/s" => Speed("m/s", 1.0),
-    "cm/s" => Speed("cm/s", 100.0),
+    "m / s" => Speed("m/s", 1.0),
+    "cm / s" => Speed("cm/s", 100.0),
     "J" => Energy("J", __b_e_charge),
     "eV" => Energy("eV", 1.0)
 )
 
 """
-    tounit
+    function tounit(unit::Union{Symbol,Expr})
 
     ### Description:
     > return the correponding unit for the given symbol<
 
     ### parameters:
-	- `unit`                        -- type: Symbol, name of the unit
+	- `unit`                        -- type: Symbol or Expr , name of the unit
 
 
 """
 tounit
 
-function tounit(unit::Symbol)
+function tounit(unit::Union{Symbol,Expr})
     name = string(unit)
     if haskey(UNIT, name)
-        return scale(UNIT[name], key, value)
+        return UNIT[name]
     end
     for (key, value) in prefix
         if startswith(name, key)
@@ -270,9 +270,9 @@ struct UnitSystem
     charge::Charge
 end
 
-PARTICLE_PHYSICS = UnitSystem(UNIT["eV/c^2"], UNIT["m"], UNIT["s"], UNIT["m/s"], UNIT["eV"], UNIT["e"])
-MKS = UnitSystem(UNIT["kg"], UNIT["m"], UNIT["s"], UNIT["m/s"], UNIT["J"], UNIT["C"])
-CGS = UnitSystem(UNIT["g"], UNIT["cm"], UNIT["s"], UNIT["cm/s"], UNIT["J"], UNIT["C"])
+PARTICLE_PHYSICS = UnitSystem(UNIT["eV / c ^ 2"], UNIT["m"], UNIT["s"], UNIT["m / s"], UNIT["eV"], UNIT["e"])
+MKS = UnitSystem(UNIT["kg"], UNIT["m"], UNIT["s"], UNIT["m / s"], UNIT["J"], UNIT["C"])
+CGS = UnitSystem(UNIT["g"], UNIT["cm"], UNIT["s"], UNIT["cm / s"], UNIT["J"], UNIT["C"])
 
 """
     current_units :: UnitSystem
@@ -288,9 +288,13 @@ current_units
 
 
 """
-    function setunits(unitsystem::Symbol=:default;
-        mass::Symbol=:default,
-        charge::Symbol=:default,
+    function setunits(unitsystem::Union{Symbol,Expr}=:default;
+        mass::Union{Symbol,Expr}=:default,
+        length::Union{Symbol,Expr}=:default,
+        time::Union{Symbol,Expr}Symbol=:default,
+        speed::Union{Symbol,Expr}=:default,
+        energy::Union{Symbol,Expr}=:default,
+        charge::Union{Symbol,Expr}=:default,
     )
 
     ### Description:
@@ -307,16 +311,16 @@ current_units
     charge: elementary charge
 
     ### positional parameters:
-    - 'unitsystem'                  -- type:Symbol, specify the unit system, default to PARTICLE_PHYSICS{mass:eV/c^2,charge:e}
+    - 'unitsystem'                  -- type:Symbol or Expr, specify the unit system, default to PARTICLE_PHYSICS{mass:eV/c^2,charge:e}
                                         , it provides a convient way to set all the units
 
-    ### keyword parameters:
-	- `mass`                        -- type:Symbol, unit for mass, default to the mass unit in 'unitsystem'
-	- `length`                      -- type:Symbol, unit for length, default to the length unit in 'unitsystem'
-    - `time`                        -- type:Symbol, unit for time, default to the time unit in 'unitsystem'
-    - `speed`                       -- type:Symbol, unit for speed, default to the length unit in 'unitsystem'/time unit in 'unitsystem'. speed is also default to 'length'/'time' unit unless specified. 
-    - `energy`                      -- type:Symbol, unit for energy, default to the energy unit in 'unitsystem'
-    - `charge`                      -- type:Symbol, unit for charge, default to the charge unit in 'unitsystem'
+    ### keyword parameters
+	- `mass`                        -- type:Symbol or Expr, unit for mass, default to the mass unit in 'unitsystem'
+	- `length`                      -- type:Symbol or Expr, unit for length, default to the length unit in 'unitsystem'
+    - `time`                        -- type:Symbol or Expr, unit for time, default to the time unit in 'unitsystem'
+    - `speed`                       -- type:Symbol or Expr, unit for speed, default to the length unit in 'unitsystem'/time unit in 'unitsystem'. speed is also default to 'length'/'time' unit unless specified. 
+    - `energy`                      -- type:Symbol or Expr, unit for energy, default to the energy unit in 'unitsystem'
+    - `charge`                      -- type:Symbol or Expr, unit for charge, default to the charge unit in 'unitsystem'
 
     ### Note:
     - unit for Plancks' constant is 'energy' * 'time'
@@ -328,16 +332,16 @@ current_units
 """
 setunits
 
-function setunits(unitsystem::Symbol=:default;
-    mass::Symbol=:default,
-    length::Symbol=:default,
-    time::Symbol=:default,
-    speed::Symbol=:default,
-    energy::Symbol=:default,
-    charge::Symbol=:default,
+function setunits(unitsystem::Union{Symbol,Expr}=:default;
+    mass::Union{Symbol,Expr}=:default,
+    length::Union{Symbol,Expr}=:default,
+    time::Union{Symbol,Expr}=:default,
+    speed::Union{Symbol,Expr}=:default,
+    energy::Union{Symbol,Expr}=:default,
+    charge::Union{Symbol,Expr}=:default,
 )
     #stores unitsystem as a struct
-    unit_system = PARTICLE_PHYSICS
+    unit_system::UnitSystem = PARTICLE_PHYSICS
     if unitsystem == :MKS
         unit_system = MKS
     elseif unitsystem == :CGS
@@ -374,7 +378,7 @@ function setunits(unitsystem::Symbol=:default;
     if speed == :default
         speed_unit = length_unit / time_unit
     else
-        speed_unit = tounit(speed)
+        speed_unit = tounit(speed.args[2]) / tounit(speed.args[3])
     end
 
     energy_unit::Energy = unit_system.energy
@@ -449,19 +453,19 @@ function setunits(unitsystem::Symbol=:default;
 end
 
 """
-    massof
+    function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
 
     ### Description:
     > return mass of 'particle' in current unit or unit of the user's choice<
 
     ### parameters:
 	- 'particle`                        -- type:particle, the particle whose mass you want to know
-    - `unit`                            -- type:Symbol, default to the unit set from setunits(), the unit of the mass variable
+    - `unit`                            -- type:Symbol or Expr, default to the unit set from setunits(), the unit of the mass variable
 
 """
 massof
 
-function massof(particle::Particle, unit::Symbol=:default)
+function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
     if (unit == :default)
         if !@isdefined current_units
             throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
@@ -475,19 +479,19 @@ function massof(particle::Particle, unit::Symbol=:default)
 end
 
 """
-    chargeof
+    function chargeof(particle::Particle, unit::Union{Symbol,Expr}=:default)
 
     ### Description:
     > return charge of 'particle' in current unit or unit of the user's choice<
 
     ### parameters:
-	- 'particle`                        -- type:particle, the particle whose charge you want to know
-    - `unit`                      -- type:Symbol, default to the unit set from setunits(), the unit of the charge variable
+	- 'particle`                  -- type:particle, the particle whose charge you want to know
+    - `unit`                      -- type:Symbol or Expr, default to the unit set from setunits(), the unit of the charge variable
 
 """
 chargeof
 
-function chargeof(particle::Particle, unit::Symbol=:default)
+function chargeof(particle::Particle, unit::Union{Symbol,Expr}=:default)
     if (unit == :default)
         if !@isdefined current_units
             throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
