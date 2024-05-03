@@ -315,6 +315,12 @@ current_units
     - `energy`                      -- type:Symbol, unit for energy, default to the energy unit in 'unitsystem'
     - `charge`                      -- type:Symbol, unit for charge, default to the charge unit in 'unitsystem'
 
+    ### Note:
+    - unit for Plancks' constant is 'energy' * 'time'
+    - unit for vacuum permeability is N/A^2
+    - unit for Permittivity of free space is F/m
+    - unit for Avogadro's number is mol^-1
+    - unit for classical radius factor is 'length'*'mass'
 
 """
 setunits
@@ -413,6 +419,8 @@ function setunits(unitsystem::Symbol=:default;
     global h_planck = __b_h_planck * energy_unit.conversion * time_unit.conversion        # Planck's constant 
     # convert Vacuum permeability with dimension force / (current)^2
     global mu_0_vac = __b_mu_0_vac
+    # convert Vacuum permeability with dimension capacitance / distance
+    global eps_0_vac = __b_eps_0_vac
 
     # convert anomous magnet moments dimension: unitless
     global anom_mag_moment_electron = __b_anom_mag_moment_electron           # anomalous mag. mom. of the electron 
@@ -491,5 +499,7 @@ end
 
 export setunits, printunits
 export massof, chargeof
-
-
+export c_light, m_electron, m_proton, m_neutron, m_muon, m_helion, m_deuteron, m_pion_0, m_pion_charged
+export r_e, e_charge, h_planck, mu_0_vac, eps_0_vac
+export anom_mag_moment_electron, anom_mag_moment_muon, anom_mag_moment_proton, anom_mag_moment_deuteron, anom_mag_moment_neutron, anom_mag_moment_He3
+export kg_per_amu, eV_per_amu, N_avogadro, fine_structure, classical_radius_factor, r_p, h_bar_planck, kg_per_eV, eps_0_vac
