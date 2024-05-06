@@ -470,7 +470,7 @@ function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
         if !@isdefined current_units
             throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
         else
-            return particle.mass * current_units.mass.conversion
+            return particle.mass * current_units.mass.conversion / __b_eV_per_amu
         end
     else
         mass::Mass = tounit(unit)
