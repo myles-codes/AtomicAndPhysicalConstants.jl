@@ -14,7 +14,7 @@ abstract type Unit end
 
 # overriding how Units are printed
 
-Base.print(io::IO, unit::T) where {T<:Unit} = print(io, " \"", unit.name, "\" \t\t where ", unit.conversion, " ", unit.name, "\t = 1 ")
+Base.print(io::IO, unit::T) where {T<:Unit} = print(io, rpad(" \"" * unit.name * "\"", 10), " \t where ", rpad(string(unit.conversion) * " " * unit.name, 30), "\t = 1 ")
 
 """
     scale
@@ -26,7 +26,7 @@ Base.print(io::IO, unit::T) where {T<:Unit} = print(io, " \"", unit.name, "\" \t
 scale
 
 function scale(unit::T, prefix::AbstractString, factor::Float64) where {T<:Unit}
-    return T(prefix * unit.name, unit.conversion / factor)
+  return T(prefix * unit.name, unit.conversion / factor)
 end
 
 """
@@ -38,14 +38,14 @@ end
 
     ### Fields:
 	- `name`                        -- type:AbstractString, name of the unit
-	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 amu
+	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 eV/c^2
 
 """
 Mass
 
 struct Mass <: Unit
-    name::AbstractString
-    conversion::Float64
+  name::AbstractString
+  conversion::Float64
 end
 
 
@@ -64,8 +64,8 @@ end
 Length
 
 struct Length <: Unit
-    name::AbstractString
-    conversion::Float64
+  name::AbstractString
+  conversion::Float64
 end
 
 """
@@ -83,31 +83,9 @@ end
 Time_
 
 struct Time_ <: Unit
-    name::AbstractString
-    conversion::Float64
+  name::AbstractString
+  conversion::Float64
 end
-
-"""
-    Speed<:Unit
-
-    ### Description:
-    > immutable struct to be used for storing speed units<
-    > the basis for conversion is meter per second<
-
-    ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
-	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 meter per second
-
-"""
-Speed
-
-struct Speed <: Unit
-    name::AbstractString
-    conversion::Float64
-end
-
-# Define devision operation that makes Speed from Length / Time 
-Base.:/(a::Length, b::Time_) = Speed(a.name * "/" * b.name, a.conversion / b.conversion)
 
 """
     Energy<:Unit
@@ -124,8 +102,8 @@ Base.:/(a::Length, b::Time_) = Speed(a.name * "/" * b.name, a.conversion / b.con
 Energy
 
 struct Energy <: Unit
-    name::AbstractString
-    conversion::Float64
+  name::AbstractString
+  conversion::Float64
 end
 
 """
@@ -143,8 +121,8 @@ end
 Charge
 
 struct Charge <: Unit
-    name::AbstractString
-    conversion::Float64
+  name::AbstractString
+  conversion::Float64
 end
 
 
@@ -160,17 +138,16 @@ end
 printunits
 
 function printunits()
-    if !@isdefined current_units
-        throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-    end
-    # prints the units for each dimensions
-    println("mass:\t", current_units.mass, "amu")
-    println("length:\t", current_units.length, "m")
-    println("time:\t", current_units.time, "s")
-    println("speed:\t", current_units.speed, "m/s")
-    println("energy:\t", current_units.energy, "eV")
-    println("charge:\t", current_units.charge, "e")
-    return
+  if !@isdefined current_units
+    throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
+  end
+  # prints the units for each dimensions
+  println("mass:\t", current_units.mass, "amu")
+  println("length:\t", current_units.length, "m")
+  println("time:\t", current_units.time, "s")
+  println("energy:\t", current_units.energy, "eV")
+  println("charge:\t", current_units.charge, "e")
+  return
 end
 
 """
@@ -183,36 +160,33 @@ end
 prefix
 
 prefix::Dict{AbstractString,Float64} = Dict(
-    "k" => 10^3,
-    "M" => 10^6,
-    "G" => 10^9,
-    "T" => 10^12,
-    "m" => 10^-3,
-    "u" => 10^-6,
-    "n" => 10^9,
-    "p" => 10^-12,
-    "f" => 10^-15,
-    "a" => 10^-18
+  "k" => 10^3,
+  "M" => 10^6,
+  "G" => 10^9,
+  "T" => 10^12,
+  "m" => 10^-3,
+  "u" => 10^-6,
+  "n" => 10^9,
+  "p" => 10^-12,
+  "f" => 10^-15,
+  "a" => 10^-18
 )
 
 UNIT::Dict{AbstractString,Unit} = Dict(
-    "amu" => Mass("amu", 1.0),
-    "eV / c ^ 2" => Mass("eV/c^2", __b_eV_per_amu),
-    "g" => Mass("g", __b_kg_per_amu * 10^3),
-    "kg" => Mass("kg", __b_kg_per_amu),
-    "C" => Charge("C", __b_e_charge),
-    "e" => Charge("e", 1.0),
-    "m" => Length("m", 1.0),
-    "cm" => Length("cm", 100.0),
-    "A" => Length("Å", 10^10),
-    "s" => Time_("s", 1.0),
-    "min" => Time_("min", 1 / 60),
-    "h" => Time_("h", 1 / 3600),
-    "c" => Speed("c", 1 / __b_c_light),
-    "m / s" => Speed("m/s", 1.0),
-    "cm / s" => Speed("cm/s", 100.0),
-    "J" => Energy("J", __b_e_charge),
-    "eV" => Energy("eV", 1.0)
+  "amu" => Mass("amu", 1 / __b_eV_per_amu),
+  "eV / c ^ 2" => Mass("eV/c^2", 1.0),
+  "g" => Mass("g", __b_kg_per_amu * 10^3 / __b_eV_per_amu),
+  "kg" => Mass("kg", __b_kg_per_amu / __b_eV_per_amu),
+  "C" => Charge("C", __b_e_charge),
+  "e" => Charge("e", 1.0),
+  "m" => Length("m", 1.0),
+  "cm" => Length("cm", 100.0),
+  "A" => Length("Å", 10^10),
+  "s" => Time_("s", 1.0),
+  "min" => Time_("min", 1 / 60),
+  "h" => Time_("h", 1 / 3600),
+  "J" => Energy("J", __b_e_charge),
+  "eV" => Energy("eV", 1.0)
 )
 
 """
@@ -229,19 +203,19 @@ UNIT::Dict{AbstractString,Unit} = Dict(
 tounit
 
 function tounit(unit::Union{Symbol,Expr})
-    name = string(unit)
-    if haskey(UNIT, name)
-        return UNIT[name]
+  name = string(unit)
+  if haskey(UNIT, name)
+    return UNIT[name]
+  end
+  for (key, value) in prefix
+    if startswith(name, key)
+      name_without_prefix = name[length(key)+1:end]
+      if haskey(UNIT, name_without_prefix)
+        return scale(UNIT[name_without_prefix], key, value)
+      end
     end
-    for (key, value) in prefix
-        if startswith(name, key)
-            name_without_prefix = name[length(key)+1:end]
-            if haskey(UNIT, name_without_prefix)
-                return scale(UNIT[name_without_prefix], key, value)
-            end
-        end
-    end
-    throw(ArgumentError("unit \"" * name * "\" does not exist"))
+  end
+  throw(ArgumentError("unit \"" * name * "\" does not exist"))
 end
 
 """
@@ -253,26 +227,25 @@ end
     ### Fields:
 	- `mass`                    -- type:Mass, stores the unit for mass
 	- `length`                  -- type:Length, stores the unit for length
-    - `time`                    -- type:Time, stores the unit for time
+  - `time`                    -- type:Time, stores the unit for time
+  - `energy`                  -- type:Energy, stores the unit for energy
+  - `charge`                  -- type:Charge, stores the unit for charge
 
-    ### Note:
-    'speed' is compute from 'length'/'time' so it is not included in the unitsystem
 
 """
 UnitSystem
 
 struct UnitSystem
-    mass::Mass
-    length::Length
-    time::Time_
-    speed::Speed
-    energy::Energy
-    charge::Charge
+  mass::Mass
+  length::Length
+  time::Time_
+  energy::Energy
+  charge::Charge
 end
 
-PARTICLE_PHYSICS = UnitSystem(UNIT["eV / c ^ 2"], UNIT["m"], UNIT["s"], UNIT["m / s"], UNIT["eV"], UNIT["e"])
-MKS = UnitSystem(UNIT["kg"], UNIT["m"], UNIT["s"], UNIT["m / s"], UNIT["J"], UNIT["C"])
-CGS = UnitSystem(UNIT["g"], UNIT["cm"], UNIT["s"], UNIT["cm / s"], UNIT["J"], UNIT["C"])
+PARTICLE_PHYSICS = UnitSystem(UNIT["eV / c ^ 2"], UNIT["m"], UNIT["s"], UNIT["eV"], UNIT["e"])
+MKS = UnitSystem(UNIT["kg"], UNIT["m"], UNIT["s"], UNIT["J"], UNIT["C"])
+CGS = UnitSystem(UNIT["g"], UNIT["cm"], UNIT["s"], UNIT["J"], UNIT["C"])
 
 """
     current_units :: UnitSystem
@@ -292,7 +265,6 @@ current_units
         mass::Union{Symbol,Expr}=:default,
         length::Union{Symbol,Expr}=:default,
         time::Union{Symbol,Expr}Symbol=:default,
-        speed::Union{Symbol,Expr}=:default,
         energy::Union{Symbol,Expr}=:default,
         charge::Union{Symbol,Expr}=:default,
     )
@@ -306,7 +278,6 @@ current_units
     mass: eV/c^2
     length: m
     time: s
-    speed: m/s
     energy: eV
     charge: elementary charge
 
@@ -317,8 +288,7 @@ current_units
     ### keyword parameters
 	- `mass`                        -- type:Symbol or Expr, unit for mass, default to the mass unit in 'unitsystem'
 	- `length`                      -- type:Symbol or Expr, unit for length, default to the length unit in 'unitsystem'
-    - `time`                        -- type:Symbol or Expr, unit for time, default to the time unit in 'unitsystem'
-    - `speed`                       -- type:Symbol or Expr, unit for speed, default to the length unit in 'unitsystem'/time unit in 'unitsystem'. speed is also default to 'length'/'time' unit unless specified. 
+    - `time`                        -- type:Symbol or Expr, unit for time, default to the time unit in 'unitsystem' 
     - `energy`                      -- type:Symbol or Expr, unit for energy, default to the energy unit in 'unitsystem'
     - `charge`                      -- type:Symbol or Expr, unit for charge, default to the charge unit in 'unitsystem'
 
@@ -333,123 +303,116 @@ current_units
 setunits
 
 function setunits(unitsystem::Union{Symbol,Expr}=:default;
-    mass::Union{Symbol,Expr}=:default,
-    length::Union{Symbol,Expr}=:default,
-    time::Union{Symbol,Expr}=:default,
-    speed::Union{Symbol,Expr}=:default,
-    energy::Union{Symbol,Expr}=:default,
-    charge::Union{Symbol,Expr}=:default,
+  mass::Union{Symbol,Expr}=:default,
+  length::Union{Symbol,Expr}=:default,
+  time::Union{Symbol,Expr}=:default,
+  energy::Union{Symbol,Expr}=:default,
+  charge::Union{Symbol,Expr}=:default,
 )
-    #stores unitsystem as a struct
-    unit_system::UnitSystem = PARTICLE_PHYSICS
-    if unitsystem == :MKS
-        unit_system = MKS
-    elseif unitsystem == :CGS
-        unit_system = CGS
-    elseif unitsystem == :ParticlePhysics || unitsystem == :default || unitsystem == :P
-        unit_system = PARTICLE_PHYSICS
-    else
-        throw(ArgumentError("unit system \"" * string(unitsystem) * "\" does not exist"))
-    end
+  #stores unitsystem as a struct
+  unit_system::UnitSystem = PARTICLE_PHYSICS
+  if unitsystem == :MKS
+    unit_system = MKS
+  elseif unitsystem == :CGS
+    unit_system = CGS
+  elseif unitsystem == :ParticlePhysics || unitsystem == :default || unitsystem == :P
+    unit_system = PARTICLE_PHYSICS
+  else
+    throw(ArgumentError("unit system \"" * string(unitsystem) * "\" does not exist"))
+  end
 
-    # get Unit struct from Symbol
-    mass_unit::Mass = unit_system.mass
-    if mass == :default
-        mass_unit = unit_system.mass
-    else
-        mass_unit = tounit(mass)
-    end
+  # get Unit struct from Symbol
+  mass_unit::Mass = unit_system.mass
+  if mass == :default
+    mass_unit = unit_system.mass
+  else
+    mass_unit = tounit(mass)
+  end
 
-    length_unit::Length = unit_system.length
-    if length == :default
-        length_unit = unit_system.length
-    else
-        length_unit = tounit(length)
-    end
+  length_unit::Length = unit_system.length
+  if length == :default
+    length_unit = unit_system.length
+  else
+    length_unit = tounit(length)
+  end
 
-    time_unit::Time_ = unit_system.time
-    if time == :default
-        time_unit = unit_system.time
-    else
-        time_unit = tounit(time)
-    end
+  time_unit::Time_ = unit_system.time
+  if time == :default
+    time_unit = unit_system.time
+  else
+    time_unit = tounit(time)
+  end
 
-    speed_unit::Speed = unit_system.speed
-    if speed == :default
-        speed_unit = length_unit / time_unit
-    else
-        speed_unit = tounit(speed.args[2]) / tounit(speed.args[3])
-    end
+  energy_unit::Energy = unit_system.energy
+  if energy == :default
+    energy_unit = unit_system.energy
+  else
+    energy_unit = tounit(energy)
+  end
 
-    energy_unit::Energy = unit_system.energy
-    if energy == :default
-        energy_unit = unit_system.energy
-    else
-        energy_unit = tounit(energy)
-    end
+  charge_unit::Charge = unit_system.charge
+  if charge == :default
+    charge_unit = unit_system.charge
+  else
+    charge_unit = tounit(charge)
+  end
 
-    charge_unit::Charge = unit_system.charge
-    if charge == :default
-        charge_unit = unit_system.charge
-    else
-        charge_unit = tounit(charge)
-    end
+  # record what units is currently being used
+  global current_units = UnitSystem(mass_unit, length_unit, time_unit, energy_unit, charge_unit)
 
-    # record what units is currently being used
-    global current_units = UnitSystem(mass_unit, length_unit, time_unit, speed_unit, energy_unit, charge_unit)
+  # convert all the variables with dimension mass
+  global m_electron = mass_unit.conversion * __b_m_electron        # Electron Mass 
+  global m_proton = mass_unit.conversion * __b_m_proton            # Proton Mass 
+  global m_neutron = mass_unit.conversion * __b_m_neutron          # Neutron Mass 
+  global m_muon = mass_unit.conversion * __b_m_muon               # Muon Mass 
+  global m_helion = mass_unit.conversion * __b_m_helion            # Helion Mass He3 nucleus 
+  global m_deuteron = mass_unit.conversion * __b_m_deuteron        # Deuteron Mass 
+  global m_pion_0 = mass_unit.conversion * __b_m_pion_0            # Pion 0 Mass                              
+  global m_pion_charged = mass_unit.conversion * __b_m_pion_charged    # Pion+- Mass
 
-    # convert all the variables with dimension mass
-    global m_electron = mass_unit.conversion * __b_m_electron / __b_eV_per_amu       # Electron Mass 
-    global m_proton = mass_unit.conversion * __b_m_proton / __b_eV_per_amu           # Proton Mass 
-    global m_neutron = mass_unit.conversion * __b_m_neutron / __b_eV_per_amu         # Neutron Mass 
-    global m_muon = mass_unit.conversion * __b_m_muon / __b_eV_per_amu              # Muon Mass 
-    global m_helion = mass_unit.conversion * __b_m_helion / __b_eV_per_amu           # Helion Mass He3 nucleus 
-    global m_deuteron = mass_unit.conversion * __b_m_deuteron / __b_eV_per_amu       # Deuteron Mass 
-    global m_pion_0 = mass_unit.conversion * __b_m_pion_0 / __b_eV_per_amu           # Pion 0 Mass                              
-    global m_pion_charged = mass_unit.conversion * __b_m_pion_charged / __b_eV_per_amu   # Pion+- Mass
+  # convert all the variables with dimension length
+  global r_e = length_unit.conversion * __b_r_e                                    # classical electron radius
 
-    # convert all the variables with dimension length
-    global r_e = length_unit.conversion * __b_r_e                                    # classical electron radius
+  # convert all the variables with dimension time
 
-    # convert all the variables with dimension time
+  # convert all the variables with dimension speed
+  global c_light = __b_c_light * length_unit.conversion / time_unit.conversion      # speed of light
 
-    # convert all the variables with dimension speed
-    global c_light = speed_unit.conversion * __b_c_light                             # speed of light
+  # convert all the variables with dimension energy
 
-    # convert all the variables with dimension energy
+  # convert all the variables with dimension charge
+  global e_charge = 1 * charge_unit.conversion                                     # elementary charge
 
-    # convert all the variables with dimension charge
-    global e_charge = 1 * charge_unit.conversion                                     # elementary charge
+  # constants with special dimenisions
+  # convert Planck's constant with dimension energy * time
+  global h_planck = __b_h_planck * energy_unit.conversion * time_unit.conversion        # Planck's constant 
+  # convert Vacuum permeability with dimension force / (current)^2
+  global mu_0_vac = __b_mu_0_vac
+  # convert Vacuum permeability with dimension capacitance / distance
+  global eps_0_vac = __b_eps_0_vac
 
-    # constants with special dimenisions
-    # convert Planck's constant with dimension energy * time
-    global h_planck = __b_h_planck * energy_unit.conversion * time_unit.conversion        # Planck's constant 
-    # convert Vacuum permeability with dimension force / (current)^2
-    global mu_0_vac = __b_mu_0_vac
-    # convert Vacuum permeability with dimension capacitance / distance
-    global eps_0_vac = __b_eps_0_vac
+  # convert anomous magnet moments dimension: unitless
+  global anom_mag_moment_electron = __b_anom_mag_moment_electron           # anomalous mag. mom. of the electron 
+  global anom_mag_moment_muon = __b_anom_mag_moment_muon               #        
+  global anom_mag_moment_proton = __b_anom_mag_moment_proton             # μ_p/μ_N - 1
+  global anom_mag_moment_deuteron = __b_anom_mag_moment_deuteron           # μ_{deuteron}/μ_N - 1
+  global anom_mag_moment_neutron = __b_anom_mag_moment_neutron            # μ_{neutron}/μ_N - 1
+  global anom_mag_moment_He3 = __b_anom_mag_moment_He3                # μ_{He3}/μ_N - 2
 
-    # convert anomous magnet moments dimension: unitless
-    global anom_mag_moment_electron = __b_anom_mag_moment_electron           # anomalous mag. mom. of the electron 
-    global anom_mag_moment_muon = __b_anom_mag_moment_muon               #        
-    global anom_mag_moment_proton = __b_anom_mag_moment_proton             # μ_p/μ_N - 1
-    global anom_mag_moment_deuteron = __b_anom_mag_moment_deuteron           # μ_{deuteron}/μ_N - 1
-    global anom_mag_moment_neutron = __b_anom_mag_moment_neutron            # μ_{neutron}/μ_N - 1
-    global anom_mag_moment_He3 = __b_anom_mag_moment_He3                # μ_{He3}/μ_N - 2
+  # convert unitless variables
+  global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
+  global eV_per_amu = __b_eV_per_amu                  # eV per standard atomic mass unit (dalton)
+  global N_avogadro = __b_N_avogadro                   # Number / mole  (exact)
+  global fine_structure = __b_fine_structure                 # fine structure constant
 
-    # convert unitless variables
-    global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
-    global eV_per_amu = __b_eV_per_amu                  # eV per standard atomic mass unit (dalton)
-    global N_avogadro = __b_N_avogadro                   # Number / mole  (exact)
-    global fine_structure = __b_fine_structure                 # fine structure constant
-
-    # values calculated from other constants
-    global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
-    global r_p = r_e * m_electron / m_proton      # proton radius
-    global h_bar_planck = h_planck / 2pi                   # h_planck/twopi
-    global kg_per_eV = kg_per_amu / eV_per_amu
-    global eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
-    return
+  # values calculated from other constants
+  global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
+  global r_p = r_e * m_electron / m_proton      # proton radius
+  global h_bar_planck = h_planck / 2pi                   # h_planck/twopi
+  global kg_per_eV = kg_per_amu / eV_per_amu
+  global eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
+  printunits()
+  return
 end
 
 """
@@ -459,23 +422,23 @@ end
     > return mass of 'particle' in current unit or unit of the user's choice<
 
     ### parameters:
-	- 'particle`                        -- type:particle, the particle whose mass you want to know
+	  - 'particle`                        -- type:particle, the particle whose mass you want to know
     - `unit`                            -- type:Symbol or Expr, default to the unit set from setunits(), the unit of the mass variable
 
 """
 massof
 
 function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
-    if (unit == :default)
-        if !@isdefined current_units
-            throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-        else
-            return particle.mass * current_units.mass.conversion / __b_eV_per_amu
-        end
+  if (unit == :default)
+    if !@isdefined current_units
+      throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
     else
-        mass::Mass = tounit(unit)
-        return particle.mass * mass.conversion
+      return particle.mass * current_units.mass.conversion
     end
+  else
+    mass::Mass = tounit(unit)
+    return particle.mass * mass.conversion
+  end
 end
 
 """
@@ -492,16 +455,16 @@ end
 chargeof
 
 function chargeof(particle::Particle, unit::Union{Symbol,Expr}=:default)
-    if (unit == :default)
-        if !@isdefined current_units
-            throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-        else
-            return particle.charge * current_units.charge.conversion
-        end
+  if (unit == :default)
+    if !@isdefined current_units
+      throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
     else
-        charge::Charge = tounit(unit)
-        return particle.charge * charge.conversion
+      return particle.charge * current_units.charge.conversion
     end
+  else
+    charge::Charge = tounit(unit)
+    return particle.charge * charge.conversion
+  end
 end
 
 export setunits, printunits

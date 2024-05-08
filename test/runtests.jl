@@ -163,11 +163,6 @@ end
 
     @test c_light ≈ 2.99792458e8 * 3600
 
-    #set the unit of time to hour, and speed to m/s, the unit of speed should be m/s
-    setunits(time=:h, speed=:(m / s))
-
-    @test c_light ≈ 2.99792458e8
-
     # set units to CGS, the speed should be in cm/s, and mass should be in gram
     setunits(:CGS)
 
@@ -182,10 +177,32 @@ end
     @test m_pion_0 ≈ 2.406176451300624e-25
     @test m_pion_charged ≈ 2.488064452799888e-25
 
+
+    #if the unit does not exist a ArgumentError will be thrown
+    @test_throws ArgumentError setunits(:DGF)
+    @test_throws ArgumentError setunits(mass=:d)
+    @test_throws ArgumentError setunits(mass=:(asdf / asdfsad))
+    @test_throws ArgumentError setunits(:LLL, time=:Ps)
+    #if unit has the wrong dimension exist a MethodError will be thrown
+    @test_throws MethodError setunits(mass=:m)
+    @test_throws MethodError setunits(mass=:(km / s))
+    @test_throws MethodError setunits(time=:MeV)
+
+
+
+    #test massof and chargeof
+
     #create some particles
-    setunits()
+
     H = set_track("H", 1, 1)
-    @test massof(H) = 1
+
+    #mass should be in amu and charge in elementary charge
+    setunits(mass=:amu)
+
+    @test massof(H) ≈ 1.00782503223
+    @test chargeof(H) ≈ 1
+    @test massof(H, :kg) ≈ 1.00782503223
+    @test chargeof(H, :C) ≈ 1
 
 
 end
