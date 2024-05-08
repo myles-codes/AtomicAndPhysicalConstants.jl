@@ -185,7 +185,7 @@ end
     @test_throws ArgumentError setunits(:LLL, time=:Ps)
     #if unit has the wrong dimension exist a MethodError will be thrown
     @test_throws MethodError setunits(mass=:m)
-    @test_throws MethodError setunits(mass=:(km / s))
+    @test_throws MethodError setunits(mass=:kC)
     @test_throws MethodError setunits(time=:MeV)
 
 
@@ -194,15 +194,15 @@ end
 
     #create some particles
 
-    H = set_track("H", 1, 1)
+    H = Particle("H", 1, 1)
 
     #mass should be in amu and charge in elementary charge
     setunits(mass=:amu)
 
     @test massof(H) ≈ 1.00782503223
     @test chargeof(H) ≈ 1
-    @test massof(H, :kg) ≈ 1.00782503223
-    @test chargeof(H, :C) ≈ 1
+    @test massof(H, :kg) ≈ 1.6735328383153192e-27
+    @test chargeof(H, :C) ≈ 1.602176634e-19
 
 
 end

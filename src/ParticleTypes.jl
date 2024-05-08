@@ -91,7 +91,7 @@ function Particle(name::String, charge=0, iso=-1)
 
 end
 
-export set_track
+export Particle
 
 
 
