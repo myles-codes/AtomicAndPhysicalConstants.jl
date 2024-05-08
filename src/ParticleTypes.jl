@@ -48,9 +48,9 @@ it just copies over the particle information.
 Molecular particle functionality will be added as the particles are added to 
 the library.
 """
-set_track
+Particle
 
-function set_track(name::String, charge=0, iso=-1)
+function Particle(name::String, charge=0, iso=-1)
     if haskey(Atomic_Particles, name) # is the particle in the Atomic_Particles dictionary?
         if iso ∉ keys(Atomic_Particles[name].mass) # error handling if the isotope isn't available
             println("The isotope you specified is not available.")
