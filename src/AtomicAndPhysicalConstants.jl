@@ -1,6 +1,9 @@
 module AtomicAndPhysicalConstants
 
 using PyFormattedStrings
+using Dates
+using HTTP
+using JSON
 
 include("PhysicalConstants.jl")
 include("ParticleTypes.jl")

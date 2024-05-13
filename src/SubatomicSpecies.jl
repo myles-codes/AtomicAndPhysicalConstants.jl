@@ -2,8 +2,7 @@
 
 # AtomicAndPhysicalConstants.jl/ParticleSpecies.jl
 
-# include("ParticleTypes.jl")
-# include("PhysicalConstants.jl")
+
 # -----------------------------------------------------------------------------------------------
 #=
 Below we have two dictionaries: Subatomic_Particles and Atomic_Particles:
