@@ -12,8 +12,8 @@ fundamental particles, listed below; also included is detailed information about
 every isotope of every atomic element documented by NIST. 
 
 The list of numerical constants included is:
-c_light: speed of light,
-h_planck: planck's constant (energy),
+- c_light: speed of light,
+- h_planck: planck's constant (energy),
 h_bar_planck: \hbar, planck's constant (angular momentum),
 mu_0_vac: vacuum permeability,
 eps_0_vac: vacuum permittivity,
