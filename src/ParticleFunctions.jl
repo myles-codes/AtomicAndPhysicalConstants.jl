@@ -25,9 +25,15 @@ Particle
 function Particle(name::String, charge=0, iso=-1)
 
 	# define regex for the name String
+
+	rgas = r"[A-Z][a-z]|[A-Z]"
 	rgm = r"#[0-9]|#[0-9][0-9]|#[0-9][0-9][0-9]"
-	rgcp = r"+|++|+++|+[0-9]|+[0-9][0-9]|+[0-9][0-9][0-9]"
-	rgcm = r"-|--|---|-[0-9]|-[0-9][0-9]|-[0-9][0-9][0-9]"
+	rgcp = r"\+[0-9]|\+[0-9][0-9]|\+[0-9][0-9][0-9]"
+	rgcm = r"\-[0-9]|\-[0-9][0-9]|\-[0-9][0-9][0-9]"
+	nm = match(rgas, name)
+	if haskey(Atomic_Particles, nm)
+		name = nm
+	
 
 	if haskey(Atomic_Particles, name) # is the particle in the Atomic_Particles dictionary?
 		if iso ∉ keys(Atomic_Particles[name].mass) # error handling if the isotope isn't available
