@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------
 # the set_species function has been replaced by Particle, which is in ParticleTypes.jl for now. I'll alter the 
 # rest of these functions to match soon.
-using Regex
+
 
 
 """
