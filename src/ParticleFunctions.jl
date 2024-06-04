@@ -9,20 +9,24 @@
 
 
 """
-Particlek takes one positional argument (particle name), and two
-keyword arguments, charge and isotope number.
+		Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 
-if the particle name is in either atomic or subatomic particle libraries,
-set_track returns a Particle object with the given attributes:
-in the case of an atomic element it modifies the mass and charge based 
-on the isotope and charge indicated, and in the case of a subatomic particle 
-it just copies over the particle information.
-Molecular particle functionality will be added as the particles are added to 
-the library.
-"""
-Particle
+Create a particle struct for tracking and simulation.
 
-function Particle(name::String, charge=0, iso=-1)
+# Arguments
+1. `name::AbstractString`: the name of the particle 
+		* subatomic particle names must be given exactly,
+		* Atomic symbols may include charge and isotope eg Li#9+1
+		* where #[1-999] specifies the isotope and (+/-)[0-999] specifies charge
+2. `charge::Int=0`: the charge of the particle.
+		* only affects atoms 
+		* overwritten if charge given in the name
+3. `iso::Int` the mass number of the atom
+		* only affects atoms 
+		* overwritten if charge given in the name
+""" Particle
+
+function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 
 	# check subatomics first so we don't accidentally strip a name
 	if haskey(Subatomic_Particles, name) # is the particle in the Subatomic_Particles dictionary?
@@ -56,7 +60,7 @@ function Particle(name::String, charge=0, iso=-1)
 		end
 		
 
-		if haskey(Atomic_Particles, AS) # is the particle in the Atomic_Particles dictionary?
+		if haskey(Atomic_Particles, AS.match) # is the particle in the Atomic_Particles dictionary?
 			if iso ∉ keys(Atomic_Particles[name].mass) # error handling if the isotope isn't available
 				println("The isotope you specified is not available.")
 				println("Isotopes are specified by the atomic symbol and integer mass number.")
@@ -64,7 +68,7 @@ function Particle(name::String, charge=0, iso=-1)
 			end
 			mass = begin
 				nmass = Atomic_Particles[name].mass[iso] # mass of the neutrally charged isotope in amu
-				nmass * (kg_per_amu / kg_per_eV) + m_electron * (Atomic_Particles[name].Z - charge) # put it in eV/c^2 and remove the electrons
+				nmass * (eV_per_amu) + m_electron * (Atomic_Particles[name].Z - charge) # put it in eV/c^2 and remove the electrons
 				end
 			if iso == -1 # if it's the average, make an educated guess at the spin
 				partonum = round(nmass)
@@ -88,29 +92,16 @@ function Particle(name::String, charge=0, iso=-1)
 			return
 		end
 	end
-end
-
-export Particle
+end; export Particle
 
 
 # ------------------------------------------------------------------------------------------------------------
 
 
 """
-    function `charge_per_mass`(particle::Particle)
+    charge_per_mass(particle::Particle)
 
-### Description:
-> Routine takes in a tracked particle object
-> to return charge/mass <
-
-### Inputs:
-- particle             -- tracked particle object
-
-### Output:
-- `charge_per_mass`    -- ratio of integer charge to mass of given particle
-
-### Notes:
->simple function to pull data from the tracked object<
+Calculate the charge per unit mass in whichever unit system you're using.
 """ charge_per_mass
 
 function charge_per_mass(particle::Particle)
@@ -118,14 +109,20 @@ function charge_per_mass(particle::Particle)
 end; export charge_per_mass
 
 
-function atomicnumber(particle::Particle)
+# ------------------------------------------------------------------------------------------------------------
 
+
+"""
+		atomicnumber(particle::Particle)
+
+Get the atomic number (positive nuclear charge) of a tracked particle.
+""" atomicnumber
+
+function atomicnumber(particle::Particle)
 	if haskey(Atomic_Particles, particle.name)
 		return Atomic_Particles[name].Z
-
 	else
 		print(f"{particle.name} is not an atom, and thus no atomic number.")
 		return
 	end
-
-end
+end; export atomicnumber
