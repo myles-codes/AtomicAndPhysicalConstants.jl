@@ -24,11 +24,11 @@ amm, the anomalous magnetic moment of the tracked particle (which is set to 0 fo
 """ Particle
 
 struct Particle
-    name::AbstractString # name of the particle to track
-    charge::Int32 # charge of the particle (important to consider ionized atoms)
-    mass::Float64 # mass of the particle
-    spin::Float64 # spin of the particle
-    amm::Float64 # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+  name::AbstractString # name of the particle to track
+  charge::Int32 # charge of the particle (important to consider ionized atoms)
+  mass::Float64 # mass of the particle
+  spin::Float64 # spin of the particle
+  amm::Float64 # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
 end;
 export Particle
 
@@ -65,17 +65,15 @@ some parameters in this struct are likely named constants from PhysicalConstants
 ### Examples:
 - SubatomicSpeciesData("neutron", 0, m_neutron, anom_mag_moment_neutron, 0.5)
 - SubatomicSpeciesData("pion-", -1, m_pion_charged, 0.0, 0.0)
-"""
-SubatomicSpecies
+""" SubatomicSpecies
 
 struct SubatomicSpecies
-    species_name::AbstractString              # common species_name of the particle
-    charge::Int                     # charge on the particle in units of e+
-    mass::Float64                     # mass of the particle in [eV/c^2]
-    anomalous_moment::Float64         # anomalous magnetic moment 
-    spin::Float64                     # spin magnetic moment in [ħ]
-end;
-export SubatomicSpecies
+  species_name::AbstractString              # common species_name of the particle
+  charge::Int                     # charge on the particle in units of e+
+  mass::Float64                     # mass of the particle in [eV/c^2]
+  anomalous_moment::Float64         # anomalous magnetic moment 
+  spin::Float64                     # spin magnetic moment in [ħ]
+end; export SubatomicSpecies
 
 
 
@@ -102,15 +100,14 @@ AtomicSpecies <: AbstractSpeciesData
 AtomicSpecies
 
 struct AtomicSpecies
-    Z::Int                      # number of protons
-    species_name::AbstractString          # periodic table element symbol
-    mass::Dict{Int,Float64}     # a dict to store the masses, keyed by isotope
-    #=
-    keyvalue -1 => average mass of common isotopes,
-    keyvalue n ∈ {0} ∪ N is the mass number of the isotope
-    =#
-end;
-export AtomicSpecies
+  Z::Int                      # number of protons
+  species_name::AbstractString          # periodic table element symbol
+  mass::Dict{Int,Float64}     # a dict to store the masses, keyed by isotope
+  #=
+  keyvalue -1 => average mass of common isotopes,
+  keyvalue n ∈ {0} ∪ N is the mass number of the isotope
+  =#
+end; export AtomicSpecies
 
 
 
