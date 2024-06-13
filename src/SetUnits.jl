@@ -392,12 +392,12 @@ function setunits(unitsystem::Union{Symbol,Expr}=:default;
   global eps_0_vac = __b_eps_0_vac
 
   # convert anomous magnet moments dimension: unitless
-  global anom_mag_moment_electron = __b_anom_mag_moment_electron           # anomalous mag. mom. of the electron 
-  global anom_mag_moment_muon = __b_anom_mag_moment_muon               #        
-  global anom_mag_moment_proton = __b_anom_mag_moment_proton             # μ_p/μ_N - 1
-  global anom_mag_moment_deuteron = __b_anom_mag_moment_deuteron           # μ_{deuteron}/μ_N - 1
-  global anom_mag_moment_neutron = __b_anom_mag_moment_neutron            # μ_{neutron}/μ_N - 1
-  global anom_mag_moment_He3 = __b_anom_mag_moment_He3                # μ_{He3}/μ_N - 2
+  global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
+  global gyromagnetic_anomaly_muon = __b_gyromagnetic_anomaly_muon               #        
+  global gyromagnetic_anomaly_proton = __b_gyromagnetic_anomaly_proton             # μ_p/μ_N - 1
+  global gyromagnetic_anomaly_deuteron = __b_gyromagnetic_anomaly_deuteron           # μ_{deuteron}/μ_N - 1
+  global gyromagnetic_anomaly_neutron = __b_gyromagnetic_anomaly_neutron            # μ_{neutron}/μ_N - 1
+  global gyromagnetic_anomaly_He3 = __b_gyromagnetic_anomaly_He3                # μ_{He3}/μ_N - 2
 
   # convert unitless variables
   global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
@@ -471,5 +471,5 @@ export setunits, printunits
 export massof, chargeof
 export c_light, m_electron, m_proton, m_neutron, m_muon, m_helion, m_deuteron, m_pion_0, m_pion_charged
 export r_e, e_charge, h_planck, mu_0_vac, eps_0_vac
-export anom_mag_moment_electron, anom_mag_moment_muon, anom_mag_moment_proton, anom_mag_moment_deuteron, anom_mag_moment_neutron, anom_mag_moment_He3
+export gyromagnetic_anomaly_electron, gyromagnetic_anomaly_muon, gyromagnetic_anomaly_proton, gyromagnetic_anomaly_deuteron, gyromagnetic_anomaly_neutron, gyromagnetic_anomaly_He3
 export kg_per_amu, eV_per_amu, N_avogadro, fine_structure, classical_radius_factor, r_p, h_bar_planck, kg_per_eV, eps_0_vac

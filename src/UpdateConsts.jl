@@ -23,12 +23,12 @@ CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
 	"vacuum electric permittivity" => Dict("__b_eps_0_vac" => __b_eps_0_vac), 
 	"vacuum mag. permeability" => Dict("__b_mu_0_vac" => __b_mu_0_vac), 
 	"fine-structure constant" => Dict("__b_fine_structure" => __b_fine_structure), 
-	"muon mag. mom. anomaly" => Dict("__b_anom_mag_moment_muon" => __b_anom_mag_moment_muon), 
-	"electron mag. mom. anomaly" => Dict("__b_anom_mag_moment_electron" => __b_anom_mag_moment_electron), 
-	"proton mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_proton" => __b_anom_mag_moment_proton), 
-	"deuteron mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_deuteron" => __b_anom_mag_moment_deuteron), 
-	"neutron mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_neutron" => __b_anom_mag_moment_neutron), 
-	"helion mag. mom. to nuclear magneton ratio" => Dict("__b_anom_mag_moment_He3" => __b_anom_mag_moment_He3), 
+	"muon mag. mom. anomaly" => Dict("__b_gyromagnetic_anomaly_muon" => __b_gyromagnetic_anomaly_muon), 
+	"electron mag. mom. anomaly" => Dict("__b_gyromagnetic_anomaly_electron" => __b_gyromagnetic_anomaly_electron), 
+	"proton mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_proton" => __b_gyromagnetic_anomaly_proton), 
+	"deuteron mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_deuteron" => __b_gyromagnetic_anomaly_deuteron), 
+	"neutron mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_neutron" => __b_gyromagnetic_anomaly_neutron), 
+	"helion mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_He3" => __b_gyromagnetic_anomaly_He3), 
 	"elementary charge" => Dict("__b_e_charge" => __b_e_charge),
 	"atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
 	"atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu)
@@ -85,13 +85,13 @@ function getCODATA(path::AbstractString)
 				elseif last(line) == "MeV"
 					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = 0.001*parse(Float64, line[2])
 				elseif line[1] == "proton mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["anom_mag_moment_proton"] = parse(Float64, line[2]) - 1
+					CODATA_Consts[line[1]]["gyromagnetic_anomaly_proton"] = parse(Float64, line[2]) - 1
 				elseif line[1] == "deuteron mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["anom_mag_moment_deuteron"] = parse(Float64, line[2]) - 1
+					CODATA_Consts[line[1]]["gyromagnetic_anomaly_deuteron"] = parse(Float64, line[2]) - 1
 				elseif line[1] == "neutron mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["anom_mag_moment_neutron"] = parse(Float64, line[2]) - 1
+					CODATA_Consts[line[1]]["gyromagnetic_anomaly_neutron"] = parse(Float64, line[2]) - 1
 				elseif line[1] == "helion mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["anom_mag_moment_He3"] = parse(Float64, line[2]) - 2
+					CODATA_Consts[line[1]]["gyromagnetic_anomaly_He3"] = parse(Float64, line[2]) - 2
 				else
 					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
 				end
