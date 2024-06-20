@@ -3,15 +3,29 @@
 
 
 # ------------------------------------------------------------------------------------------------------------
-# the set_species function has been replaced by Particle, which is in ParticleTypes.jl for now. I'll alter the 
-# rest of these functions to match soon.
+"""
+		subatomic_particle(name::AbstractString)
+
+Dependence of Particle(name, charge=0, iso=-1)
+Create a particle struct for a subatomic particle with name=name
+"""
+
+function subatomic_particle(name::AbstractString)
+		# write the particle out directly
+		return Particle(name, Subatomic_Particles[name].charge,
+			Subatomic_Particles[name].mass,
+			Subatomic_Particles[name].spin,
+			Subatomic_Particles[name].anomalous_moment)
+	end
 
 
+# ------------------------------------------------------------------------------------------------------------
 
 """
 		Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 
 Create a particle struct for tracking and simulation.
+If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 # Arguments
 1. `name::AbstractString`: the name of the particle 
@@ -28,24 +42,39 @@ Create a particle struct for tracking and simulation.
 
 function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 
+	anti = r"Anti\-|anti\-"
+	# is the anti-particle in the Subatomic_Particles dictionary?
+	if occursin(anti, name) && haskey(Subatomic_Particles, name[6:end])
+		if name[6:end] != "electron"
+			subatomic_particle("positron")
+		else
+			subatomic_particle("anti_"*name[6:end])
+		end
+
 	# check subatomics first so we don't accidentally strip a name
-	if haskey(Subatomic_Particles, name) # is the particle in the Subatomic_Particles dictionary?
+	elseif haskey(Subatomic_Particles, name) # is the particle in the Subatomic_Particles dictionary?
 		# write the particle out directly
-		return Particle(name, Subatomic_Particles[name].charge,
-			Subatomic_Particles[name].mass,
-			Subatomic_Particles[name].spin,
-			Subatomic_Particles[name].anomalous_moment)
+			subatomic_particle(name)
+		
 	else
 
 
 		# define regex for the name String
 
 		rgas = r"[A-Z][a-z]|[A-Z]" # atomic symbol regex
-		rgm = r"#[0-9]|#[0-9][0-9]|#[0-9][0-9][0-9]" # atomic mass regex
-		rgcp = r"\+[0-9]|\+[0-9][0-9]|\+[0-9][0-9][0-9]" # positive charge regex
-		rgcm = r"\-[0-9]|\-[0-9][0-9]|\-[0-9][0-9][0-9]" # negative charge regex
+		rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]" # atomic mass regex
+		rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]" # positive charge regex
+		rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]\-[0-9]|" # negative charge regex
+
+		anti_atom = false
+
+		if occursin(anti, name)
+			name = name[6:end]
+			anti_atom = true
+		end
 
 		AS = match(rgas, name) # grab just the atomic symbol
+		AS = AS.match # throw out the wrapper
 		isom = match(rgm, name)
 		if typeof(isom) != Nothing
 			isostr = strip(isom.match, '#')
@@ -53,30 +82,43 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 		end
 		if occursin(rgcp, name) == true
 			chstr = match(rgcp, name)
-			charge = tryparse(Int, strip(chstr, "+"))
+			charge = tryparse(Int, strip(chstr.match, '+'))
 		elseif occursin(rgcm, name) == true
 			chstr = match(rgcm, name)
-			charge = tryparse(Int, chstr)
+			charge = tryparse(Int, chstr.match)
 		end
 		
 
-		if haskey(Atomic_Particles, AS.match) # is the particle in the Atomic_Particles dictionary?
-			if iso ∉ keys(Atomic_Particles[name].mass) # error handling if the isotope isn't available
+		if haskey(Atomic_Particles, AS) # is the particle in the Atomic_Particles dictionary?
+			if iso ∉ keys(Atomic_Particles[AS].mass) # error handling if the isotope isn't available
 				println("The isotope you specified is not available.")
 				println("Isotopes are specified by the atomic symbol and integer mass number.")
 				return
 			end
 			mass = begin
-				nmass = Atomic_Particles[name].mass[iso] # mass of the neutrally charged isotope in amu
-				nmass * (eV_per_amu) + m_electron * (Atomic_Particles[name].Z - charge) # put it in eV/c^2 and remove the electrons
+				if anti_atom == false
+					nmass = Atomic_Particles[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass * (__b_eV_per_amu) + __b_m_electron * (Atomic_Particles[AS].Z - charge) # put it in eV/c^2 and remove the electrons
+				elseif anti_atom == true
+					nmass = Atomic_Particles[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass * (__b_eV_per_amu) + __b_m_electron * (-Atomic_Particles[AS].Z + charge) # put it in eV/c^2 and remove the positrons
 				end
+			end
 			if iso == -1 # if it's the average, make an educated guess at the spin
 				partonum = round(nmass)
-				spin = 0.5 * partonum
+				if anti_atom == false
+					spin = 0.5*__b_h_bar_planck*(partonum + (Atomic_Particles[AS].Z-charge))
+				elseif anti_atom == true
+					spin = 0.5*__b_h_bar_planck*(partonum + (Atomic_Particles[AS].Z+charge))
+				end
 			else # otherwise, use the sum of proton and neutron spins
-				spin = 0.5 * iso
+				spin = 0.5*__b_h_bar_planck*iso
 			end
+			if anti_atom == false
 				return Particle(name, charge, mass, spin, 0) # return the object to track
+			elseif anti_atom == true
+				return Particle("anti-"*name, charge, mass, spin, 0)
+			end
 
 
 		else # handle the case where the given name is garbage
