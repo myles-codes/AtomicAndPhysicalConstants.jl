@@ -57,14 +57,16 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 			subatomic_particle(name)
 		
 	else
-
+		# make sure to use the optional arguments
+		charge = charge
+		iso = iso
 
 		# define regex for the name String
 
 		rgas = r"[A-Z][a-z]|[A-Z]" # atomic symbol regex
 		rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]" # atomic mass regex
 		rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]" # positive charge regex
-		rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]\-[0-9]|" # negative charge regex
+		rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]|\-[0-9]" # negative charge regex
 
 		anti_atom = false
 
