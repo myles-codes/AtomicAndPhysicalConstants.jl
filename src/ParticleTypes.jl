@@ -9,7 +9,7 @@ export AbstractSpecies;
 
 
 # -----------------------------------------------------------------------------------------------
-Particle
+
 
 struct Particle
   name::AbstractString # name of the particle to track
