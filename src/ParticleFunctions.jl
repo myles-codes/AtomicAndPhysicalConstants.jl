@@ -22,6 +22,21 @@ function subatomic_particle(name::AbstractString)
 # ------------------------------------------------------------------------------------------------------------
 
 """
+	Particle Struct:
+
+The Particle struct is used for keeping track 
+of information specifice to the chosen particle.
+
+# Fields:
+1. `name::AbstractString': the name of the particle 
+2. `charge::Int32': the net charge of the particle in units of |e|
+3. `mass::Float64': the mass of the particle
+4. `spin::Float64': the spin of the particle (multiplied with ħ)
+5. `mu::Float64': the magnetic moment of the particle.
+
+The Particle Struct also has a constructor called Particle, 
+documentation for which follows.
+
 		Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 
 Create a particle struct for tracking and simulation.
@@ -38,6 +53,7 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 3. `iso::Int' the mass number of the atom
 		* only affects atoms 
 		* overwritten if mass given in the name
+
 """ Particle
 
 function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
