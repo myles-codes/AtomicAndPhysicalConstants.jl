@@ -9,26 +9,14 @@ export AbstractSpecies;
 
 
 # -----------------------------------------------------------------------------------------------
-"""
-The Particle struct is used for keeping track 
-of information specifice to the chosen particle.
-Its attributes are set using elements from the existing 
-particle libraries, but its structure is a little lighter
-and more flexible.
-Particle has five attributes;
-name, the name (symbol) of the particle to track;
-charge, the net charge of the tracked particle;
-mass, the net mass of the tracked particle;
-spin, the net spin of the tracked particle; and
-amm, the anomalous magnetic moment of the tracked particle (which is set to 0 for atomic particles)
-""" Particle
+Particle
 
 struct Particle
   name::AbstractString # name of the particle to track
   charge::Int32 # charge of the particle (important to consider ionized atoms)
   mass::Float64 # mass of the particle
   spin::Float64 # spin of the particle
-  amm::Float64 # anomalous magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+  mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
 end;
 export Particle
 
