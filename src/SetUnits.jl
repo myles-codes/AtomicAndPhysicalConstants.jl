@@ -1,6 +1,6 @@
-
-# include("PhysicalConstants.jl")
-# include("ParticleTypes.jl")
+using Unitful
+include("PhysicalConstants.jl")
+include("ParticleTypes.jl")
 """
     Unit
 
