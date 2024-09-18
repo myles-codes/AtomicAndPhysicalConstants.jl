@@ -176,7 +176,7 @@ end; export Species
 Calculate the charge per unit mass in whichever unit system you're using.
 """ charge_per_mass
 
-function charge_per_mass(particle::Particle)
+function charge_per_mass(particle::Species)
   return particle.charge/particle.mass
 end; export charge_per_mass
 
