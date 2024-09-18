@@ -22,7 +22,7 @@ function subatomic_particle(name::AbstractString)
 # ------------------------------------------------------------------------------------------------------------
 
 """
-	Particle Struct:
+	Species Struct:
 
 The Particle struct is used for keeping track 
 of information specifice to the chosen particle.
@@ -54,9 +54,9 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 		* only affects atoms 
 		* overwritten if mass given in the name
 
-""" Particle
+""" Species
 
-function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
+function Species(name::AbstractString, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
@@ -145,9 +145,9 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 				spin = 0.5*__b_h_bar_planck*iso
 			end
 			if anti_atom == false
-				return Particle(AS, charge, mass, spin, 0) # return the object to track
+				return Species(AS, charge, mass, spin, 0) # return the object to track
 			elseif anti_atom == true
-				return Particle("anti-"*AS, charge, mass, spin, 0)
+				return Species("anti-"*AS, charge, mass, spin, 0)
 			end
 
 
@@ -164,7 +164,7 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 			return
 		end
 	end
-end; export Particle
+end; export Species
 
 
 # ------------------------------------------------------------------------------------------------------------

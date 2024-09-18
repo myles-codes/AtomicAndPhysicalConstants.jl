@@ -11,7 +11,7 @@ export AbstractSpecies;
 # -----------------------------------------------------------------------------------------------
 
 
-struct Particle
+struct Species
   name::AbstractString # name of the particle to track
   charge::Int32 # charge of the particle (important to consider ionized atoms)
   mass::Float64 # mass of the particle
