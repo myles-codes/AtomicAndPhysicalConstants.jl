@@ -4,13 +4,13 @@
 
 # ------------------------------------------------------------------------------------------------------------
 """
-		subatomic_particle(name::AbstractString)
+		subatomic_particle(name::String)
 
 Dependence of Particle(name, charge=0, iso=-1)
 Create a particle struct for a subatomic particle with name=name
 """ subatomic_particle
 
-function subatomic_particle(name::AbstractString)
+function subatomic_particle(name::String)
 		# write the particle out directly
 		return Particle(name, Subatomic_Particles[name].charge,
 			Subatomic_Particles[name].mass,
@@ -28,22 +28,22 @@ The Particle struct is used for keeping track
 of information specifice to the chosen particle.
 
 # Fields:
-1. `name::AbstractString': the name of the particle 
+1. `name::String': the name of the particle 
 2. `charge::Int32': the net charge of the particle in units of |e|
 3. `mass::Float64': the mass of the particle
 4. `spin::Float64': the spin of the particle (multiplied with ħ)
 5. `mu::Float64': the magnetic moment of the particle.
 
-The Particle Struct also has a constructor called Particle, 
+The Species Struct also has a constructor called Species, 
 documentation for which follows.
 
-		Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
+		Species(name::String, charge::Int=0, iso::Int=-1)
 
-Create a particle struct for tracking and simulation.
+Create a species struct for tracking and simulation.
 If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 # Arguments
-1. `name::AbstractString': the name of the particle 
+1. `name::String': the name of the species 
 		* subatomic particle names must be given exactly,
 		* Atomic symbols may include charge and isotope eg Li#9+1
 		* where #[1-999] specifies the isotope and (+/-)[0-999] specifies charge
@@ -56,7 +56,7 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 """ Species
 
-function Species(name::AbstractString, charge::Int=0, iso::Int=-1)
+function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
