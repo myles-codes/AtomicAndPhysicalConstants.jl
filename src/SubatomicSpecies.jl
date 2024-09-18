@@ -22,7 +22,7 @@ and the value is the relevant SubatomicSpecies struct, _eg_
 Subatomic_Particles["some-particle"] = SubatomicSpecies("some-particle", ...)
 """ Subatomic_Particles
 
-Subatomic_Particles = Dict{AbstractString, SubatomicSpecies}(
+Subatomic_Particles = Dict{String, SubatomicSpecies}(
   "pion0"             => SubatomicSpecies("pion0", 0, __b_m_pion_0, 0.0, 0.0),
   # const ref_species       = SubatomicSpecies("Ref_Particle", "Garbage!", 0, 0.0, 0.0, NaN)
   "neutron"           => SubatomicSpecies("neutron", 0, __b_m_neutron, __b_gyromagnetic_anomaly_neutron, 0.5*__b_h_bar_planck),

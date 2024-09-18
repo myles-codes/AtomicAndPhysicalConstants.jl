@@ -32,7 +32,13 @@ __b_N_avogadro = 6.02214076e23;                   # Number / mole  (exact)
 
 
 
-
+__b_mu_deuteron = 0;
+__b_mu_electron = 0;
+__b_mu_helion = 0;
+__b_mu_muon = 0;
+__b_mu_neutron = 0;
+__b_mu_proton = 0;
+__b_mu_triton = 0;
 # values calculated from other constants in this collection
 
 
