@@ -391,13 +391,6 @@ function setunits(unitsystem::Union{Symbol,Expr}=:default;
   # convert Vacuum permeability with dimension capacitance / distance
   global eps_0_vac = __b_eps_0_vac
 
-  # convert anomous magnet moments dimension: unitless
-  global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
-  global gyromagnetic_anomaly_muon = __b_gyromagnetic_anomaly_muon               #        
-  global gyromagnetic_anomaly_proton = __b_gyromagnetic_anomaly_proton             # μ_p/μ_N - 1
-  global gyromagnetic_anomaly_deuteron = __b_gyromagnetic_anomaly_deuteron           # μ_{deuteron}/μ_N - 1
-  global gyromagnetic_anomaly_neutron = __b_gyromagnetic_anomaly_neutron            # μ_{neutron}/μ_N - 1
-  global gyromagnetic_anomaly_He3 = __b_gyromagnetic_anomaly_He3                # μ_{He3}/μ_N - 2
 
   # convert unitless variables
   global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
