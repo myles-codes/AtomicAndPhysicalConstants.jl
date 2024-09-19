@@ -14,7 +14,7 @@ SubtomicSpecies
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
 - `mass`              -- mass of the given particle in [eV/c^2]
-- `anomalous_moment`  -- anomalous magnetic moment of particle
+- `mu`  							-- magnetic moment of particle
 - `spin`              -- spin of the particle
 
 ### Notes:
