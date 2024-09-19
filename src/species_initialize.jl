@@ -88,7 +88,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 		end
 
 	# check subatomics first so we don't accidentally strip a name
-	elseif haskey(Subatomic_Particles, name) # is the particle in the Subatomic_Particles dictionary?
+	elseif haskey(subatomic_particles, name) # is the particle in the Subatomic_Particles dictionary?
 		# write the particle out directly
 			subatomic_particle(name)
 		
@@ -139,19 +139,19 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 		end
 		
 
-		if haskey(Atomic_Particles, AS) # is the particle in the Atomic_Particles dictionary?
-			if iso ∉ keys(Atomic_Particles[AS].mass) # error handling if the isotope isn't available
+		if haskey(atomic_particles, AS) # is the particle in the Atomic_Particles dictionary?
+			if iso ∉ keys(atomic_particles[AS].mass) # error handling if the isotope isn't available
 				println("The isotope you specified is not available.")
 				println("Isotopes are specified by the atomic symbol and integer mass number.")
 				return
 			end
 			mass = begin
 				if anti_atom == false
-					nmass = Atomic_Particles[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
 					nmass * (__b_eV_per_amu) + __b_m_electron * (Atomic_Particles[AS].Z - charge) # put it in eV/c^2 and remove the electrons
 				elseif anti_atom == true
-					nmass = Atomic_Particles[AS].mass[iso] # mass of the positively charged isotope in amu
-					nmass * (__b_eV_per_amu) + __b_m_electron * (-Atomic_Particles[AS].Z + charge) # put it in eV/c^2 and remove the positrons
+					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass * (__b_eV_per_amu) + __b_m_electron * (-atomic_particles[AS].Z + charge) # put it in eV/c^2 and remove the positrons
 				end
 			end
 			if iso == -1 # if it's the average, make an educated guess at the spin
@@ -174,11 +174,11 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 		else # handle the case where the given name is garbage
 			println("The specified particle name does not exist in this library.")
 			println("Available subatomic particles are: ")
-			for p in keys(Subatomic_Particles)
+			for p in keys(aubatomic_particles)
 				println(p)
 			end
 			println("Available atomic elements are")
-			for p in keys(Atomic_Particles)
+			for p in keys(Atomic_particles)
 				println(p)
 			end
 			return
