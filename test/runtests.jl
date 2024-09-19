@@ -24,12 +24,6 @@ end
     @test !@isdefined h_planck
     @test !@isdefined mu_0_vac
     @test !@isdefined eps_0_vac
-    @test !@isdefined gyromagnetic_anomaly_electron
-    @test !@isdefined gyromagnetic_anomaly_muon
-    @test !@isdefined gyromagnetic_anomaly_proton
-    @test !@isdefined gyromagnetic_anomaly_deuteron
-    @test !@isdefined gyromagnetic_anomaly_neutron
-    @test !@isdefined gyromagnetic_anomaly_He3
     @test !@isdefined kg_per_amu
     @test !@isdefined eV_per_amu
     @test !@isdefined N_avogadro
@@ -134,12 +128,6 @@ end
 
     #unitless constants shouldn't change
 
-    @test gyromagnetic_anomaly_electron ≈ 1.15965218128e-3
-    @test gyromagnetic_anomaly_muon ≈ 1.16592089e-3
-    @test gyromagnetic_anomaly_proton ≈ 1.79284734463e0
-    @test gyromagnetic_anomaly_deuteron ≈ -0.14298726925e0
-    @test gyromagnetic_anomaly_neutron ≈ -1.91304273e0
-    @test gyromagnetic_anomaly_He3 ≈ -4.184153686e0
 
     @test kg_per_amu ≈ 1.66053906660e-27
     @test eV_per_amu ≈ 9.3149410242e8
@@ -194,7 +182,7 @@ end
 
     #create some particles
 
-    H = Particle("H", 1, 1)
+    H = Species("H", 1, 1)
 
     #mass should be in amu and charge in elementary charge
     setunits(mass=:amu)
