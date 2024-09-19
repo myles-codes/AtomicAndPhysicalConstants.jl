@@ -416,7 +416,7 @@ function setunits(unitsystem::Union{Symbol,Expr}=:default;
 end
 
 """
-    function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+    function massof(particle::Species, unit::Union{Symbol,Expr}=:default)
 
     ### Description:
     > return mass of 'particle' in current unit or unit of the user's choice<
@@ -428,7 +428,7 @@ end
 """
 massof
 
-function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+function massof(particle::Species, unit::Union{Symbol,Expr}=:default)
   if (unit == :default)
     if !@isdefined current_units
       throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
