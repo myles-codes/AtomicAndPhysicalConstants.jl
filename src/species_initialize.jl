@@ -80,7 +80,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
-	if occursin(anti, name) && haskey(Subatomic_Particles, name[6:end])
+	if occursin(anti, name) && haskey(subatomic_particles, name[6:end])
 		if name[6:end] != "electron"
 			return subatomic_particle("positron")
 		else
@@ -148,7 +148,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 			mass = begin
 				if anti_atom == false
 					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
-					nmass * (__b_eV_per_amu) + __b_m_electron * (Atomic_Particles[AS].Z - charge) # put it in eV/c^2 and remove the electrons
+					nmass * (__b_eV_per_amu) + __b_m_electron * (atomic_particles[AS].Z - charge) # put it in eV/c^2 and remove the electrons
 				elseif anti_atom == true
 					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
 					nmass * (__b_eV_per_amu) + __b_m_electron * (-atomic_particles[AS].Z + charge) # put it in eV/c^2 and remove the positrons
@@ -174,11 +174,11 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 		else # handle the case where the given name is garbage
 			println("The specified particle name does not exist in this library.")
 			println("Available subatomic particles are: ")
-			for p in keys(aubatomic_particles)
+			for p in keys(subatomic_particles)
 				println(p)
 			end
 			println("Available atomic elements are")
-			for p in keys(Atomic_particles)
+			for p in keys(atomic_particles)
 				println(p)
 			end
 			return
