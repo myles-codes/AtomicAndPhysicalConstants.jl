@@ -11,8 +11,8 @@ export AbstractSpecies;
 # -----------------------------------------------------------------------------------------------
 
 
-struct Particle
-  name::AbstractString # name of the particle to track
+struct Species
+  name::String # name of the particle to track
   charge::Int32 # charge of the particle (important to consider ionized atoms)
   mass::Float64 # mass of the particle
   spin::Float64 # spin of the particle
@@ -41,7 +41,7 @@ SubtomicSpecies <: AbstractSpeciesData
 > mutable struct to store all (possibly degenerate) information about a subatomic particle<
 
 ### Fields:
-- `species_name`      -- AbstractString common name for (anti) baryon
+- `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
 - `mass`              -- mass of the given particle in [eV/c^2]
 - `anomalous_moment`  -- anomalous magnetic moment of particle
@@ -56,7 +56,7 @@ some parameters in this struct are likely named constants from PhysicalConstants
 """ SubatomicSpecies
 
 struct SubatomicSpecies
-  species_name::AbstractString              # common species_name of the particle
+  species_name::String              # common species_name of the particle
   charge::Int                     # charge on the particle in units of e+
   mass::Float64                     # mass of the particle in [eV/c^2]
   anomalous_moment::Float64         # anomalous magnetic moment 
@@ -76,7 +76,7 @@ AtomicSpecies <: AbstractSpeciesData
 
 ### Fields:
 - `Z`            -- Integer atomic number (i.e. protons in the nucleus)
-- `species_name` -- AbstractString periodic table symbol for element
+- `species_name` -- String periodic table symbol for element
 - `mass`         -- > Dict{Int, Float64}(isotope::Int, mass::Float64) isotope masses
 									 > key -1 refers to the average common atomic mass, other keys refer to 
 									 > the number of nucleons present in the isotope <
@@ -100,7 +100,7 @@ AtomicSpecies
 
 struct AtomicSpecies
   Z::Int                      		# number of protons
-  species_name::AbstractString    # periodic table element symbol
+  species_name::String    # periodic table element symbol
   mass::Dict{Int,Float64}					# a dict to store the masses, keyed by isotope
   #=
   keyvalue -1 => average mass of common isotopes,

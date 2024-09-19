@@ -4,13 +4,13 @@
 
 # ------------------------------------------------------------------------------------------------------------
 """
-		subatomic_particle(name::AbstractString)
+		subatomic_particle(name::String)
 
 Dependence of Particle(name, charge=0, iso=-1)
 Create a particle struct for a subatomic particle with name=name
 """ subatomic_particle
 
-function subatomic_particle(name::AbstractString)
+function subatomic_particle(name::String)
 		# write the particle out directly
 		return Particle(name, Subatomic_Particles[name].charge,
 			Subatomic_Particles[name].mass,
@@ -22,28 +22,28 @@ function subatomic_particle(name::AbstractString)
 # ------------------------------------------------------------------------------------------------------------
 
 """
-	Particle Struct:
+	Species Struct:
 
 The Particle struct is used for keeping track 
 of information specifice to the chosen particle.
 
 # Fields:
-1. `name::AbstractString': the name of the particle 
+1. `name::String': the name of the particle 
 2. `charge::Int32': the net charge of the particle in units of |e|
 3. `mass::Float64': the mass of the particle
 4. `spin::Float64': the spin of the particle (multiplied with ħ)
 5. `mu::Float64': the magnetic moment of the particle.
 
-The Particle Struct also has a constructor called Particle, 
+The Species Struct also has a constructor called Species, 
 documentation for which follows.
 
-		Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
+		Species(name::String, charge::Int=0, iso::Int=-1)
 
-Create a particle struct for tracking and simulation.
+Create a species struct for tracking and simulation.
 If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 # Arguments
-1. `name::AbstractString': the name of the particle 
+1. `name::String': the name of the species 
 		* subatomic particle names must be given exactly,
 		* Atomic symbols may include charge and isotope eg Li#9+1
 		* where #[1-999] specifies the isotope and (+/-)[0-999] specifies charge
@@ -54,9 +54,9 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 		* only affects atoms 
 		* overwritten if mass given in the name
 
-""" Particle
+""" Species
 
-function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
+function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
@@ -145,9 +145,9 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 				spin = 0.5*__b_h_bar_planck*iso
 			end
 			if anti_atom == false
-				return Particle(AS, charge, mass, spin, 0) # return the object to track
+				return Species(AS, charge, mass, spin, 0) # return the object to track
 			elseif anti_atom == true
-				return Particle("anti-"*AS, charge, mass, spin, 0)
+				return Species("anti-"*AS, charge, mass, spin, 0)
 			end
 
 
@@ -164,19 +164,19 @@ function Particle(name::AbstractString, charge::Int=0, iso::Int=-1)
 			return
 		end
 	end
-end; export Particle
+end; export Species
 
 
 # ------------------------------------------------------------------------------------------------------------
 
 
 """
-    charge_per_mass(particle::Particle)
+    charge_per_mass(particle::Species)
 
 Calculate the charge per unit mass in whichever unit system you're using.
 """ charge_per_mass
 
-function charge_per_mass(particle::Particle)
+function charge_per_mass(particle::Species)
   return particle.charge/particle.mass
 end; export charge_per_mass
 
@@ -185,12 +185,12 @@ end; export charge_per_mass
 
 
 """
-		atomicnumber(particle::Particle)
+		atomicnumber(particle::Species)
 
 Get the atomic number (positive nuclear charge) of a tracked particle.
 """ atomicnumber
 
-function atomicnumber(particle::Particle)
+function atomicnumber(particle::Species)
 	if haskey(Atomic_Particles, particle.name)
 		return Atomic_Particles[name].Z
 	else

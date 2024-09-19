@@ -25,7 +25,7 @@ Base.print(io::IO, unit::T) where {T<:Unit} = print(io, rpad(" \"" * unit.name *
 """
 scale
 
-function scale(unit::T, prefix::AbstractString, factor::Float64) where {T<:Unit}
+function scale(unit::T, prefix::String, factor::Float64) where {T<:Unit}
   return T(prefix * unit.name, unit.conversion / factor)
 end
 
@@ -37,14 +37,14 @@ end
     > the basis for conversion is amu<
 
     ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
+	- `name`                        -- type:String, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 eV/c^2
 
 """
 Mass
 
 struct Mass <: Unit
-  name::AbstractString
+  name::String
   conversion::Float64
 end
 
@@ -57,14 +57,14 @@ end
     > the basis for conversion is meter<
 
     ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
+	- `name`                        -- type:String, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 meter
 
 """
 Length
 
 struct Length <: Unit
-  name::AbstractString
+  name::String
   conversion::Float64
 end
 
@@ -76,14 +76,14 @@ end
     > the basis for conversion is second<
 
     ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
+	- `name`                        -- type:String, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 second
 
 """
 Time_
 
 struct Time_ <: Unit
-  name::AbstractString
+  name::String
   conversion::Float64
 end
 
@@ -95,14 +95,14 @@ end
     > the basis for conversion is electric volts<
 
     ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
+	- `name`                        -- type:String, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 eV
 
 """
 Energy
 
 struct Energy <: Unit
-  name::AbstractString
+  name::String
   conversion::Float64
 end
 
@@ -114,14 +114,14 @@ end
     > the basis for conversion is elementary charge<
 
     ### Fields:
-	- `name`                        -- type:AbstractString, name of the unit
+	- `name`                        -- type:String, name of the unit
 	- `conversion`                  -- type:FLoat, 'conversion' unit = 1 e
 
 """
 Charge
 
 struct Charge <: Unit
-  name::AbstractString
+  name::String
   conversion::Float64
 end
 
@@ -159,7 +159,7 @@ end
 """
 prefix
 
-prefix::Dict{AbstractString,Float64} = Dict(
+prefix::Dict{String,Float64} = Dict(
   "k" => 10^3,
   "M" => 10^6,
   "G" => 10^9,
@@ -172,7 +172,7 @@ prefix::Dict{AbstractString,Float64} = Dict(
   "a" => 10^-18
 )
 
-UNIT::Dict{AbstractString,Unit} = Dict(
+UNIT::Dict{String,Unit} = Dict(
   "amu" => Mass("amu", 1 / __b_eV_per_amu),
   "eV / c ^ 2" => Mass("eV/c^2", 1.0),
   "g" => Mass("g", __b_kg_per_amu * 10^3 / __b_eV_per_amu),
