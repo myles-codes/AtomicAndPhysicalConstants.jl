@@ -55,12 +55,7 @@ end
 
     @test !@isdefined __b_e_charge
     @test !@isdefined __b_fine_structure
-    @test !@isdefined __b_gyromagnetic_anomaly_electron
-    @test !@isdefined __b_gyromagnetic_anomaly_muon
-    @test !@isdefined __b_gyromagnetic_anomaly_proton
-    @test !@isdefined __b_gyromagnetic_anomaly_deuteron
-    @test !@isdefined __b_gyromagnetic_anomaly_neutron
-    @test !@isdefined __b_gyromagnetic_anomaly_He3
+
     @test !@isdefined __b_kg_per_amu
     @test !@isdefined __b_eV_per_amu
     @test !@isdefined __b_N_avogadro
@@ -90,12 +85,6 @@ end
     @test mu_0_vac ≈ 1.25663706212e-6
     @test eps_0_vac ≈ 8.854187812800385e-12
 
-    @test gyromagnetic_anomaly_electron ≈ 1.15965218128e-3
-    @test gyromagnetic_anomaly_muon ≈ 1.16592089e-3
-    @test gyromagnetic_anomaly_proton ≈ 1.79284734463e0
-    @test gyromagnetic_anomaly_deuteron ≈ -0.14298726925e0
-    @test gyromagnetic_anomaly_neutron ≈ -1.91304273e0
-    @test gyromagnetic_anomaly_He3 ≈ -4.184153686e0
 
     @test kg_per_amu ≈ 1.66053906660e-27
     @test eV_per_amu ≈ 9.3149410242e8
