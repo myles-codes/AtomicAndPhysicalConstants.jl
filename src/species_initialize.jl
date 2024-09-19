@@ -157,9 +157,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 			if iso == -1 # if it's the average, make an educated guess at the spin
 				partonum = round(nmass)
 				if anti_atom == false
-					spin = 0.5*__b_h_bar_planck*(partonum + (Atomic_Particles[AS].Z-charge))
+					spin = 0.5*__b_h_bar_planck*(partonum + (atomic_particles[AS].Z-charge))
 				elseif anti_atom == true
-					spin = 0.5*__b_h_bar_planck*(partonum + (Atomic_Particles[AS].Z+charge))
+					spin = 0.5*__b_h_bar_planck*(partonum + (atomic_particles[AS].Z+charge))
 				end
 			else # otherwise, use the sum of proton and neutron spins
 				spin = 0.5*__b_h_bar_planck*iso
