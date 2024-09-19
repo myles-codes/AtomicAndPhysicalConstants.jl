@@ -454,7 +454,7 @@ end
 """
 chargeof
 
-function chargeof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+function chargeof(particle::Species, unit::Union{Symbol,Expr}=:default)
   if (unit == :default)
     if !@isdefined current_units
       throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
