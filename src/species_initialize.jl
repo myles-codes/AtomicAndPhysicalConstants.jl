@@ -1,8 +1,26 @@
-# AtomicAndPhysicalConstants.jl/src/ParticleFunctions.jl
+# AtomicAndPhysicalConstants.jl/src/ParticleTypes.jl
+
+
+
+
+
+
+
+
+struct Species
+  name::String # name of the particle to track
+  charge::Int32 # charge of the particle (important to consider ionized atoms) in [e]
+  mass::Float64 # mass of the particle in [eV/c^2]
+  spin::Float64 # spin of the particle in [eV*s]
+  mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+end;
+export Species
+
 
 
 
 # ------------------------------------------------------------------------------------------------------------
+
 """
 		subatomic_particle(name::String)
 
@@ -12,14 +30,14 @@ Create a particle struct for a subatomic particle with name=name
 
 function subatomic_particle(name::String)
 		# write the particle out directly
-		return Particle(name, Subatomic_Particles[name].charge,
-			Subatomic_Particles[name].mass,
-			Subatomic_Particles[name].spin,
-			Subatomic_Particles[name].anomalous_moment)
+		return Species(name, subatomic_particles[name].charge,
+			subatomic_particles[name].mass,
+			subatomic_particles[name].spin,
+			subatomic_particles[name].mu)
 	end
 
+# -----------------------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------------------------------------
 
 """
 	Species Struct:
@@ -56,15 +74,17 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 """ Species
 
+
+
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
 	if occursin(anti, name) && haskey(Subatomic_Particles, name[6:end])
 		if name[6:end] != "electron"
-			subatomic_particle("positron")
+			return subatomic_particle("positron")
 		else
-			subatomic_particle("anti_"*name[6:end])
+			return subatomic_particle("anti_"*name[6:end])
 		end
 
 	# check subatomics first so we don't accidentally strip a name
@@ -167,67 +187,3 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 end; export Species
 
 
-# ------------------------------------------------------------------------------------------------------------
-
-
-"""
-    charge_per_mass(particle::Species)
-
-Calculate the charge per unit mass in whichever unit system you're using.
-""" charge_per_mass
-
-function charge_per_mass(particle::Species)
-  return particle.charge/particle.mass
-end; export charge_per_mass
-
-
-# ------------------------------------------------------------------------------------------------------------
-
-
-"""
-		atomicnumber(particle::Species)
-
-Get the atomic number (positive nuclear charge) of a tracked particle.
-""" atomicnumber
-
-function atomicnumber(particle::Species)
-	if haskey(Atomic_Particles, particle.name)
-		return Atomic_Particles[name].Z
-	else
-		print(f"{particle.name} is not an atom, and thus no atomic number.")
-		return
-	end
-end; export atomicnumber
-
-
-
-# ------------------------------------------------------------------------------------------------------------
-
-"""
-		gyromagnetic_anomaly(gs::Float64)
-
-Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
-
-# Arguments:
-1. `gs::Float64': the g_factor for the particle
-""" gyromagnetic_anomaly
-
-function gyromagnetic_anomaly(gs::Float64)
-	return (gs-2)/2
-end
-
-
-"""
-		g_nucleon(gs::Float64, Z::Int, mass::Float64)
-
-Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
-
-# Arguments:
-1. `gs::Float64': the g_factor for the particle
-2. `Z::Int': the charge (in units of +e) of the particle
-3. `mass::Float64': the mass of the particle
-""" g_nucleon
-
-function g_nucleon(gs::Float64, Z::Int, mass::Float64)
-	return Z*(m_proton/mass)*gs
-end
