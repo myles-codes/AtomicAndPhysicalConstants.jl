@@ -71,7 +71,7 @@ function getCODATA(path::String, CODATA_Consts::Dict)
 	f = open(path)
 	everyline = readlines(f)
 	for l in everyline
-		line = split(l, "   ")
+		line = split(l, "  ")
 		sp = findall(x->x=="", line)
 		line = deleteat!(line, sp)
 		if length(line) != 0
@@ -82,12 +82,15 @@ function getCODATA(path::String, CODATA_Consts::Dict)
 				if occursin("...", line[2]) == true
 					line[2] = replace(line[2], "..." => "")
 				end
+
+				
+				
 				if line[1] == "unified atomic mass unit"
 					CODATA_Consts[line[1]]["atomic_mass_unit"] = kg_to_ev*parse(Float64, line[2])
-				elseif last(line) == "MeV"
-					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = 0.001*parse(Float64, line[2])
-				elseif line[1][end-8:end] == "mag. mom."
+				elseif occursin(line[1], "mag. mom.") == true
 					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])/__b_J_per_eV
+				elseif occursin("MeV", line[1])
+					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])*1e6
 				else
 					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
 				end
