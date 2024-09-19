@@ -38,9 +38,20 @@ end; export atomicnumber
 
 
 # ------------------------------------------------------------------------------------------------------------
+"""
+		gyromagnetic_ratio(species::Species)
+
+Compute and return the value of g_s for a particle in [1/(T*s)] == [C/kg]
+For atomic particles, will currently return 0. Will be updated in a future patch
+"""
+
+function g_spin(species::Species)
+	return 2 * species.mass * species.mu / (species.spin * species.charge)
+end
+
 
 """
-		gyromagnetic_anomaly(gs::Float64)
+		gyromagnetic_anomaly(species::Species)
 
 Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 
@@ -48,7 +59,8 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 1. `gs::Float64': the g_factor for the particle
 """ gyromagnetic_anomaly
 
-function gyromagnetic_anomaly(gs::Float64)
+function gyromagnetic_anomaly(species::Species)
+	gs = g_spin(species)
 	return (gs-2)/2
 end
 
@@ -58,12 +70,13 @@ end
 
 Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
 
-# Arguments:
-1. `gs::Float64': the g_factor for the particle
-2. `Z::Int': the charge (in units of +e) of the particle
-3. `mass::Float64': the mass of the particle
+
 """ g_nucleon
 
-function g_nucleon(gs::Float64, Z::Int, mass::Float64)
-	return Z*(m_proton/mass)*gs
+function g_nucleon(species::Species)
+	Z = species.charge
+	m = species.mass
+	gs = g_spin(species)
+
+	return gs*Z*__b_m_proton/m
 end

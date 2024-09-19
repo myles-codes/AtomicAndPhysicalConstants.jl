@@ -13,8 +13,7 @@
 
 
 
-
-														 __b_m_electron               = 0.0005109989506900001
+__b_m_electron               = 0.0005109989506900001
                              # Electron Mass [eV]/c^2
 __b_m_proton                 = 938.27208943
                              # Proton Mass [eV]/c^2

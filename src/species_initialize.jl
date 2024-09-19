@@ -7,6 +7,14 @@
 
 
 
+struct Species
+  name::String # name of the particle to track
+  charge::Int32 # charge of the particle (important to consider ionized atoms) in [e]
+  mass::Float64 # mass of the particle in [eV/c^2]
+  spin::Float64 # spin of the particle in [eV*s]
+  mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+end;
+export Species
 
 
 
@@ -22,7 +30,7 @@ Create a particle struct for a subatomic particle with name=name
 
 function subatomic_particle(name::String)
 		# write the particle out directly
-		return Particle(name, subatomic_particles[name].charge,
+		return Species(name, subatomic_particles[name].charge,
 			subatomic_particles[name].mass,
 			subatomic_particles[name].spin,
 			subatomic_particles[name].mu)
@@ -66,14 +74,6 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 
 """ Species
 
-struct Species
-  name::String # name of the particle to track
-  charge::Int32 # charge of the particle (important to consider ionized atoms)
-  mass::Float64 # mass of the particle
-  spin::Float64 # spin of the particle
-  mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
-end;
-export Species
 
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
