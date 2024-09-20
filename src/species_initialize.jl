@@ -13,6 +13,7 @@ struct Species
   mass::Float64 # mass of the particle in [eV/c^2]
   spin::Float64 # spin of the particle in [eV*s]
   mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
+	iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
 end;
 export Species
 
@@ -33,7 +34,8 @@ function subatomic_particle(name::String)
 		return Species(name, subatomic_particles[name].charge,
 			subatomic_particles[name].mass,
 			subatomic_particles[name].spin,
-			subatomic_particles[name].mu)
+			subatomic_particles[name].mu,
+			0)
 	end
 
 # -----------------------------------------------------------------------------------------------
@@ -46,11 +48,13 @@ The Particle struct is used for keeping track
 of information specifice to the chosen particle.
 
 # Fields:
-1. `name::String': the name of the particle 
+1. `name::String': 	the name of the particle 
 2. `charge::Int32': the net charge of the particle in units of |e|
 3. `mass::Float64': the mass of the particle
 4. `spin::Float64': the spin of the particle (multiplied with ħ)
-5. `mu::Float64': the magnetic moment of the particle.
+5. `mu::Float64': 	the magnetic moment of the particle.
+5. `iso::Int': 			if the particle is an atomic isotope, this is the 
+										mass number, otherwise 0
 
 The Species Struct also has a constructor called Species, 
 documentation for which follows.
@@ -90,7 +94,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 	# check subatomics first so we don't accidentally strip a name
 	elseif haskey(subatomic_particles, name) # is the particle in the Subatomic_Particles dictionary?
 		# write the particle out directly
-			subatomic_particle(name)
+			return subatomic_particle(name)
 		
 	else
 		# make sure to use the optional arguments
@@ -165,9 +169,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 				spin = 0.5*__b_h_bar_planck*iso
 			end
 			if anti_atom == false
-				return Species(AS, charge, mass, spin, 0) # return the object to track
+				return Species(AS, charge, mass, spin, 0, iso) # return the object to track
 			elseif anti_atom == true
-				return Species("anti-"*AS, charge, mass, spin, 0)
+				return Species("anti-"*AS, charge, mass, spin, 0, iso)
 			end
 
 

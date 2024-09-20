@@ -80,3 +80,39 @@ function g_nucleon(species::Species)
 
 	return gs*Z*__b_m_proton/m
 end
+
+
+"""
+		full_name(species::Species)
+
+get the full name of a tracked species:
+- if species is subatomic, gives the name in the subatomic_particles dictionary
+- if species is atomic, gives "mass number"*"atomic symbol"*"charge state"
+"""
+function full_name(species::Species)
+	if haskey(subatomic_particles, species.name)
+		return species.name
+	else
+		isostring = ""
+		chargestring = ""
+		if species.iso > 0
+			isostring = "#"*f"{species.iso}"
+		end
+		if species.charge != 0
+			if species.charge == 1
+				chargestring = "+"
+			elseif species.charge == -1
+				chargestring == "-"
+			elseif species.charge == 2
+				chargestring = "++"
+			elseif species.charge == -2
+				chargestring == "--"
+			elseif species.charge > 2
+				chargestring = f"+{species.charge}"
+			elseif species.charge < -2
+				chargestring == f"-{species.charge}"
+			end
+		end
+		return isostring*species.name*chargestring
+	end
+end
