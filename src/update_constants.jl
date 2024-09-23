@@ -23,15 +23,17 @@ CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
 	"vacuum electric permittivity" => Dict("__b_eps_0_vac" => __b_eps_0_vac), 
 	"vacuum mag. permeability" => Dict("__b_mu_0_vac" => __b_mu_0_vac), 
 	"fine-structure constant" => Dict("__b_fine_structure" => __b_fine_structure), 
-	"muon mag. mom. anomaly" => Dict("__b_gyromagnetic_anomaly_muon" => __b_gyromagnetic_anomaly_muon), 
-	"electron mag. mom. anomaly" => Dict("__b_gyromagnetic_anomaly_electron" => __b_gyromagnetic_anomaly_electron), 
-	"proton mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_proton" => __b_gyromagnetic_anomaly_proton), 
-	"deuteron mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_deuteron" => __b_gyromagnetic_anomaly_deuteron), 
-	"neutron mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_neutron" => __b_gyromagnetic_anomaly_neutron), 
-	"helion mag. mom. to nuclear magneton ratio" => Dict("__b_gyromagnetic_anomaly_He3" => __b_gyromagnetic_anomaly_He3), 
+	"deuteron mag. mom." => Dict("__b_mu_deuteron" => __b_mu_deuteron),
+	"electron mag. mom." => Dict("__b_mu_electron" => __b_mu_electron),
+	"helion mag. mom." => Dict("__b_mu_helion" => __b_mu_helion),
+	"muon mag. mom." => Dict("__b_mu_muon" => __b_mu_muon),
+	"neutron mag. mom." => Dict("__b_mu_neutron" => __b_mu_neutron),
+	"proton mag. mom." => Dict("__b_mu_proton" => __b_mu_proton),
+	"triton mag. mom." => Dict("__b_mu_triton" => __b_mu_triton),
 	"elementary charge" => Dict("__b_e_charge" => __b_e_charge),
 	"atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
-	"atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu)
+	"atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
+	"electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV)
 );
 
 
@@ -42,13 +44,13 @@ returns the path to the local copy""" downloadCODATA
 
 function downloadCODATA(year::Int)
 	myYear = year
-	NIST_releases = [1969, 1973, 1986, 1998, 2002, 2006, 2010, 2014, 2018]
+	NIST_releases = [1969, 1973, 1986, 1998, 2002, 2006, 2010, 2014, 2018, 2022]
 	ixyear = findmin(myYear .- NIST_releases)
 	year = NIST_releases[ixyear[2]]
 	if ixyear[1] != 0
 		println(f"The year requested isn't available: downloading the {year} CODATA release instead.")
 	end
-	if year != 2018
+	if year != 2022
 			url = "https://physics.nist.gov/cuu/Constants/ArchiveASCII/allascii_"*string(year)*".txt"
 	else 
 			url = "https://physics.nist.gov/cuu/Constants/Table/allascii.txt"
@@ -65,11 +67,11 @@ tries to extract the constants named in the \n\
 dictionary CODATA_Consts and write them to \n\
 that same dictionary""" getCODATA
 
-function getCODATA(path::AbstractString)
+function getCODATA(path::String, CODATA_Consts::Dict)
 	f = open(path)
 	everyline = readlines(f)
 	for l in everyline
-		line = split(l, "   ")
+		line = split(l, "  ")
 		sp = findall(x->x=="", line)
 		line = deleteat!(line, sp)
 		if length(line) != 0
@@ -80,18 +82,15 @@ function getCODATA(path::AbstractString)
 				if occursin("...", line[2]) == true
 					line[2] = replace(line[2], "..." => "")
 				end
+
+				
+				
 				if line[1] == "unified atomic mass unit"
 					CODATA_Consts[line[1]]["atomic_mass_unit"] = kg_to_ev*parse(Float64, line[2])
-				elseif last(line) == "MeV"
-					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = 0.001*parse(Float64, line[2])
-				elseif line[1] == "proton mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["gyromagnetic_anomaly_proton"] = parse(Float64, line[2]) - 1
-				elseif line[1] == "deuteron mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["gyromagnetic_anomaly_deuteron"] = parse(Float64, line[2]) - 1
-				elseif line[1] == "neutron mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["gyromagnetic_anomaly_neutron"] = parse(Float64, line[2]) - 1
-				elseif line[1] == "helion mag. mom. to nuclear magneton ratio"
-					CODATA_Consts[line[1]]["gyromagnetic_anomaly_He3"] = parse(Float64, line[2]) - 2
+				elseif occursin(line[1], "mag. mom.") == true
+					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])/__b_J_per_eV
+				elseif occursin("MeV", line[1])
+					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])*1e6
 				else
 					CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
 				end
@@ -99,66 +98,78 @@ function getCODATA(path::AbstractString)
 		end
 	end
 	close(f)
+	return CODATA_Consts
 end;
 
 
 
-
 """writeCODATA writes a julia file called \n\
-"yyyy-mm-dd_Constants.jl", where yyyy-mm-dd \n\
-is the current date. The contents of this \n\
+"yyyy_constants.jl", where yyyy is the year \n\
+of the release. The contents of this \n\
 file are the fundamental constants extracted \n\
 from the CODATA set of the year given in the \n\
 argument""" writeCODATA
 
-function writeCODATA(year::Int)
-	
-	f = open(pwd()*"/src/PhysicalConstants.jl", "r")
+function writeCODATA(year::Int, new_consts)
+	yearregex = r"[1-2][0-9][0-9][-0-9]"
+	f = open(pwd()*"/src/physical_constants.jl", "r")
 	everyline = readlines(f) 
-	newf = open(pwd() * f"/src/{year}Constants.jl", "a+")
+	newf = open(pwd() * f"/src/{year}_constants.jl", "a+")
 	newlines = []
 	pion_masses = download_pdg_pion_masses()
 	for l in everyline
-		line = split(l, "  ")   
-		if line[1] != ""
-			sp = findall(x->x=="", line)
-			line = deleteat!(line, sp)
+
+		if match(r"CODATA", l) !== nothing
+			line = ["#","the", f"{year}", "CODATA release"]
+			push!(newlines, line)
+			continue
 		end
+		if split(l) == SubString{String}[]
+			line = "\n"
+			push!(newlines, line)
+			continue
+		else
+			line = split(l)
+		end
+		
 									
-		for (k, v) in CODATA_Consts
+		for (k, v) in new_consts
 			eqspace = repeat(" ",28 - length(first(keys(v))))
-			if line != "" && line[1] == first(keys(v)) 
-				line[2] = eqspace*"= "*f"{v[first(keys(v))]}"
-				break
+			if size(line, 1) >= 1
+				if line[1] == first(keys(v))
+					line = [line[1]]
+					push!(line, eqspace*"= "*f"{v[first(keys(v))]}")
+					break
+				
+				elseif line[1] ==	"__b_m_pion_0"
+					line = [line[1]]
+					push!(line, eqspace*"= "*f"{pion_masses[1]}")
+				elseif line[1] == "__b_m_pion_charged"
+					line = [line[1]]
+					push!(line, eqspace*"= "*f"{pion_masses[2]}")
+				end
 			end
 		end
-		if line != "" && match(r"# .... CODATA", line[1]) == true
-			line[1] = "# "*parse(AbstractString, year)*" CODATA"
-		end
-		if line != "" && line[1] ==	"__b_m_pion_0"
-			line[2] = eqspace*"= "*f"{pion_masses[1]}"
-		elseif line != "" && line[1] == "__b_m_pion_charged"
-			line[2] = eqspace*"= "*f"{pion_masses[2]}"
-		end	
 		push!(newlines, line)
 	end
 	seekstart(newf)
-	newlines[1] = f"# AtomicAndPhysicalConstants/src/{year}Constants.jl"
+	newlines[1] = ["#", f"AtomicAndPhysicalConstants/src/{year}_constants.jl"]
 	for line in newlines
-		if line[1] == "\n" 
-			println(newf, "\n")
-		elseif line[1] == '#'
-			println(newf, line)
-		else
-			newl = join(line, "  ")
-			println(newf, newl)
+		if length(line) >= 1
+			if line == "\n"
+				println(newf, "\n")
+			elseif  line[1] == "#"
+				line = join(pushfirst!(line, repeat(" ", 28)), " ")
+				println(newf, line)
+			else
+				newl = join(line, " ")
+				println(newf, newl)
+			end
 		end
 	end
 	close(f)
 	close(newf)
 end;
-
-
 
 
 
@@ -172,8 +183,8 @@ Julia code file in the src directory""" setCODATA
 
 function setCODATA(year::Int)
 	table_path = downloadCODATA(year)
-	getCODATA(table_path)
-	writeCODATA(year)
+	new_consts = getCODATA(table_path, CODATA_Consts)
+	writeCODATA(year, new_consts)
 
 end; export setCODATA
 

@@ -135,16 +135,65 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   end
   # record what units is currently being used
   global current_units = UnitSystem(mass_unit, length_unit, time_unit, energy_unit, charge_unit)
-  # convert the units
-  global m_electron = (b_m_electron |> mass_unit).val
 
+  # convert all the variables with dimension mass
+  global m_electron = mass_unit.conversion * __b_m_electron        # Electron Mass 
+  global m_proton = mass_unit.conversion * __b_m_proton            # Proton Mass 
+  global m_neutron = mass_unit.conversion * __b_m_neutron          # Neutron Mass 
+  global m_muon = mass_unit.conversion * __b_m_muon               # Muon Mass 
+  global m_helion = mass_unit.conversion * __b_m_helion            # Helion Mass He3 nucleus 
+  global m_deuteron = mass_unit.conversion * __b_m_deuteron        # Deuteron Mass 
+  global m_pion_0 = mass_unit.conversion * __b_m_pion_0            # Pion 0 Mass                              
+  global m_pion_charged = mass_unit.conversion * __b_m_pion_charged    # Pion+- Mass
+
+  # convert all the variables with dimension length
+  global r_e = length_unit.conversion * __b_r_e                                    # classical electron radius
+
+  # convert all the variables with dimension time
+
+  # convert all the variables with dimension speed
+  global c_light = __b_c_light * length_unit.conversion / time_unit.conversion      # speed of light
+
+  # convert all the variables with dimension energy
+
+  # convert all the variables with dimension charge
+  global e_charge = 1 * charge_unit.conversion                                     # elementary charge
+
+  # constants with special dimenisions
+  # convert Planck's constant with dimension energy * time
+  global h_planck = __b_h_planck * energy_unit.conversion * time_unit.conversion        # Planck's constant 
+  # convert Vacuum permeability with dimension force / (current)^2
+  global mu_0_vac = __b_mu_0_vac
+  # convert Vacuum permeability with dimension capacitance / distance
+  global eps_0_vac = __b_eps_0_vac
+
+  # convert anomous magnet moments dimension: unitless
+  global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
+  global gyromagnetic_anomaly_muon = __b_gyromagnetic_anomaly_muon               #        
+  global gyromagnetic_anomaly_proton = __b_gyromagnetic_anomaly_proton             # μ_p/μ_N - 1
+  global gyromagnetic_anomaly_deuteron = __b_gyromagnetic_anomaly_deuteron           # μ_{deuteron}/μ_N - 1
+  global gyromagnetic_anomaly_neutron = __b_gyromagnetic_anomaly_neutron            # μ_{neutron}/μ_N - 1
+  global gyromagnetic_anomaly_He3 = __b_gyromagnetic_anomaly_He3                # μ_{He3}/μ_N - 2
+
+  # convert unitless variables
+  global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
+  global eV_per_amu = __b_eV_per_amu                  # eV per standard atomic mass unit (dalton)
+  global N_avogadro = __b_N_avogadro                   # Number / mole  (exact)
+  global fine_structure = __b_fine_structure                 # fine structure constant
+
+  # values calculated from other constants
+  global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
+  global r_p = r_e * m_electron / m_proton      # proton radius
+  global h_bar_planck = h_planck / 2pi                   # h_planck/twopi
+  global kg_per_eV = kg_per_amu / eV_per_amu
+  global eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
   printunits()
 
   return
 end
 
 """
-    function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+    function massof(particle::Species, unit::Union{Symbol,Expr}=:default)
 
     ### Description:
     > return mass of 'particle' in current unit or unit of the user's choice<
@@ -156,7 +205,7 @@ end
 """
 massof
 
-function massof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+function massof(particle::Species, unit::Union{Symbol,Expr}=:default)
   if (unit == :default)
     if !@isdefined current_units
       throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
@@ -182,7 +231,7 @@ end
 """
 chargeof
 
-function chargeof(particle::Particle, unit::Union{Symbol,Expr}=:default)
+function chargeof(particle::Species, unit::Union{Symbol,Expr}=:default)
   if (unit == :default)
     if !@isdefined current_units
       throw(ErrorException("units are not set, call setunits() to initalize units and constants"))

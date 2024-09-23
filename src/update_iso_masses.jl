@@ -15,14 +15,14 @@ function downloadIsos()
 end;
 
 
-"""getIsos(path::AbstractString) opens the file at  \n\
+"""getIsos(path::String) opens the file at  \n\
 path (which is expected to be a linearized table  \n\
 of isotopes from NIST) and writes the information  \n\
 for each isotope to a dictionary. The function  \n\
 returns a vector containing all these dictionaries  \n\
 for further processing.""" getIsos
 
-function getIsos(path::AbstractString)
+function getIsos(path::String)
   f = open(path)
   everyline = readlines(f)
   isos = []
@@ -31,7 +31,7 @@ function getIsos(path::AbstractString)
     line = split(l, " = ")
     if line[1] == "Atomic Number"
       i += 1
-      push!(isos, Dict{AbstractString, Any}(line[1]=>tryparse(Int64, line[2])))
+      push!(isos, Dict{String, Any}(line[1]=>tryparse(Int64, line[2])))
     elseif line[1] == "Atomic Symbol"
       isos[i][line[1]] = line[2]
     elseif line[1] == "Mass Number"
@@ -111,7 +111,7 @@ function writeIsos(Elements::Dict{Int64, AtomicSpecies})
     \n\
   Atomic_Particles["He"] = AtomicSpecies(2, "He", ...)"""*qs*qs*qs*" Atomic_Particles \n\
   \n\
-  Atomic_Particles = Dict{AbstractString, AtomicSpecies}(\n"
+  Atomic_Particles = Dict{String, AtomicSpecies}(\n"
 	
   f = open(pwd() * f"/src/{date}_AtomicIsotopes.jl", "w")
   write(f, topmat)
