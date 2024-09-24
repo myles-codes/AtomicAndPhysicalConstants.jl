@@ -47,7 +47,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 
 function g_spin(species::Species)
 	return 2 * species.mass * species.mu / (species.spin * species.charge)
-end
+end; export g_spin
 
 
 """
@@ -62,7 +62,7 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 function gyromagnetic_anomaly(species::Species)
 	gs = g_spin(species)
 	return (gs-2)/2
-end
+end; export gyromagnetic_anomaly
 
 
 """
@@ -79,7 +79,7 @@ function g_nucleon(species::Species)
 	gs = g_spin(species)
 
 	return gs*Z*__b_m_proton/m
-end
+end; export g_nucleon
 
 
 """
@@ -115,4 +115,4 @@ function full_name(species::Species)
 		end
 		return isostring*species.name*chargestring
 	end
-end
+end; export full_name
