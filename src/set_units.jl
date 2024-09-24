@@ -9,7 +9,7 @@ include("physical_constants.jl")
 #@unit c "c" C_light (__b_c_light) * Unitful.m / Unitful.s false
 #@unit eV "eV" Electric_volt (__b_e_charge) * Unitful.J false
 @unit e "e" Elementary_charge __b_e_charge false
-@unit amu "amu" Amu (1 / (__b_N_avogadro.val)) * Unitful.g false
+@unit amu "amu" Amu (1 / (__b_N_avogadro.val)) * u"g" false
 end
 
 Unitful.register(AtomicUnits);
