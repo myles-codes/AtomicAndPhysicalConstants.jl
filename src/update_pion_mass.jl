@@ -1,7 +1,4 @@
 
-
-
-
 """
 pdg_pion_masses() gets the masses of pion from Particle Data Group.
 It returns the mass of pion 0, pion +, pion - in order as a tuple, the unit is eV/c^2

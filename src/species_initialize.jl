@@ -1,10 +1,3 @@
-# AtomicAndPhysicalConstants.jl/src/ParticleTypes.jl
-
-
-
-
-
-
 
 
 struct Species

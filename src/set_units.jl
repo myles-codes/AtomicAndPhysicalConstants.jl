@@ -1,20 +1,11 @@
-using Unitful
-include("physical_constants.jl")
-include("species_initialize.jl")
 
-# define units with the module AtomicUnits
-module AtomicUnits
-using Unitful
-include("physical_constants.jl")
+
 #@unit c "c" C_light (__b_c_light) * Unitful.m / Unitful.s false
 #@unit eV "eV" Electric_volt (__b_e_charge) * Unitful.J false
 @unit e "e" Elementary_charge __b_e_charge * u"C" false
 @unit amu "amu" Amu (1 / (__b_N_avogadro)) * u"g" false
-end
 
-#register units
-Unitful.register(AtomicUnits);
-using .AtomicUnits
+
 
 """
 UnitSystem
@@ -313,12 +304,3 @@ function chargeof(particle::Species, unit::Union{Unitful.FreeUnits,AbstractStrin
   return (particle.charge * u"e" |> unit).val
 end
 
-export setunits, printunits
-export PARTICLE_PHYSICS, MKS, CGS
-export massof, chargeof
-export c_light, m_electron, m_proton, m_neutron, m_muon, m_helion, m_deuteron, m_pion_0, m_pion_charged
-export r_e, e_charge, h_planck, mu_0_vac, eps_0_vac
-export kg_per_amu, eV_per_amu, N_avogadro, fine_structure, classical_radius_factor, r_p, h_bar_planck, kg_per_eV, eps_0_vac
-export mu_deuteron, mu_electron, mu_helion, mu_muon, mu_neutron, mu_proton, mu_triton
-
-#export anom_mag_moment_electron, anom_mag_moment_muon, anom_mag_moment_proton, anom_mag_moment_deuteron, anom_mag_moment_neutron, anom_mag_moment_He3
