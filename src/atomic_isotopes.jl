@@ -1,11 +1,3 @@
-# AtomicAndPhysicalConstants.jl/src/AtomicIsotopes.jl
-
-
-
-
-
-
-
 
 """
 AtomicSpecies <: AbstractSpeciesData
@@ -45,15 +37,9 @@ struct AtomicSpecies
   keyvalue -1 => average mass of common isotopes,
   keyvalue n ∈ {0} ∪ N is the mass number of the isotope
   =#
-end; export AtomicSpecies
-
-
-
-
+end
 
 # -------------------------------------------------------
-
-
 
 """Atomic_Particles 
 Isotopes from NIST data 2024-04-19 
@@ -301,4 +287,4 @@ atomic_particles = Dict{String, AtomicSpecies}(
 "Ts"     =>    AtomicSpecies(117, "Ts", Dict(291 => 291.20553, -1 => 0.0, 293 => 293.20824, 292 => 292.20746, 294 => 294.21046)),
 
 "Og"     =>    AtomicSpecies(118, "Og", Dict(-1 => 0.0, 293 => 293.21356, 294 => 294.21392, 295 => 295.21624))
-); export Atomic_Particles
+)

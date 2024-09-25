@@ -1,26 +1,11 @@
-# AtomicAndPhysicalConstants/src/2022_constants.jl
-
-
-
 
 # Constants pulled from the NIST table of
 # the 2022 CODATA release
 
 
-
-
 # Format is:
 # __b_const_name = value;
 # Constant Name const_unit
-
-
-
-
-
-
-
-
-using Unitful
 
 
 __b_m_electron = 510998.95069

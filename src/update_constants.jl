@@ -1,12 +1,12 @@
-# AtomicAndPhysicalConstants/UpdateConstants.jl
 
 
+"""
+    CODATA_Consts
 
-
-"""This is a dictionary that associates \n\
-named constants in any CODATA release to \n\
-their stored values; it's used to store  \n\
-fetched values so they can be written to \n\
+This is a dictionary that associates 
+named constants in any CODATA release to 
+their stored values; it's used to store  
+fetched values so they can be written to 
 file""" CODATA_Consts
 
 CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
@@ -34,11 +34,14 @@ CODATA_Consts = Dict{AbstractString, Dict{AbstractString, Float64}}(
 	"atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
 	"atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
 	"electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV)
-);
+)
 
 
 
-"""downloadCODATA takes the desired year of the release as an argument,
+"""
+     downloadCODATA(year::Int)
+
+Takes the desired year of the release as an argument,
 then downloads the ascii table of fundamental physical constants and 
 returns the path to the local copy""" downloadCODATA
 
@@ -57,14 +60,16 @@ function downloadCODATA(year::Int)
 	end
 	path = download(url)
 	return path
-end;
+end
 
 
-"""getCODATA(path::AbstractString) accesses \n\
-the file at "path" (which is expected to be \n\
-the ascii table of CODATA constants) and \n\
-tries to extract the constants named in the \n\
-dictionary CODATA_Consts and write them to \n\
+"""
+    getCODATA(path::String, CODATA_Consts::Dict)
+
+accesses the file at "path" (which is expected to be 
+the ascii table of CODATA constants) and 
+tries to extract the constants named in the 
+dictionary CODATA_Consts and write them to 
 that same dictionary""" getCODATA
 
 function getCODATA(path::String, CODATA_Consts::Dict)
@@ -103,11 +108,14 @@ end;
 
 
 
-"""writeCODATA writes a julia file called \n\
-"yyyy_constants.jl", where yyyy is the year \n\
-of the release. The contents of this \n\
-file are the fundamental constants extracted \n\
-from the CODATA set of the year given in the \n\
+"""
+    writeCODATA(year::Int, new_consts)
+
+writes a julia file called
+"yyyy_constants.jl", where yyyy is the year
+of the release. The contents of this
+file are the fundamental constants extracted
+from the CODATA set of the year given in the
 argument""" writeCODATA
 
 function writeCODATA(year::Int, new_consts)
@@ -173,12 +181,15 @@ end;
 
 
 
-"""setCODATA combines the functions \n\
-downloadCODATA, \n\
-getCODATA, and \n\
-writeCODATA \n\
-to do a complete fetch of the updated \n\
-CODATA constants and stores them in a \n\
+"""
+    setCODATA(year::Int)
+
+Combines the functions
+`downloadCODATA`
+`getCODATA`, and
+`writeCODATA`
+to do a complete fetch of the updated
+CODATA constants and stores them in a
 Julia code file in the src directory""" setCODATA
 
 function setCODATA(year::Int)
@@ -186,6 +197,5 @@ function setCODATA(year::Int)
 	new_consts = getCODATA(table_path, CODATA_Consts)
 	writeCODATA(year, new_consts)
 
-end; export setCODATA
-
+end; 
 

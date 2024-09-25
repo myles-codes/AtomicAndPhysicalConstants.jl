@@ -1,8 +1,3 @@
-# AtomicAndPhysicalConstants/src/UpdateIsoMasses.jl
-
-
-
-
 """downloadIsos() downloads the current  \n\
 ascii table of isotopic data as NIST  \n\
 doesn't appear to make old releases  \n\
