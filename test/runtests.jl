@@ -125,7 +125,7 @@ end
     @test fine_structure ≈ 7.2973525693e-3
 
     #set units to MKS and mass to MeV, and mass should have unit in MeV/c^2
-    setunits(MKS, mass_unit=u"MeV/c^2")
+    setunits(MKS, mass_unit="MeV/c^2")
 
     @test m_electron ≈ 0.51099895000e6 / 10^6
     @test m_proton ≈ 0.93827208816e9 / 10^6
@@ -137,7 +137,7 @@ end
     @test m_pion_charged ≈ 139.57018e6 / 10^6
 
     #set the unit of time to hour, the unit of speed should be m/hour
-    setunits(time_unit=u"hr")
+    setunits(time_unit="hr")
 
     @test c_light ≈ 2.99792458e8 * 3600
 
@@ -156,9 +156,9 @@ end
     @test m_pion_charged ≈ 2.488064452799888e-25
 
     #if unit has the wrong dimension exist a MethodError will be thrown
-    @test_throws ErrorException setunits(mass_unit=u"km")
-    @test_throws ErrorException setunits(charge_unit=u"eV/c^2")
-    @test_throws ErrorException setunits(time_unit=u"J/km")
+    @test_throws ErrorException setunits(mass_unit="km")
+    @test_throws ErrorException setunits(charge_unit="eV/c^2")
+    @test_throws ErrorException setunits(time_unit="J/km")
 
 
 
@@ -169,12 +169,12 @@ end
     H = Species("H", 1, 1, 0, 0, 0)
 
     #mass should be in amu and charge in elementary charge
-    setunits(mass_unit=u"amu")
+    setunits(mass_unit="amu")
 
     @test massof(H) ≈ 1.00782503223
     @test chargeof(H) ≈ 1
-    @test massof(H, u"kg") ≈ 1.6735328383153192e-27
-    @test chargeof(H, u"C") ≈ 1.602176634e-19
+    @test massof(H, "kg") ≈ 1.6735328383153192e-27
+    @test chargeof(H, "C") ≈ 1.602176634e-19
 
 
 end

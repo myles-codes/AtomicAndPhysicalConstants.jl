@@ -4,7 +4,6 @@ using PyFormattedStrings
 using Dates
 using HTTP
 using JSON
-using Unitful
 
 include("physical_constants.jl")
 include("atomic_isotopes.jl")
