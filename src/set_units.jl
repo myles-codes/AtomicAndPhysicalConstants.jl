@@ -1,10 +1,17 @@
 
+module NewUnits
+  using Unitful
+  AA = parentmodule(NewUnits)
+  @unit e "e" elementary_charge AA.__b_e_charge * u"C" false
+  @unit amu "amu" Amu (1 / (AA.__b_N_avogadro)) * u"g" false
+end
 
-#@unit c "c" C_light (__b_c_light) * Unitful.m / Unitful.s false
-#@unit eV "eV" Electric_volt (__b_e_charge) * Unitful.J false
-@unit e "e" Elementary_charge __b_e_charge * u"C" false
-@unit amu "amu" Amu (1 / (__b_N_avogadro)) * u"g" false
+Unitful.register(NewUnits);
+using .NewUnits
 
+function __init__()
+  Unitful.register(NewUnits)
+end
 
 
 """
