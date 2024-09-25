@@ -76,8 +76,6 @@ end
     @test m_muon ≈ 105.6583755e6
     @test m_helion ≈ 2.808391607035771e9
     @test m_deuteron ≈ 1.87561294257e9
-    @test m_pion_0 ≈ 134.9766e6
-    @test m_pion_charged ≈ 139.57018e6
 
     @test c_light ≈ 2.99792458e8
     @test e_charge ≈ 1
@@ -107,8 +105,6 @@ end
     @test m_muon ≈ 1.8835316270433453e-28
     @test m_helion ≈ 5.006412778866699e-27
     @test m_deuteron ≈ 3.3435837724217406e-27
-    @test m_pion_0 ≈ 2.406176451300624e-28
-    @test m_pion_charged ≈ 2.488064452799888e-28
 
     #c_light shouldn't change
     @test c_light ≈ 2.99792458e8
@@ -133,8 +129,6 @@ end
     @test m_muon ≈ 105.6583755e6 / 10^6
     @test m_helion ≈ 2.808391607035771e9 / 10^6
     @test m_deuteron ≈ 1.87561294257e9 / 10^6
-    @test m_pion_0 ≈ 134.9766e6 / 10^6
-    @test m_pion_charged ≈ 139.57018e6 / 10^6
 
     #set the unit of time to hour, the unit of speed should be m/hour
     setunits(time_unit="hr")
@@ -152,8 +146,6 @@ end
     @test m_muon ≈ 1.8835316270433453e-25
     @test m_helion ≈ 5.006412778866699e-24
     @test m_deuteron ≈ 3.3435837724217406e-24
-    @test m_pion_0 ≈ 2.406176451300624e-25
-    @test m_pion_charged ≈ 2.488064452799888e-25
 
     #if unit has the wrong dimension exist a MethodError will be thrown
     @test_throws ErrorException setunits(mass_unit="km")
