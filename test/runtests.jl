@@ -161,7 +161,7 @@ end
     H = Species("H", 1, 1, 0, 0, 0)
 
     #mass should be in amu and charge in elementary charge
-    setunits(mass_unit="amu")
+    setunits(mass_unit = u"amu")
 
     @test massof(H) ≈ 1.00782503223
     @test chargeof(H) ≈ 1
