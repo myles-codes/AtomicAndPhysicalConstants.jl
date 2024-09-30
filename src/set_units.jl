@@ -1,9 +1,9 @@
 
 module NewUnits
-  using Unitful
-  AA = parentmodule(NewUnits)
-  @unit e "e" elementary_charge AA.__b_e_charge * u"C" false
-  @unit amu "amu" Amu (1 / (AA.__b_N_avogadro)) * u"g" false
+using Unitful
+AA = parentmodule(NewUnits)
+@unit e "e" elementary_charge AA.__b_e_charge * u"C" false
+@unit amu "amu" Amu (1 / (AA.__b_N_avogadro)) * u"g" false
 end
 
 Unitful.register(NewUnits);
@@ -15,18 +15,18 @@ end
 
 
 """
-UnitSystem
+    UnitSystem
 
-### Description:
+## Description:
 This defines an immutable struct for storing a specific
 system of units.
 
-### Fields:
-- `mass`    -- type:Unitful.FreeUnits, stores the unit for mass
-- `length`  -- type:Unitful.FreeUnits, stores the unit for length
-- `time`    -- type:Unitful.FreeUnits, stores the unit for time
-- `energy`  -- type:Unitful.FreeUnits, stores the unit for energy
-- `charge`  -- type:Unitful.FreeUnits, stores the unit for charge
+## Fields:
+- `mass`    -- type:`Unitful.FreeUnits`, stores the unit for mass
+- `length`  -- type:`Unitful.FreeUnits`, stores the unit for length
+- `time`    -- type:`Unitful.FreeUnits`, stores the unit for time
+- `energy`  -- type:`Unitful.FreeUnits`, stores the unit for energy
+- `charge`  -- type:`Unitful.FreeUnits`, stores the unit for charge
 """
 UnitSystem
 
@@ -63,24 +63,24 @@ CGS = UnitSystem(
   u"C")
 
 """
-current_units :: UnitSystem
+    current_units :: UnitSystem
 
-### Description:
-This declares a UnitSystem that stores the units in current use.
+## Description:
+This declares a `UnitSystem` that stores the units in current use.
 
-### Note:
+## Note:
 It is initialized when setunits() is called.
 """
 current_units
 
 """
-    `getunits(unit::Symbol)``
+    getunits(unit::Symbol)
 
-    ### Description:
-    return the unit with the corresponding field 'unit; in `current_units``
+## Description:
+return the unit with the corresponding field `unit` in `current_units`
 
-    ### parameters:
-    - `unit`                            -- type:Symbol, the name of the field in current_units.
+## parameters:
+- `unit`  -- type:`Symbol`, the name of the field in current_units.
 
 """
 getunit
@@ -94,9 +94,9 @@ function getunit(unit::Symbol)
 end
 
 """
-`printunits()`
+    printunits()
 
-### Description:
+## Description:
 This function returns nothing. It simply prints the set of units
 in current use.
 """
@@ -116,44 +116,45 @@ function printunits()
 end
 
 """
-    `setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
-  mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
-  length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.length,
-  time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
-  energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.energy,
-  charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.charge,
-)`
+    setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
+      mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
+      length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.length,
+      time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
+      energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.energy,
+      charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.charge,
+      print_units::Bool = true
+    )
 
-    ### Description:
-    return nothing
-    users can specify the unit system and modify units in the system by keyword parameters
-    sets global unit and store them in current units
-    prints current units at the end
+## Description:
+Return `nothing`.
+Users can specify the unit system and modify units in the system by keyword parameters.
+Sets global unit and store them in current units.
+Prints current units at the end (optional).
     
-    ### default units
-    mass: eV/c^2
-    length: m
-    time: s
-    energy: eV
-    charge: elementary charge
+## Default units:
+- `mass`: eV/c^2
+- `length`: m
+- `time`: s
+- `energy`: eV
+- `charge`: elementary charge
 
-    ### positional parameters:
-    - 'unitsystem'                       -- type:UnitSystem, specify the unit system, default to PARTICLE_PHYSICS{mass:eV/c^2,charge:e}
-                                        , it provides a convient way to set all the units
+## positional parameters:
+- `unitsystem`   -- type: `UnitSystem`, specify the unit system, default to `PARTICLE_PHYSICS`, which sets units to 'Default units' (see above).
+                                        The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
 
-    ### keyword parameters
-	  - `mass_unit`                        -- type:Union{Unitful.FreeUnits,AbstractString}, unit for mass, default to the mass unit in 'unitsystem'
-	  - `length_unit`                      -- type:Union{Unitful.FreeUnits,AbstractString}, unit for length, default to the length unit in 'unitsystem'
-    - `time_unit`                        -- type:Union{Unitful.FreeUnits,AbstractString}, unit for time, default to the time unit in 'unitsystem' 
-    - `energy_unit`                      -- type:Union{Unitful.FreeUnits,AbstractString}, unit for energy, default to the energy unit in 'unitsystem'
-    - `charge_unit`                      -- type:Union{Unitful.FreeUnits,AbstractString}, unit for charge, default to the charge unit in 'unitsystem'
+## keyword parameters
+- `mass_unit`   -- type:`Union{Unitful.FreeUnits,AbstractString}`, unit for mass, default to the mass unit in `unitsystem`
+- `length_unit` -- type:`Union{Unitful.FreeUnits,AbstractString}`, unit for length, default to the length unit in `unitsystem`
+- `time_unit`   -- type:`Union{Unitful.FreeUnits,AbstractString}`, unit for time, default to the time unit in `unitsystem` 
+- `energy_unit` -- type:`Union{Unitful.FreeUnits,AbstractString}`, unit for energy, default to the energy unit in `unitsystem`
+- `charge_unit` -- type:`Union{Unitful.FreeUnits,AbstractString}`, unit for charge, default to the charge unit in `unitsystem`
 
-    ### Note:
-    - unit for Plancks' constant is 'energy' * 'time'
-    - unit for vacuum permeability is N/A^2
-    - unit for Permittivity of free space is F/m
-    - unit for Avogadro's number is mol^-1
-    - unit for classical radius factor is 'length'*'mass'
+## Note:
+- unit for `Plancks' constant` is 'energy' * 'time'
+- unit for `vacuum permeability` is N/A^2
+- unit for `Permittivity of free space` is F/m
+- unit for `Avogadro's number` is mol^-1
+- unit for `classical radius` factor is 'length'*'mass'
 
 """
 setunits
@@ -164,6 +165,7 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
   energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.energy,
   charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.charge,
+  print_units::Bool=true
 )
   # convert types to Unitful.FreeUnits
   if mass_unit isa AbstractString
@@ -260,54 +262,62 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   global h_bar_planck = h_planck / 2pi                   # h_planck/twopi
   global kg_per_eV = kg_per_amu / eV_per_amu
   global eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
-  printunits()
+  if print_units
+    printunits()
+  end
 
   return
 end
 
 """
-    function massof(particle::Species, unit::Union{Unitful.FreeUnits,AbstractString}=current_units.mass)
+    massof(
+      species::Species,
+      unit::Union{Unitful.FreeUnits,AbstractString}=current_units.mass
+    )
 
-    ### Description:
-    return mass of 'particle' in current unit or unit of the user's choice
+## Description:
+return mass of 'species' in current unit or unit of the user's choice
 
-    ### parameters:
-	  - 'particle`                        -- type:Species, the particle whose mass you want to know
-    - `unit`                            -- type:Union{Unitful.FreeUnits,AbstractString}, default to the unit set from setunits(), the unit of the mass variable
+## parameters:
+- `species`     -- type:`Species`, the species whose mass you want to know
+- `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the mass variable
 
 """
 massof
 
-function massof(particle::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:mass))
+function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:mass))
   if unit isa AbstractString
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"kg")
     throw(ErrorException("unit have proper dimension"))
   end
-  return (particle.mass * u"eV/c^2" |> unit).val
+  return (species.mass * u"eV/c^2" |> unit).val
 end
 
 """
-    function chargeof(particle::Species, unit::Union{Unitful.FreeUnits,AbstractString}=current_units.charge)
+    chargeof(
+      species::Species,
+      unit::Union{Unitful.FreeUnits,AbstractString}=current_units.charge
+    )
 
-    ### Description:
-    return charge of 'particle' in current unit or unit of the user's choice
+## Description:
+return charge of 'species' in current unit or unit of the user's choice
 
-    ### parameters:
-	- 'particle`                  -- type:Species, the particle whose charge you want to know
-  - `unit`                      -- type:Union{Unitful.FreeUnits,AbstractString}, default to the unit set from setunits(), the unit of the charge variable
+## parameters:
+- `species`     -- type:`Species`, the species whose charge you want to know
+- `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the charge variable
 
 """
 chargeof
 
-function chargeof(particle::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:charge))
+function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:charge))
   if unit isa AbstractString
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("unit have proper dimension"))
   end
-  return (particle.charge * u"e" |> unit).val
+  return (species.charge * u"e" |> unit).val
 end
 
