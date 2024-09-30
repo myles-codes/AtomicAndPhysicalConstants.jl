@@ -32,14 +32,14 @@ end;
 
 # -----------------------------------------------------------------------------------------------
 #=
-Below we have a dictionary, subatomic_particles :
+Below we have a dictionary, SUBATOMIC_SPECIES :
 this contatins key=>value pairs of  subatomic-name => SubatomicSpecies
 =#
 
 
 
 """
-    subatomic_particles 
+    SUBATOMIC_SPECIES 
 a dictionary of all the available subatomic species; 
 the key is the particle's species_name, 
 and the value is the relevant SubatomicSpecies struct, _eg_ 
@@ -47,7 +47,7 @@ and the value is the relevant SubatomicSpecies struct, _eg_
 Subatomic_Particles["some-particle"] = SubatomicSpecies("some-particle", ...)
 """
 
-subatomic_particles = Dict{String,SubatomicSpecies}(
+const SUBATOMIC_SPECIES = Dict{String,SubatomicSpecies}(
   "pion0" => SubatomicSpecies("pion0", 0, __b_m_pion_0, 0.0, 0.0),
   "neutron" => SubatomicSpecies("neutron", 0, __b_m_neutron, __b_mu_neutron, 0.5 * __b_h_bar_planck),
   "deuteron" => SubatomicSpecies("deuteron", 1, __b_m_deuteron, __b_mu_deuteron, 1.0 * __b_h_bar_planck),

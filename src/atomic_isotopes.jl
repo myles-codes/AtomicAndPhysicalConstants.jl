@@ -51,7 +51,7 @@ AtomicSpecies struct, _eg_
 
 Atomic_Particles["He"] = AtomicSpecies(2, "He", ...)""" Atomic_Particles 
 
-atomic_particles = Dict{String, AtomicSpecies}(
+const ATOMIC_SPECIES = Dict{String, AtomicSpecies}(
 "H"      =>    AtomicSpecies(1, "H", Dict(5 => 5.035311, 4 => 4.02643, 6 => 6.04496, 7 => 7.0527, -1 => 1.0079407540557772, 2 => 2.01410177812, 3 => 3.0160492779, 1 => 1.00782503223)),
 
 "He"     =>    AtomicSpecies(2, "He", Dict(5 => 5.012057, 4 => 4.00260325413, 6 => 6.018885891, 7 => 7.0279907, -1 => 4.002601932120929, 10 => 10.05279, 9 => 9.043946, 8 => 8.03393439, 3 => 3.0160293201)),

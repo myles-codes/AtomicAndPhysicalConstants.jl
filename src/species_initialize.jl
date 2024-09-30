@@ -24,10 +24,10 @@ Create a particle struct for a subatomic particle with name=name
 
 function subatomic_particle(name::String)
 		# write the particle out directly
-		return Species(name, subatomic_particles[name].charge,
-			subatomic_particles[name].mass,
-			subatomic_particles[name].spin,
-			subatomic_particles[name].mu,
+		return Species(name, SUBATOMIC_SPECIES[name].charge,
+			SUBATOMIC_SPECIES[name].mass,
+			SUBATOMIC_SPECIES[name].spin,
+			SUBATOMIC_SPECIES[name].mu,
 			0)
 	end
 
@@ -84,7 +84,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
-	if occursin(anti, name) && haskey(subatomic_particles, name[6:end])
+	if occursin(anti, name) && haskey(SUBATOMIC_SPECIES, name[6:end])
 		if name[6:end] != "electron"
 			return subatomic_particle("positron")
 		else
@@ -92,7 +92,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 		end
 
 	# check subatomics first so we don't accidentally strip a name
-	elseif haskey(subatomic_particles, name) # is the particle in the Subatomic_Particles dictionary?
+	elseif haskey(SUBATOMIC_SPECIES, name) # is the particle in the Subatomic_Particles dictionary?
 		# write the particle out directly
 			return subatomic_particle(name)
 		
@@ -142,27 +142,26 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 			end
 		end
 		
-		if haskey(atomic_particles, AS) # is the particle in the Atomic_Particles dictionary?
-			if iso ∉ keys(atomic_particles[AS].mass) # error handling if the isotope isn't available
-				println("The isotope you specified is not available.")
-				println("Isotopes are specified by the atomic symbol and integer mass number.")
+		if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
+			if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
+				error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
 				return
 			end
 			mass = begin
 				if anti_atom == false
-					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
-					nmass * (__b_eV_per_amu) + __b_m_electron * (atomic_particles[AS].Z - charge) # put it in eV/c^2 and remove the electrons
+					nmass = ATOMIC_SPECIES[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass * (__b_eV_per_amu) + __b_m_electron * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
 				elseif anti_atom == true
-					nmass = atomic_particles[AS].mass[iso] # mass of the positively charged isotope in amu
-					nmass * (__b_eV_per_amu) + __b_m_electron * (-atomic_particles[AS].Z + charge) # put it in eV/c^2 and remove the positrons
+					nmass = ATOMIC_SPECIES[AS].mass[iso] # mass of the positively charged isotope in amu
+					nmass * (__b_eV_per_amu) + __b_m_electron * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
 				end
 			end
 			if iso == -1 # if it's the average, make an educated guess at the spin
 				partonum = round(nmass)
 				if anti_atom == false
-					spin = 0.5*__b_h_bar_planck*(partonum + (atomic_particles[AS].Z-charge))
+					spin = 0.5*__b_h_bar_planck*(partonum + (ATOMIC_SPECIES[AS].Z-charge))
 				elseif anti_atom == true
-					spin = 0.5*__b_h_bar_planck*(partonum + (atomic_particles[AS].Z+charge))
+					spin = 0.5*__b_h_bar_planck*(partonum + (ATOMIC_SPECIES[AS].Z+charge))
 				end
 			else # otherwise, use the sum of proton and neutron spins
 				spin = 0.5*__b_h_bar_planck*iso
@@ -175,15 +174,17 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 
 
 		else # handle the case where the given name is garbage
-			println("The specified particle name does not exist in this library.")
+			error("The specified particle name does not exist in this library.")
+			#=
 			println("Available subatomic particles are: ")
-			for p in keys(subatomic_particles)
+			for p in keys(SUBATOMIC_SPECIES)
 				println(p)
 			end
 			println("Available atomic elements are")
-			for p in keys(atomic_particles)
+			for p in keys(ATOMIC_SPECIES)
 				println(p)
 			end
+			=#
 			return
 		end
 	end
