@@ -40,7 +40,18 @@ end
 
 # Declare specific systems of units
 #   for particle physics
-PARTICLE_PHYSICS = UnitSystem(
+"""
+    PARTICLE_PHYSICS::UnitSystem
+## PARTICLE_PHYSICS units:
+- `mass`: eV/c^2
+- `length`: m
+- `time`: s
+- `energy`: eV
+- `charge`: elementary charge
+"""
+PARTICLE_PHYSICS
+
+const PARTICLE_PHYSICS = UnitSystem(
   u"eV/c^2",
   u"m",
   u"s",
@@ -48,14 +59,36 @@ PARTICLE_PHYSICS = UnitSystem(
   u"e")
 
 #   MKS
-MKS = UnitSystem(
+"""
+    MKS::UnitSystem
+## MKS units:
+- `mass`: kg
+- `length`: m
+- `time`: s
+- `energy`: J
+- `charge`: C
+"""
+MKS
+
+const MKS = UnitSystem(
   u"kg",
   u"m",
   u"s",
   u"J",
   u"C")
 #   quasi-CGS
-CGS = UnitSystem(
+"""
+    CGS::UnitSystem
+## CGS units:
+- `mass`: g
+- `length`: cm
+- `time`: s
+- `energy`: J
+- `charge`: C
+"""
+CGS
+
+const CGS = UnitSystem(
   u"g",
   u"cm",
   u"s",
