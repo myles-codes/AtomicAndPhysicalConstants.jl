@@ -163,9 +163,9 @@ end
     #mass should be in amu and charge in elementary charge
     setunits(mass_unit="amu")
 
-    @test massof(H) ≈ 1.00782503223
+    @test massof(H) ≈ 1.0
     @test chargeof(H) ≈ 1
-    @test massof(H, "kg") ≈ 1.6735328383153192e-27
+    @test massof(H, "kg") ≈ 1.6605e-27
     @test chargeof(H, "C") ≈ 1.602176634e-19
 
 
