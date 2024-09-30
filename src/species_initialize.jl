@@ -43,11 +43,18 @@ of information specifice to the chosen particle.
 # Fields:
 1. `name::String': 	the name of the particle 
 2. `charge::Int32': the net charge of the particle in units of |e|
+										- bookkeeping only, thus in internal units
+										- use the 'charge()' function to get the charge 
+										- in the desired units
 3. `mass::Float64': the mass of the particle
-4. `spin::Float64': the spin of the particle (multiplied with ħ)
-5. `mu::Float64': 	the magnetic moment of the particle.
+										- bookkeeping only, thus in internal units
+										- use the 'mass()' function to get the charge 
+										- in the desired units
+4. `spin::Float64': the spin of the particle in eV⋅s 
+										- (half/integer multiplied with ħ)
+5. `mu::Float64': 	the magnetic moment of the particle in eV/T.
 5. `iso::Int': 			if the particle is an atomic isotope, this is the 
-										mass number, otherwise 0
+										mass number, otherwise -1
 
 The Species Struct also has a constructor called Species, 
 documentation for which follows.
@@ -60,7 +67,7 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 # Arguments
 1. `name::String': the name of the species 
 		* subatomic particle names must be given exactly,
-		* Atomic symbols may include charge and isotope eg Li#9+1
+		* Atomic symbols may include charge and isotope eg #9Li+1
 		* where #[1-999] specifies the isotope and (+/-)[0-999] specifies charge
 2. `charge::Int=0': the charge of the particle.
 		* only affects atoms 

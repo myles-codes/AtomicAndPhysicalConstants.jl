@@ -48,14 +48,6 @@ __b_N_avogadro = 6.02214076e23
 
 
 
-
-
-
-
-
-
-
-
 __b_mu_deuteron = 4.330735087e-27
 # deuteron magnetic moment in [eV/T]
 __b_mu_electron = -9.2847646917e-24
@@ -76,12 +68,6 @@ __b_mu_triton = 1.5046095178e-26
 
 
 
-
-
-
-
-
-
 # values calculated from other constants in this collection
 
 
@@ -96,15 +82,6 @@ __b_h_bar_planck = __b_h_planck / 2pi;
 # h_planck/twopi [eV*sec]
 __b_eps_0_vac = 8.8541878188e-12
 # Permittivity of free space in [F/m]
-
-
-
-
-
-
-
-
-
 
 
 
