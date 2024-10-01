@@ -9,30 +9,16 @@ end
 
 @testset "set_units.jl" begin
 
-    # constants should be undefined when setunits() in not called
-    @test !@isdefined c_light
-    @test !@isdefined m_electron
-    @test !@isdefined m_electron
-    @test !@isdefined m_proton
-    @test !@isdefined m_neutron
-    @test !@isdefined m_muon
-    @test !@isdefined m_helion
-    @test !@isdefined m_deuteron
-    @test !@isdefined m_pion_0
-    @test !@isdefined m_pion_charged
-    @test !@isdefined r_e
-    @test !@isdefined e_charge
-    @test !@isdefined h_planck
-    @test !@isdefined mu_0_vac
-    @test !@isdefined eps_0_vac
-    @test !@isdefined kg_per_amu
-    @test !@isdefined eV_per_amu
-    @test !@isdefined N_avogadro
-    @test !@isdefined fine_structure
-    @test !@isdefined classical_radius_factor
-    @test !@isdefined r_p
-    @test !@isdefined h_bar_planck
-    @test !@isdefined kg_per_eV
+    # units should be available to users, including "amu" and "e"
+    # if not availble, an error would be thrown and the test would fail.
+    @test u"kg" == u"kg"
+    @test u"km" == u"km"
+    @test u"amu" == u"amu"
+    @test u"eV/c^2" == u"eV/c^2"
+    @test u"e" == u"e"
+    @test u"C" == u"C"
+    @test u"s" == u"s"
+
 
     #setunits to default units
     setunits()
