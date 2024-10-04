@@ -246,9 +246,9 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   # convert Planck's constant with dimension energy * time
   global h_planck = (__b_h_planck |> energy_unit * time_unit).val        # Planck's constant 
   # convert Vacuum permeability with dimension force / (current)^2
-  global mu_0_vac = __b_mu_0_vac
+  global mu_0_vac = __b_mu_0_vac.val
   # convert Vacuum permeability with dimension capacitance / distance
-  global eps_0_vac = __b_eps_0_vac
+  global eps_0_vac = __b_eps_0_vac.val
 
   # convert anomous magnet moments dimension: unitless
   #global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
@@ -268,10 +268,10 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   global mu_triton = (__b_mu_triton |> energy_unit / u"T").val        # triton magnetic moment
 
   # convert unitless variables
-  global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
-  global eV_per_amu = __b_eV_per_amu                  # eV per standard atomic mass unit (dalton)
+  global kg_per_amu = __b_kg_per_amu.val               # kg per standard atomic mass unit (dalton)
+  global eV_per_amu = __b_eV_per_amu.val                  # eV per standard atomic mass unit (dalton)
   global N_avogadro = __b_N_avogadro                # Number / mole  (exact)
-  global fine_structure = __b_fine_structure                 # fine structure constant
+  global fine_structure = __b_fine_structure                # fine structure constant
 
   # values calculated from other constants
   global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
