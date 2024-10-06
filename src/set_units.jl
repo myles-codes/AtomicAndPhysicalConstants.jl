@@ -1,19 +1,3 @@
-
-module NewUnits
-using Unitful
-AA = parentmodule(NewUnits)
-@unit e "e" elementary_charge AA.__b_e_charge * u"C" false
-@unit amu "amu" Amu (1 / (AA.__b_N_avogadro)) * u"g" false
-end
-
-Unitful.register(NewUnits);
-using .NewUnits
-
-function __init__()
-  Unitful.register(NewUnits)
-end
-
-
 """
     UnitSystem
 
@@ -236,35 +220,35 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   global current_units = UnitSystem(mass_unit, length_unit, time_unit, energy_unit, charge_unit)
 
   # convert all the variables with dimension mass
-  global m_electron = (__b_m_electron * u"eV/c^2" |> mass_unit).val         # Electron Mass 
-  global m_proton = (__b_m_proton * u"eV/c^2" |> mass_unit).val             # Proton Mass 
-  global m_neutron = (__b_m_neutron * u"eV/c^2" |> mass_unit).val           # Neutron Mass 
-  global m_muon = (__b_m_muon * u"eV/c^2" |> mass_unit).val                 # Muon Mass 
-  global m_helion = (__b_m_helion * u"eV/c^2" |> mass_unit).val             # Helion Mass He3 nucleus 
-  global m_deuteron = (__b_m_deuteron * u"eV/c^2" |> mass_unit).val         # Deuteron Mass 
-  global m_pion_0 = (__b_m_pion_0 * u"eV/c^2" |> mass_unit).val             # Pion 0 mass
-  global m_pion_charged = (__b_m_pion_charged * u"eV/c^2" |> mass_unit).val # Pion+- Mass 
+  global m_electron = (__b_m_electron |> mass_unit).val         # Electron Mass 
+  global m_proton = (__b_m_proton |> mass_unit).val             # Proton Mass 
+  global m_neutron = (__b_m_neutron |> mass_unit).val           # Neutron Mass 
+  global m_muon = (__b_m_muon |> mass_unit).val                 # Muon Mass 
+  global m_helion = (__b_m_helion |> mass_unit).val             # Helion Mass He3 nucleus 
+  global m_deuteron = (__b_m_deuteron |> mass_unit).val         # Deuteron Mass 
+  global m_pion_0 = (__b_m_pion_0 |> mass_unit).val             # Pion 0 mass
+  global m_pion_charged = (__b_m_pion_charged |> mass_unit).val # Pion+- Mass 
 
   # convert all the variables with dimension length
-  global r_e = (__b_r_e * u"m" |> length_unit).val                     # classical electron radius
+  global r_e = (__b_r_e |> length_unit).val                     # classical electron radius
 
   # convert all the variables with dimension time
 
   # convert all the variables with dimension speed
-  global c_light = (__b_c_light * u"m/s" |> length_unit / time_unit).val          # speed of light
+  global c_light = (__b_c_light |> length_unit / time_unit).val          # speed of light
 
   # convert all the variables with dimension energy
 
   # convert all the variables with dimension charge
-  global e_charge = (__b_e_charge * u"C" |> charge_unit).val                                # elementary charge
+  global e_charge = (__b_e_charge |> charge_unit).val                                # elementary charge
 
   # constants with special dimenisions
   # convert Planck's constant with dimension energy * time
-  global h_planck = (__b_h_planck * u"eV*s" |> energy_unit * time_unit).val        # Planck's constant 
+  global h_planck = (__b_h_planck |> energy_unit * time_unit).val        # Planck's constant 
   # convert Vacuum permeability with dimension force / (current)^2
-  global mu_0_vac = __b_mu_0_vac
+  global mu_0_vac = __b_mu_0_vac.val
   # convert Vacuum permeability with dimension capacitance / distance
-  global eps_0_vac = __b_eps_0_vac
+  global eps_0_vac = __b_eps_0_vac.val
 
   # convert anomous magnet moments dimension: unitless
   #global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
@@ -275,19 +259,19 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   #global gyromagnetic_anomaly_He3 = __b_gyromagnetic_anomaly_He3                # μ_{He3}/μ_N - 2
 
   # convert magnet moments dimension: energy / magnetic field strength
-  global mu_deuteron = (__b_mu_deuteron * u"eV/T" |> energy_unit / u"T").val    # deuteron magnetic moment
-  global mu_electron = (__b_mu_electron * u"eV/T" |> energy_unit / u"T").val    # electron magnetic moment
-  global mu_helion = (__b_mu_helion * u"eV/T" |> energy_unit / u"T").val        # helion magnetic moment
-  global mu_muon = (__b_mu_muon * u"eV/T" |> energy_unit / u"T").val            # muon magnetic moment
-  global mu_neutron = (__b_mu_neutron * u"eV/T" |> energy_unit / u"T").val      # neutron magnetic moment
-  global mu_proton = (__b_mu_proton * u"eV/T" |> energy_unit / u"T").val        # proton magnetic moment
-  global mu_triton = (__b_mu_triton * u"eV/T" |> energy_unit / u"T").val        # triton magnetic moment
+  global mu_deuteron = (__b_mu_deuteron |> energy_unit / u"T").val    # deuteron magnetic moment
+  global mu_electron = (__b_mu_electron |> energy_unit / u"T").val    # electron magnetic moment
+  global mu_helion = (__b_mu_helion |> energy_unit / u"T").val        # helion magnetic moment
+  global mu_muon = (__b_mu_muon |> energy_unit / u"T").val            # muon magnetic moment
+  global mu_neutron = (__b_mu_neutron |> energy_unit / u"T").val      # neutron magnetic moment
+  global mu_proton = (__b_mu_proton |> energy_unit / u"T").val        # proton magnetic moment
+  global mu_triton = (__b_mu_triton |> energy_unit / u"T").val        # triton magnetic moment
 
   # convert unitless variables
-  global kg_per_amu = __b_kg_per_amu               # kg per standard atomic mass unit (dalton)
-  global eV_per_amu = __b_eV_per_amu                  # eV per standard atomic mass unit (dalton)
+  global kg_per_amu = __b_kg_per_amu.val               # kg per standard atomic mass unit (dalton)
+  global eV_per_amu = __b_eV_per_amu.val                  # eV per standard atomic mass unit (dalton)
   global N_avogadro = __b_N_avogadro                # Number / mole  (exact)
-  global fine_structure = __b_fine_structure                 # fine structure constant
+  global fine_structure = __b_fine_structure                # fine structure constant
 
   # values calculated from other constants
   global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
