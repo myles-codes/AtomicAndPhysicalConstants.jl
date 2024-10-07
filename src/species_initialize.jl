@@ -47,9 +47,9 @@ of information specifice to the chosen particle.
 										- bookkeeping only, thus in internal units
 										- use the 'charge()' function to get the charge 
 										- in the desired units
-3. `mass::Float64': the mass of the particle
+3. `mass::Float64': the mass of the particle in eV/c^2
 										- bookkeeping only, thus in internal units
-										- use the 'mass()' function to get the charge 
+										- use the 'mass()' function to get the mass 
 										- in the desired units
 4. `spin::Float64': the spin of the particle in eV⋅s 
 										- (half/integer multiplied with ħ)
@@ -151,15 +151,15 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
             end
             mass = begin
                 if anti_atom == false
-                    nmass = ATOMIC_SPECIES[AS].mass[iso] # mass of the positively charged isotope in amu
-                    nmass * (__b_eV_per_amu) + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
+                    nmass = uconvert("eV/c^2", ATOMIC_SPECIES[AS].mass[iso] * u"amu"); # mass of the positively charged isotope in eV/c^2
+                    nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
                 elseif anti_atom == true
-                    nmass = ATOMIC_SPECIES[AS].mass[iso] # mass of the positively charged isotope in amu
-                    nmass * (__b_eV_per_amu) + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
+                    nmass = uconvert("eV/c^2", ATOMIC_SPECIES[AS].mass[iso]*u"amu"); # mass of the positively charged isotope in amu
+                    nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
                 end
             end
             if iso == -1 # if it's the average, make an educated guess at the spin
-                partonum = round(nmass)
+                partonum = round(ATOMIC_SPECIES[AS].mass[iso])
                 if anti_atom == false
                     spin = 0.5 * __b_h_bar_planck.val * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
                 elseif anti_atom == true
