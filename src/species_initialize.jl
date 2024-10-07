@@ -151,10 +151,10 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
             end
             mass = begin
                 if anti_atom == false
-                    nmass = uconvert("eV/c^2", ATOMIC_SPECIES[AS].mass[iso] * u"amu"); # mass of the positively charged isotope in eV/c^2
+                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
                 elseif anti_atom == true
-                    nmass = uconvert("eV/c^2", ATOMIC_SPECIES[AS].mass[iso]*u"amu"); # mass of the positively charged isotope in amu
+                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in amu
                     nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
                 end
             end
