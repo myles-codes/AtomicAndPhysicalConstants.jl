@@ -4,7 +4,7 @@ struct Species
     name::String # name of the particle to track
     charge::Int32 # charge of the particle (important to consider ionized atoms) in [e]
     mass::Float64 # mass of the particle in [eV/c^2]
-    spin::Float64 # spin of the particle in [eV*s]
+    spin::Float64 # spin of the particle in [ħ]
     mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
     iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
 end;
@@ -161,12 +161,12 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
             if iso == -1 # if it's the average, make an educated guess at the spin
                 partonum = round(ATOMIC_SPECIES[AS].mass[iso])
                 if anti_atom == false
-                    spin = 0.5 * __b_h_bar_planck.val * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
+                    spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
                 elseif anti_atom == true
-                    spin = 0.5 * __b_h_bar_planck.val * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
+                    spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
                 end
             else # otherwise, use the sum of proton and neutron spins
-                spin = 0.5 * __b_h_bar_planck.val * iso
+                spin = 0.5 * iso
             end
             if anti_atom == false
                 return Species(AS, charge, mass, spin, 0, iso) # return the object to track
