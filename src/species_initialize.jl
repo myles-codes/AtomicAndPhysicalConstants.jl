@@ -3,7 +3,7 @@
 struct Species
     name::String # name of the particle to track
     charge::Int32 # charge of the particle (important to consider ionized atoms) in [e]
-    mass::Float64 # mass of the particle in [eV/c^2]
+    mass_in_eV::Float64 # mass of the particle in [eV/c^2]
     spin::Float64 # spin of the particle in [ħ]
     mu::Float64 # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
     iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
@@ -42,20 +42,24 @@ The Particle struct is used for keeping track
 of information specifice to the chosen particle.
 
 # Fields:
-1. `name::String': 	the name of the particle 
-2. `charge::Int32': the net charge of the particle in units of |e|
-										- bookkeeping only, thus in internal units
-										- use the 'charge()' function to get the charge 
-										- in the desired units
-3. `mass::Float64': the mass of the particle in eV/c^2
-										- bookkeeping only, thus in internal units
-										- use the 'mass()' function to get the mass 
-										- in the desired units
-4. `spin::Float64': the spin of the particle in eV⋅s 
-										- (half/integer multiplied with ħ)
-5. `mu::Float64': 	the magnetic moment of the particle in eV/T.
-5. `iso::Int': 			if the particle is an atomic isotope, this is the 
-										mass number, otherwise -1
+1. `name::String': 				the name of the particle 
+
+2. `charge::Int32': 			the net charge of the particle in units of |e|
+													- bookkeeping only, thus in internal units
+													- use the 'charge()' function to get the charge 
+													- in the desired units
+
+3. `mass_in_eV::Float64': the mass of the particle in eV/c^2
+													- bookkeeping only, thus in internal units
+													- use the 'mass()' function to get the mass 
+													- in the desired units
+
+4. `spin::Float64': 			the spin of the particle in eV⋅s 
+													- (half/integer multiplied with ħ)
+
+5. `mu::Float64': 				the magnetic moment of the particle in eV/T.
+5. `iso::Int': 						if the particle is an atomic isotope, this is the 
+													- mass number, otherwise -1
 
 The Species Struct also has a constructor called Species, 
 documentation for which follows.
@@ -149,7 +153,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
                 error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
                 return
             end
-            mass = begin
+            mass_in_eV = begin
                 if anti_atom == false
                     nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
