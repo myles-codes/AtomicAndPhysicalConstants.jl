@@ -3,7 +3,7 @@
 # the 2022 CODATA release
 
 const __b_e_charge = 1.602176634e-19 * u"C"
-# elementary charge [Coul]
+# elementary charge [C]
 const __b_N_avogadro = 6.02214076e23
 # Avogadro's constant: Number / mole (exact)
 
