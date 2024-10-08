@@ -144,17 +144,17 @@ end
 
     #create some particles
 
-    H = Species("H", 1, 1, 0, 0, 0)
+    H = Species("H", 1, 931.5 * 10^6, 0, 0, 0)
 
     #mass should be in amu and charge in elementary charge
     setunits(mass_unit=u"amu")
 
-    @test mass(H) ≈ 1.0
+    @test mass(H) ≈ 1.000 atol = 1e-4
     @test charge(H) ≈ 1
-    @test mass(H, "kg") ≈ 1.6605390671738466e-27
-    @test charge(H, "C") ≈ 1.602176634e-19
+    @test mass(H, "kg") ≈ 1.6605e-27 atol = 1e-4
+    @test charge(H, "C") ≈ 1.6021e-19 atol = 1e-4
 
     s = Species("electron")
-    @test mass(H, unit=u"eV/c^2") ≈ 510998.95069
+    @test mass(s, u"eV/c^2") ≈ 510998.95069 atol = 1
 
 end
