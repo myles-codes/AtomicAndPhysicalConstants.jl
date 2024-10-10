@@ -287,7 +287,7 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
 end
 
 """
-    massof(
+    mass(
       species::Species,
       unit::Union{Unitful.FreeUnits,AbstractString}=current_units.mass
     )
@@ -300,20 +300,20 @@ return mass of 'species' in current unit or unit of the user's choice
 - `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the mass variable
 
 """
-massof
+mass
 
-function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:mass))
+function mass(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:mass))
   if unit isa AbstractString
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"kg")
     throw(ErrorException("unit have proper dimension"))
   end
-  return (species.mass * u"amu" |> unit).val
+  return (species.mass * u"eV/c^2" |> unit).val
 end
 
 """
-    chargeof(
+    charge(
       species::Species,
       unit::Union{Unitful.FreeUnits,AbstractString}=current_units.charge
     )
@@ -326,9 +326,9 @@ return charge of 'species' in current unit or unit of the user's choice
 - `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the charge variable
 
 """
-chargeof
+charge
 
-function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:charge))
+function charge(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=getunit(:charge))
   if unit isa AbstractString
     unit = uparse(unit)
   end
