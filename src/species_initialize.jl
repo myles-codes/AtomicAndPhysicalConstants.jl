@@ -26,7 +26,7 @@ subatomic_particle
 function subatomic_particle(name::String)
     # write the particle out directly
     return Species(name, SUBATOMIC_SPECIES[name].charge,
-        SUBATOMIC_SPECIES[name].mass,
+        SUBATOMIC_SPECIES[name].mass_in_eV,
         SUBATOMIC_SPECIES[name].spin,
         SUBATOMIC_SPECIES[name].mu,
         0)
@@ -149,21 +149,21 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
         end
 
         if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
-            if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
+            if iso ∉ keys(ATOMIC_SPECIES[AS].mass_in_amu) # error handling if the isotope isn't available
                 error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
                 return
             end
             mass_in_eV = begin
                 if anti_atom == false
-                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
+                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
                 elseif anti_atom == true
-                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in amu
+                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in amu
                     nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
                 end
             end
             if iso == -1 # if it's the average, make an educated guess at the spin
-                partonum = round(ATOMIC_SPECIES[AS].mass[iso])
+                partonum = round(ATOMIC_SPECIES[AS].mass_in_amu[iso])
                 if anti_atom == false
                     spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
                 elseif anti_atom == true

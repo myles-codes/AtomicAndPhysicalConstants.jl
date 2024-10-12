@@ -144,7 +144,7 @@ end
 
     #create some particles
 
-    H = Species("H", 1, 931.5 * 10^6, 0, 0, 0)
+    H = Species("H")
 
     #mass should be in amu and charge in elementary charge
     setunits(mass_unit=u"amu")
