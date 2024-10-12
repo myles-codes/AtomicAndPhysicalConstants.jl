@@ -91,7 +91,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
     anti = r"Anti\-|anti\-"
     # is the anti-particle in the Subatomic_Particles dictionary?
     if occursin(anti, name) && haskey(SUBATOMIC_SPECIES, name[6:end])
-        if name[6:end] != "electron"
+        if name[6:end] == "electron"
             return subatomic_particle("positron")
         else
             return subatomic_particle("anti_" * name[6:end])
