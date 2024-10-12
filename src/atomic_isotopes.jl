@@ -8,7 +8,7 @@ AtomicSpecies <: AbstractSpeciesData
 ### Fields:
 - `Z`            -- Integer atomic number (i.e. protons in the nucleus)
 - `species_name` -- String periodic table symbol for element
-- `mass`         -- > Dict{Int, Float64}(isotope::Int, mass::Float64) isotope masses
+- `mass_in_amu`   -- > Dict{Int, Float64}(isotope::Int, mass::Float64) isotope masses
 									 > key -1 refers to the average common atomic mass, other keys refer to 
 									 > the number of nucleons present in the isotope <
 
@@ -32,7 +32,7 @@ AtomicSpecies
 struct AtomicSpecies
   Z::Int                      		# number of protons
   species_name::String    # periodic table element symbol
-  mass::Dict{Int,Float64}					# a dict to store the masses, keyed by isotope
+  mass_in_amu::Dict{Int,Float64}					# a dict to store the masses, keyed by isotope
   #=
   keyvalue -1 => average mass of common isotopes,
   keyvalue n ∈ {0} ∪ N is the mass number of the isotope

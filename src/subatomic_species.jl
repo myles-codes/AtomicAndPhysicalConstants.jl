@@ -8,7 +8,7 @@ SubtomicSpecies
 ### Fields:
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
-- `mass`              -- mass of the given particle in [eV/c^2]
+- `mass_in_eV`              -- mass of the given particle in [eV/c^2]
 - `mu`  							-- magnetic moment of particle in [eV/T]
 - `spin`              -- spin of the particle in [ħ]
 
@@ -24,7 +24,7 @@ SubatomicSpecies
 struct SubatomicSpecies
   species_name::String              # common species_name of the particle
   charge::Int                     # charge on the particle in units of e+
-  mass::Float64                     # mass of the particle in [eV/c^2]
+  mass_in_eV::Float64                     # mass of the particle in [eV/c^2]
   mu::Float64         # anomalous magnetic moment 
   spin::Float64                     # spin magnetic moment in [ħ]
 end;
@@ -49,19 +49,19 @@ Subatomic_Particles["some-particle"] = SubatomicSpecies("some-particle", ...)
 
 const SUBATOMIC_SPECIES = Dict{String,SubatomicSpecies}(
   "pion0" => SubatomicSpecies("pion0", 0, __b_m_pion_0.val, 0.0, 0.0),
-  "neutron" => SubatomicSpecies("neutron", 0, __b_m_neutron.val, __b_mu_neutron.val, 0.5 ),
-  "deuteron" => SubatomicSpecies("deuteron", 1, __b_m_deuteron.val, __b_mu_deuteron.val, 1.0 ),
+  "neutron" => SubatomicSpecies("neutron", 0, __b_m_neutron.val, __b_mu_neutron.val, 0.5),
+  "deuteron" => SubatomicSpecies("deuteron", 1, __b_m_deuteron.val, __b_mu_deuteron.val, 1.0),
   "pion+" => SubatomicSpecies("pion+", 1, __b_m_pion_charged.val, 0.0, 0.0),
-  "anti_muon" => SubatomicSpecies("anti-muon", 1, __b_m_muon.val, __b_mu_muon.val, 0.5 ),
-  "proton" => SubatomicSpecies("proton", 1, __b_m_proton.val, __b_mu_proton.val, 0.5 ),
-  "positron" => SubatomicSpecies("positron", 1, __b_m_electron.val, __b_mu_electron.val, 0.5 ),
+  "anti_muon" => SubatomicSpecies("anti-muon", 1, __b_m_muon.val, __b_mu_muon.val, 0.5),
+  "proton" => SubatomicSpecies("proton", 1, __b_m_proton.val, __b_mu_proton.val, 0.5),
+  "positron" => SubatomicSpecies("positron", 1, __b_m_electron.val, __b_mu_electron.val, 0.5),
   "photon" => SubatomicSpecies("photon", 0, 0.0, 0.0, 0.0),
-  "electron" => SubatomicSpecies("electron", -1, __b_m_electron.val, __b_mu_electron.val, 0.5 ),
-  "anti_proton" => SubatomicSpecies("anti-proton", -1, __b_m_proton.val, __b_mu_proton.val, 0.5 ),
-  "muon" => SubatomicSpecies("muon", -1, __b_m_muon.val, __b_mu_muon.val, 0.5 ),
+  "electron" => SubatomicSpecies("electron", -1, __b_m_electron.val, __b_mu_electron.val, 0.5),
+  "anti_proton" => SubatomicSpecies("anti-proton", -1, __b_m_proton.val, __b_mu_proton.val, 0.5),
+  "muon" => SubatomicSpecies("muon", -1, __b_m_muon.val, __b_mu_muon.val, 0.5),
   "pion-" => SubatomicSpecies("pion-", -1, __b_m_pion_charged.val, 0.0, 0.0),
-  "anti_deuteron" => SubatomicSpecies("anti-deuteron", -1, __b_m_deuteron.val, __b_mu_deuteron.val, 1.0 ),
-  "anti_neutron" => SubatomicSpecies("anti-neutron", 0, __b_m_neutron.val, __b_mu_neutron.val, 0.5 )
+  "anti_deuteron" => SubatomicSpecies("anti-deuteron", -1, __b_m_deuteron.val, __b_mu_deuteron.val, 1.0),
+  "anti_neutron" => SubatomicSpecies("anti-neutron", 0, __b_m_neutron.val, __b_mu_neutron.val, 0.5)
 )
 
 
