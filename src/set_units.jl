@@ -309,7 +309,7 @@ function mass(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=ge
   if dimension(unit) != dimension(u"kg")
     throw(ErrorException("unit have proper dimension"))
   end
-  return (species.mass * u"eV/c^2" |> unit).val
+  return (species.mass_in_eV * u"eV/c^2" |> unit).val
 end
 
 """
