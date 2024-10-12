@@ -8,7 +8,7 @@ SubtomicSpecies
 ### Fields:
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
-- `mass`              -- mass of the given particle in [eV/c^2]
+- `mass_in_eV`              -- mass of the given particle in [eV/c^2]
 - `mu`  							-- magnetic moment of particle in [eV/T]
 - `spin`              -- spin of the particle in [ħ]
 
@@ -24,7 +24,7 @@ SubatomicSpecies
 struct SubatomicSpecies
   species_name::String              # common species_name of the particle
   charge::Int                     # charge on the particle in units of e+
-  mass::Float64                     # mass of the particle in [eV/c^2]
+  mass_in_eV::Float64                     # mass of the particle in [eV/c^2]
   mu::Float64         # anomalous magnetic moment 
   spin::Float64                     # spin magnetic moment in [ħ]
 end;
