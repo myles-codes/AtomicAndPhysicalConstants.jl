@@ -173,9 +173,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
                 spin = 0.5 * iso
             end
             if anti_atom == false
-                return Species(AS, charge, mass, spin, 0, iso) # return the object to track
+                return Species(AS, charge, mass_in_eV, spin, 0, iso) # return the object to track
             elseif anti_atom == true
-                return Species("anti-" * AS, charge, mass, spin, 0, iso)
+                return Species("anti-" * AS, charge, mass_in_eV, spin, 0, iso)
             end
 
 
