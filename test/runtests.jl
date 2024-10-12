@@ -151,8 +151,8 @@ end
 
     @test mass(H) ≈ 1.000 atol = 1e-4
     @test charge(H) ≈ 1
-    @test mass(H, "kg") ≈ 1.6605e-27 atol = 1e-4
-    @test charge(H, "C") ≈ 1.6021e-19 atol = 1e-4
+    @test mass(H, "kg") ≈ 1.6605e-27 atol = 1e-28
+    @test charge(H, "C") ≈ 1.6021e-19 atol = 1e-20
 
     s = Species("electron")
     @test mass(s, u"eV/c^2") ≈ 510998.95069 atol = 1
