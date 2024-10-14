@@ -3,6 +3,6 @@
 Hi!
 Look at my equation:
 
-``math
+```math
 \langle P \rangle_t = 0.75
-``
+```
