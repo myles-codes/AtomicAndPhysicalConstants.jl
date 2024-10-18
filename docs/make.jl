@@ -7,7 +7,8 @@ makedocs(
   pages=
   [
     "Home" => "index.md",
-    "Set Units" => "set_units.md"
+    "Set Units" => "set_units.md",
+    "Physical Constants" => "physical_constants.md"
   ]
 )
 
