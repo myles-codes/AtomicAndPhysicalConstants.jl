@@ -40,7 +40,7 @@ of information specifice to the chosen particle.
 # Fields:
 1. `name::String': 				the name of the particle 
 
-2. `charge::typeof(1.0u"q")': 				 the net charge of the particle in units of |e|
+2. `int_charge::typeof(1u"q")': 				 the net charge of the particle in units of |e|
 																		 	 - bookkeeping only, thus in internal units
 																			 - use the 'charge()' function to get the charge 
 																			 - in the desired units
