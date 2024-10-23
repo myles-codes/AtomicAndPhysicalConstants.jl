@@ -79,6 +79,7 @@ const CGS = UnitSystem(
   u"J",
   u"C")
 
+
 """
     current_units :: UnitSystem
 
@@ -88,7 +89,14 @@ This declares a `UnitSystem` that stores the units in current use.
 ## Note:
 It is initialized when setunits() is called.
 """
-current_units
+# Note that the units don't have the proper dimension, this means set unit is not called
+current_units::UnitSystem = UnitSystem(u"m",
+  u"m",
+  u"m",
+  u"m",
+  u"m")
+
+
 
 """
     getunits(unit::Symbol)
@@ -103,7 +111,7 @@ return the unit with the corresponding field `unit` in `current_units`
 getunit
 
 function getunit(unit::Symbol)
-  if !@isdefined current_units
+  if dimension(current_units.mass) != dimension(u"kg")
     throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
   else
     return getfield(current_units, unit)
@@ -120,7 +128,7 @@ in current use.
 printunits
 
 function printunits()
-  if !@isdefined current_units
+  if dimension(current_units.mass) != dimension(u"kg")
     throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
   end
   # prints the units for each dimensions
@@ -220,65 +228,57 @@ function setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
   global current_units = UnitSystem(mass_unit, length_unit, time_unit, energy_unit, charge_unit)
 
   # convert all the variables with dimension mass
-  global m_electron = (__b_m_electron |> mass_unit).val         # Electron Mass 
-  global m_proton = (__b_m_proton |> mass_unit).val             # Proton Mass 
-  global m_neutron = (__b_m_neutron |> mass_unit).val           # Neutron Mass 
-  global m_muon = (__b_m_muon |> mass_unit).val                 # Muon Mass 
-  global m_helion = (__b_m_helion |> mass_unit).val             # Helion Mass He3 nucleus 
-  global m_deuteron = (__b_m_deuteron |> mass_unit).val         # Deuteron Mass 
-  global m_pion_0 = (__b_m_pion_0 |> mass_unit).val             # Pion 0 mass
-  global m_pion_charged = (__b_m_pion_charged |> mass_unit).val # Pion+- Mass 
+  AtomicAndPhysicalConstants.m_electron = (__b_m_electron |> mass_unit).val         # Electron Mass 
+  AtomicAndPhysicalConstants.m_proton = (__b_m_proton |> mass_unit).val             # Proton Mass 
+  AtomicAndPhysicalConstants.m_neutron = (__b_m_neutron |> mass_unit).val           # Neutron Mass 
+  AtomicAndPhysicalConstants.m_muon = (__b_m_muon |> mass_unit).val                 # Muon Mass 
+  AtomicAndPhysicalConstants.m_helion = (__b_m_helion |> mass_unit).val             # Helion Mass He3 nucleus 
+  AtomicAndPhysicalConstants.m_deuteron = (__b_m_deuteron |> mass_unit).val         # Deuteron Mass 
+  AtomicAndPhysicalConstants.m_pion_0 = (__b_m_pion_0 |> mass_unit).val             # Pion 0 mass
+  AtomicAndPhysicalConstants.m_pion_charged = (__b_m_pion_charged |> mass_unit).val # Pion+- Mass 
 
   # convert all the variables with dimension length
-  global r_e = (__b_r_e |> length_unit).val                     # classical electron radius
+  AtomicAndPhysicalConstants.r_e = (__b_r_e |> length_unit).val                     # classical electron radius
 
   # convert all the variables with dimension time
 
   # convert all the variables with dimension speed
-  global c_light = (__b_c_light |> length_unit / time_unit).val          # speed of light
+  AtomicAndPhysicalConstants.c_light = (__b_c_light |> length_unit / time_unit).val          # speed of light
 
   # convert all the variables with dimension energy
 
   # convert all the variables with dimension charge
-  global e_charge = (__b_e_charge |> charge_unit).val                                # elementary charge
+  AtomicAndPhysicalConstants.e_charge = (__b_e_charge |> charge_unit).val                                # elementary charge
 
   # constants with special dimenisions
   # convert Planck's constant with dimension energy * time
-  global h_planck = (__b_h_planck |> energy_unit * time_unit).val        # Planck's constant 
+  AtomicAndPhysicalConstants.h_planck = (__b_h_planck |> energy_unit * time_unit).val        # Planck's constant 
   # convert Vacuum permeability with dimension force / (current)^2
-  global mu_0_vac = __b_mu_0_vac.val
+  AtomicAndPhysicalConstants.mu_0_vac = __b_mu_0_vac.val
   # convert Vacuum permeability with dimension capacitance / distance
-  global eps_0_vac = __b_eps_0_vac.val
-
-  # convert anomous magnet moments dimension: unitless
-  #global gyromagnetic_anomaly_electron = __b_gyromagnetic_anomaly_electron           # anomalous mag. mom. of the electron 
-  #global gyromagnetic_anomaly_muon = __b_gyromagnetic_anomaly_muon               #        
-  #global gyromagnetic_anomaly_proton = __b_gyromagnetic_anomaly_proton             # μ_p/μ_N - 1
-  #global gyromagnetic_anomaly_deuteron = __b_gyromagnetic_anomaly_deuteron           # μ_{deuteron}/μ_N - 1
-  #global gyromagnetic_anomaly_neutron = __b_gyromagnetic_anomaly_neutron            # μ_{neutron}/μ_N - 1
-  #global gyromagnetic_anomaly_He3 = __b_gyromagnetic_anomaly_He3                # μ_{He3}/μ_N - 2
+  AtomicAndPhysicalConstants.eps_0_vac = __b_eps_0_vac.val
 
   # convert magnet moments dimension: energy / magnetic field strength
-  global mu_deuteron = (__b_mu_deuteron |> energy_unit / u"T").val    # deuteron magnetic moment
-  global mu_electron = (__b_mu_electron |> energy_unit / u"T").val    # electron magnetic moment
-  global mu_helion = (__b_mu_helion |> energy_unit / u"T").val        # helion magnetic moment
-  global mu_muon = (__b_mu_muon |> energy_unit / u"T").val            # muon magnetic moment
-  global mu_neutron = (__b_mu_neutron |> energy_unit / u"T").val      # neutron magnetic moment
-  global mu_proton = (__b_mu_proton |> energy_unit / u"T").val        # proton magnetic moment
-  global mu_triton = (__b_mu_triton |> energy_unit / u"T").val        # triton magnetic moment
+  AtomicAndPhysicalConstants.mu_deuteron = (__b_mu_deuteron |> energy_unit / u"T").val    # deuteron magnetic moment
+  AtomicAndPhysicalConstants.mu_electron = (__b_mu_electron |> energy_unit / u"T").val    # electron magnetic moment
+  AtomicAndPhysicalConstants.mu_helion = (__b_mu_helion |> energy_unit / u"T").val        # helion magnetic moment
+  AtomicAndPhysicalConstants.mu_muon = (__b_mu_muon |> energy_unit / u"T").val            # muon magnetic moment
+  AtomicAndPhysicalConstants.mu_neutron = (__b_mu_neutron |> energy_unit / u"T").val      # neutron magnetic moment
+  AtomicAndPhysicalConstants.mu_proton = (__b_mu_proton |> energy_unit / u"T").val        # proton magnetic moment
+  AtomicAndPhysicalConstants.mu_triton = (__b_mu_triton |> energy_unit / u"T").val        # triton magnetic moment
 
   # convert unitless variables
-  global kg_per_amu = __b_kg_per_amu.val               # kg per standard atomic mass unit (dalton)
-  global eV_per_amu = __b_eV_per_amu.val                  # eV per standard atomic mass unit (dalton)
-  global N_avogadro = __b_N_avogadro                # Number / mole  (exact)
-  global fine_structure = __b_fine_structure                # fine structure constant
+  AtomicAndPhysicalConstants.kg_per_amu = __b_kg_per_amu.val               # kg per standard atomic mass unit (dalton)
+  AtomicAndPhysicalConstants.eV_per_amu = __b_eV_per_amu.val                  # eV per standard atomic mass unit (dalton)
+  AtomicAndPhysicalConstants.N_avogadro = __b_N_avogadro                # Number / mole  (exact)
+  AtomicAndPhysicalConstants.fine_structure = __b_fine_structure                # fine structure constant
 
   # values calculated from other constants
-  global classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
-  global r_p = r_e * m_electron / m_proton      # proton radius
-  global h_bar_planck = h_planck / 2pi                   # h_planck/twopi
-  global kg_per_eV = kg_per_amu / eV_per_amu
-  global eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
+  AtomicAndPhysicalConstants.classical_radius_factor = r_e * m_electron                 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2. Is same for all particles of charge +/- 1.
+  AtomicAndPhysicalConstants.r_p = r_e * m_electron / m_proton      # proton radius
+  AtomicAndPhysicalConstants.h_bar_planck = h_planck / 2pi                   # h_planck/twopi
+  AtomicAndPhysicalConstants.kg_per_eV = kg_per_amu / eV_per_amu
+  AtomicAndPhysicalConstants.eps_0_vac = 1 / (c_light^2 * mu_0_vac)       # Permeability of free space
   if print_units
     printunits()
   end
@@ -307,7 +307,7 @@ function mass(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=ge
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"kg")
-    throw(ErrorException("unit have proper dimension"))
+    throw(ErrorException("mass unit doesn't have proper dimension"))
   end
   return (species.mass_in_eV * u"eV/c^2" |> unit).val
 end
@@ -333,8 +333,48 @@ function charge(species::Species, unit::Union{Unitful.FreeUnits,AbstractString}=
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"C")
-    throw(ErrorException("unit have proper dimension"))
+    throw(ErrorException("charge unit doesn't have proper dimension"))
   end
   return (species.charge * u"e" |> unit).val
 end
 
+
+
+# Define global constants
+m_electron::Float64 = NaN
+m_proton::Float64 = NaN
+m_neutron::Float64 = NaN
+m_muon::Float64 = NaN
+m_helion::Float64 = NaN
+m_deuteron::Float64 = NaN
+m_pion_0::Float64 = NaN
+m_pion_charged::Float64 = NaN
+
+r_e::Float64 = NaN
+
+c_light::Float64 = NaN
+
+e_charge::Float64 = NaN
+
+h_planck::Float64 = NaN
+mu_0_vac::Float64 = NaN
+eps_0_vac::Float64 = NaN
+
+mu_deuteron::Float64 = NaN
+mu_electron::Float64 = NaN
+mu_helion::Float64 = NaN
+mu_muon::Float64 = NaN
+mu_neutron::Float64 = NaN
+mu_proton::Float64 = NaN
+mu_triton::Float64 = NaN
+
+kg_per_amu::Float64 = NaN
+eV_per_amu::Float64 = NaN
+N_avogadro::Float64 = NaN
+fine_structure::Float64 = NaN
+
+classical_radius_factor::Float64 = NaN
+r_p::Float64 = NaN
+h_bar_planck::Float64 = NaN
+kg_per_eV::Float64 = NaN
+eps_0_vac::Float64 = NaN
