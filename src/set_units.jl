@@ -123,14 +123,14 @@ function setunits(unitsystem=ACCELERATOR;
     throw(ErrorException("unit for charge does not have proper dimension"))
   end
 
-  eval(:(C_LIGHT() = uconvert($length_unit / $time_unit, __b_c_light)))
-  eval(:(H_PLANCK() = uconvert($energy_unit * $time_unit, __b_h_planck)))
-  eval(:(H_BAR_PLANCK() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
-  eval(:(R_E() = uconvert($length_unit, __b_r_e)))
-  eval(:(R_P() = uconvert($length_unit, __b_r_p)))
-  eval(:(E_CHARGE() = uconvert($charge_unit, __b_e_charge)))
-  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV)))
-  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
+  eval(:(c_light() = uconvert($length_unit / $time_unit, __b_c_light)))
+  eval(:(h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)))
+  eval(:(h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
+  eval(:(r_e() = uconvert($length_unit, __b_r_e)))
+  eval(:(r_p() = uconvert($length_unit, __b_r_p)))
+  eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
+  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")))
+  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")))
   return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
@@ -156,7 +156,7 @@ function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
     unit = uparse(unit)
   end
   if dimension(unit) != dimension(u"kg")
-    throw(ErrorException("mass unit doesn't have proper dimension"))
+    error("mass unit doesn't have proper dimension")
   end
   return (species.mass_in_eV * u"eV/c^2" |> unit).val
 end
@@ -191,58 +191,58 @@ end
 
 
 
-function C_LIGHT(unit::Unitful.FreeUnits)
+function c_light(unit::Unitful.FreeUnits)
   return __b_c_light |> unit
 end
 
-function H_PLANCK(unit::Unitful.FreeUnits)
+function h_planck(unit::Unitful.FreeUnits)
   return __b_h_planck |> unit
 end
 
 
-function H_BAR_PLANCK(unit::Unitful.FreeUnits)
+function h_bar_planck(unit::Unitful.FreeUnits)
   return __b_h_bar_planck |> unit
 end
 
 
-function R_E(unit::Unitful.FreeUnits)
+function r_e(unit::Unitful.FreeUnits)
   return __b_r_e |> unit
 end
 
-function R_P(unit::Unitful.FreeUnits)
+function r_p(unit::Unitful.FreeUnits)
   return __b_r_p |> unit
 end
 
-function E_CHARGE(unit::Unitful.FreeUnits)
+function e_charge(unit::Unitful.FreeUnits)
   return __b_e_charge |> unit
 end
 
 
-function MU_0_VAC()
+function mu_0_vac()
   return __b_mu_0_vac
 end
 
-function MU_0_VAC(unit::Unitful.FreeUnits)
+function mu_0_vac(unit::Unitful.FreeUnits)
   return __b_mu_0_vac |> unit
 end
 
 
-function EPS_0_VAC()
+function eps_0_vac()
   return __b_eps_0_vac
 end
 
-function EPS_0_VAC(unit::Unitful.FreeUnits)
+function eps_0_vac(unit::Unitful.FreeUnits)
   return __b_eps_0_vac |> unit
 end
 
-function CLASSICAL_RADIUS_FACTOR()
+function classical_radius_factor()
   return __b_classical_radius_factor
 end
 
-function FINE_STRUCTURE()
+function fine_structure()
   return __b_classical_radius_factor
 end
 
-function N_AVOGADRO()
+function N_avogadro()
   return __b_N_avogadro
 end
