@@ -2,17 +2,17 @@
 # Declare specific systems of units
 #   for particle physics
 """
-    PARTICLE_PHYSICS
-## PARTICLE_PHYSICS units:
+    ACCELERATOR
+## ACCELERATOR units:
 - `mass`: eV/c^2
 - `length`: m
 - `time`: s
 - `energy`: eV
 - `charge`: elementary charge
 """
-PARTICLE_PHYSICS
+ACCELERATOR
 
-const PARTICLE_PHYSICS = [
+const ACCELERATOR = [
   "eV/c^2",
   "m",
   "s",
@@ -92,7 +92,7 @@ function printunits()
 end
 
 """
-    setunits(unitsystem::UnitSystem=PARTICLE_PHYSICS;
+    setunits(unitsystem::UnitSystem=ACCELERATOR;
       mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
       length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.length,
       time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
@@ -135,7 +135,7 @@ Prints current units at the end (optional).
 """
 setunits
 
-function setunits(unitsystem::Vector{String}=PARTICLE_PHYSICS;
+function setunits(unitsystem::Vector{String}=ACCELERATOR;
   mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[0],
   length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[1],
   time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[2],
