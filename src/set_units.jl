@@ -12,11 +12,11 @@
 ACCELERATOR
 
 const ACCELERATOR = [
-  "eV/c^2",
-  "m",
-  "s",
-  "eV",
-  "e"]
+  u"eV/c^2",
+  u"m",
+  u"s",
+  u"eV",
+  u"e"]
 
 #   MKS
 """
@@ -31,11 +31,11 @@ const ACCELERATOR = [
 MKS
 
 const MKS = [
-  "kg",
-  "m",
-  "s",
-  "J",
-  "C"]
+  u"kg",
+  u"m",
+  u"s",
+  u"J",
+  u"C"]
 #   quasi-CGS
 """
     CGS
@@ -49,11 +49,11 @@ const MKS = [
 CGS
 
 const CGS = [
-  "g",
-  "cm",
-  "s",
-  "J",
-  "C"]
+  u"g",
+  u"cm",
+  u"s",
+  u"J",
+  u"C"]
 
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
@@ -99,29 +99,13 @@ Prints current units at the end (optional).
 """
 setunits
 
-function setunits(unitsystem::Vector{String}=ACCELERATOR;
-  mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[1],
-  length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[2],
-  time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[3],
-  energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[4],
-  charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[5],
+function setunits(unitsystem=ACCELERATOR;
+  mass_unit::Unitful.FreeUnits=unitsystem[1],
+  length_unit::Unitful.FreeUnits=unitsystem[2],
+  time_unit::Unitful.FreeUnits=unitsystem[3],
+  energy_unit::Unitful.FreeUnits=unitsystem[4],
+  charge_unit::Unitful.FreeUnits=unitsystem[5],
 )
-  # convert types to Unitful.FreeUnits
-  if mass_unit isa AbstractString
-    mass_unit = uparse(mass_unit)
-  end
-  if length_unit isa AbstractString
-    length_unit = uparse(length_unit)
-  end
-  if time_unit isa AbstractString
-    time_unit = uparse(time_unit)
-  end
-  if energy_unit isa AbstractString
-    energy_unit = uparse(energy_unit)
-  end
-  if charge_unit isa AbstractString
-    charge_unit = uparse(charge_unit)
-  end
   # check dimensions of units
   if dimension(mass_unit) != dimension(u"kg")
     throw(ErrorException("unit for mass does not have proper dimension"))
