@@ -1,4 +1,3 @@
-
 # Declare specific systems of units
 #   for particle physics
 """
@@ -56,41 +55,6 @@ const CGS = [
   "J",
   "C"]
 
-
-"""
-    current_units 
-
-## Description:
-This vector that stores the units in current use.
-
-## Note:
-It is initialized when setunits() is called.
-"""
-current_units::Vector{String} = []
-
-
-"""
-    printunits()
-
-## Description:
-This function returns nothing. It simply prints the set of units
-in current use.
-"""
-printunits
-
-function printunits()
-  if isempty(current_units)
-    throw(ErrorException("units are not set, call setunits() to initalize units and constants"))
-  end
-  # prints the units for each dimensions
-  println("mass unit:\t", current_units[0])
-  println("length unit:\t", current_units[1])
-  println("time unit:\t", current_units[2])
-  println("energy unit:\t", current_units[3])
-  println("charge unit:\t", current_units[4])
-  return
-end
-
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
       mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
@@ -136,11 +100,11 @@ Prints current units at the end (optional).
 setunits
 
 function setunits(unitsystem::Vector{String}=ACCELERATOR;
-  mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[0],
-  length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[1],
-  time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[2],
-  energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[3],
-  charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[4],
+  mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[1],
+  length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[2],
+  time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[3],
+  energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[4],
+  charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem[5],
 )
   # convert types to Unitful.FreeUnits
   if mass_unit isa AbstractString
@@ -174,8 +138,6 @@ function setunits(unitsystem::Vector{String}=ACCELERATOR;
   if dimension(charge_unit) != dimension(u"C")
     throw(ErrorException("unit for charge does not have proper dimension"))
   end
-  # record what units is currently being used
-  global current_units = [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
   eval(:(C_LIGHT() = uconvert($length_unit / $time_unit, __b_c_light)))
   eval(:(H_PLANCK() = uconvert($energy_unit * $time_unit, __b_h_planck)))
@@ -185,7 +147,8 @@ function setunits(unitsystem::Vector{String}=ACCELERATOR;
   eval(:(E_CHARGE() = uconvert($charge_unit, __b_e_charge)))
   eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV)))
   eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
-  return current_units
+  return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
+
 end
 
 """
@@ -244,29 +207,29 @@ end
 
 
 
-function C_LIGHT(unit::typeof(u"m/s"))
+function C_LIGHT(unit::Unitful.FreeUnits)
   return __b_c_light |> unit
 end
 
-function H_PLANCK(unit::typeof(u"eV*s"))
+function H_PLANCK(unit::Unitful.FreeUnits)
   return __b_h_planck |> unit
 end
 
 
-function H_BAR_PLANCK(unit::typeof(u"eV*s"))
+function H_BAR_PLANCK(unit::Unitful.FreeUnits)
   return __b_h_bar_planck |> unit
 end
 
 
-function R_E(unit::typeof(u"m"))
+function R_E(unit::Unitful.FreeUnits)
   return __b_r_e |> unit
 end
 
-function R_P(unit::typeof(u"m"))
+function R_P(unit::Unitful.FreeUnits)
   return __b_r_p |> unit
 end
 
-function E_CHARGE(unit::typeof(u"e"))
+function E_CHARGE(unit::Unitful.FreeUnits)
   return __b_e_charge |> unit
 end
 
@@ -275,7 +238,7 @@ function MU_0_VAC()
   return __b_mu_0_vac
 end
 
-function MU_0_VAC(unit::typeof(u"N/A^2"))
+function MU_0_VAC(unit::Unitful.FreeUnits)
   return __b_mu_0_vac |> unit
 end
 
@@ -284,9 +247,7 @@ function EPS_0_VAC()
   return __b_eps_0_vac
 end
 
-
-
-function EPS_0_VAC(unit::typeof(u"F/m"))
+function EPS_0_VAC(unit::Unitful.FreeUnits)
   return __b_eps_0_vac |> unit
 end
 
