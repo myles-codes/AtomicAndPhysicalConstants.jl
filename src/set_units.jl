@@ -158,7 +158,7 @@ function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
-  return (species.mass_in_eV |> unit).val
+  return (species.mass |> unit).val
 end
 
 
