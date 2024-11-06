@@ -1,14 +1,6 @@
 
 
-struct Species
-    name::String # name of the particle to track
-    int_charge::typeof(1u"q") # charge of the particle (important to consider ionized atoms) in [e]
-    mass_in_eV::typeof(1.0u"eV/c^2") # mass of the particle in [eV/c^2]
-    planck_spin::typeof(1.0u"ħ") # spin of the particle in [ħ]
-    moment::typeof(1.0u"eV/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
-    iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
-end;
-export Species
+
 
 
 
@@ -26,9 +18,9 @@ subatomic_particle
 function subatomic_particle(name::String)
     # write the particle out directly
     return Species(name, SUBATOMIC_SPECIES[name].charge*u"q",
-        SUBATOMIC_SPECIES[name].mass_in_eV*u"eV/c^2",
-        SUBATOMIC_SPECIES[name].spin*u"ħ",
-        SUBATOMIC_SPECIES[name].mu*u"eV/T",
+        SUBATOMIC_SPECIES[name].mass*u"eV/c^2",
+        SUBATOMIC_SPECIES[name].planck_spin*u"ħ",
+        SUBATOMIC_SPECIES[name].mu*u"J/T",
         0)
 end
 
@@ -49,7 +41,7 @@ of information specifice to the chosen particle.
 																			 - use the 'charge()' function to get the charge 
 																			 - in the desired units
 
-3. `mass_in_eV::typeof(1.0u"eV/c^2")': the mass of the particle in eV/c^2
+3. `mass::typeof(1.0u"eV/c^2")': 				 the mass of the particle in eV/c^2
 																			 - bookkeeping only, thus in internal units
 																		 	 - use the 'mass()' function to get the mass 
 																			 - in the desired units
@@ -153,7 +145,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
                 error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
                 return
             end
-            mass_in_eV = begin
+            mass = begin
                 if anti_atom == false
                     nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
@@ -165,17 +157,17 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
             if iso == -1 # if it's the average, make an educated guess at the spin
                 partonum = round(ATOMIC_SPECIES[AS].mass_in_amu[iso])
                 if anti_atom == false
-                    spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
+                    planck_spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
                 elseif anti_atom == true
-                    spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
+                    planck_spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
                 end
             else # otherwise, use the sum of proton and neutron spins
-                spin = 0.5 * iso
+                planck_spin = 0.5 * iso
             end
             if anti_atom == false
-                return Species(AS, charge*u"q", mass_in_eV*u"eV/c^2", spin*u"ħ", 0*u"eV/T", iso) # return the object to track
+                return Species(AS, charge*u"q", mass*u"eV/c^2", planck_spin*u"ħ", 0*u"eV/T", iso) # return the object to track
             elseif anti_atom == true
-                return Species("anti-" * AS, charge*u"q", mass_in_eV*u"eV/c^2", spin*u"ħ", 0u"eV/T", iso)
+                return Species("anti-" * AS, charge*u"q", mass*u"eV/c^2", planck_spin*u"ħ", 0u"eV/T", iso)
             end
 
 
