@@ -93,8 +93,8 @@ function writeIsos(Elements::Dict{Int64, AtomicSpecies})
 	date = today()
 
   Z_eles = 1:1:118
-  topmat = """# AtomicAndPhysicalConstants.jl/src/AtomicIsotopes.jl\n\n\n\n"""
-  brek = """\n\n\n# -------------------------------------------------------\n\n\n\n"""
+  topmat = f"""\n# AtomicAndPhysicalConstants.jl/src/{date}_isotopes.jl\n\n\n"""
+  brek = """#########################################################\n\n\n"""
   qs = '"'
   docplus = qs*qs*qs*"""ATOMIC_SPECIES \n\
   Isotopes from NIST data $date \n\
@@ -108,7 +108,7 @@ function writeIsos(Elements::Dict{Int64, AtomicSpecies})
   \n\
   ATOMIC_SPECIES = Dict{String, AtomicSpecies}(\n"
 	
-  f = open(pwd() * f"/src/{date}_atomic_isotopes.jl", "w")
+  f = open(pwd() * f"/src/{date}_isotopes.jl", "w")
   write(f, topmat)
   write(f, brek)
   write(f, docplus)
@@ -118,11 +118,11 @@ function writeIsos(Elements::Dict{Int64, AtomicSpecies})
     space = repeat(" ", 7-nlen)
     
     atom_entry = qs*Elements[Z].species_name*qs*space#*f"=>    {Elements[Z]}"
-		atom_entry *= f"AtomicSpecies({Elements[Z].Z},"
-		atom_entry *= f""" "{Element[Z].species_name}", """
+		atom_entry *= f"=>    AtomicSpecies({Elements[Z].Z},"
+		atom_entry *= f""" "{Elements[Z].species_name}", """
 		atom_entry *= "Dict{}("
 		for (k, v) in Elements[Z].mass
-			atom_entry *= f"""{k}, {v}*u"amu", """
+			atom_entry *= f"""{k} => {v}*u"amu", """
 		end
 		atom_entry *= "))"
     write(f, atom_entry)
@@ -130,7 +130,7 @@ function writeIsos(Elements::Dict{Int64, AtomicSpecies})
     if Z < 118
       write(f, ",\n\n")
     else
-      write(f, "\n); export Atomic_Particles")
+      write(f, "\n); export ATOMIC_SPECIES")
     end
   end
 

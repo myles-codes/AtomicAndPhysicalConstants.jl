@@ -8,13 +8,14 @@ using Reexport
 @reexport using Unitful
 
 include("units_definition.jl")
-include("physical_constants.jl")
+include("constants.jl")
 include("types.jl")
-include("atomic_isotopes.jl")
+include("constructors.jl")
+include("isotopes.jl")
 include("subatomic_species.jl")
 include("update_pion_mass.jl")
 include("update_constants.jl")
-include("update_iso_masses.jl")
+include("update_isos.jl")
 include("particle_functions.jl")
 include("set_units.jl")
 

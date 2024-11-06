@@ -1,4 +1,6 @@
-
+# Package: AtomicAndPhysicalConstants
+# file: src/species_initialize.jl
+# purpose: define constructors
 
 
 
@@ -152,10 +154,10 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
             end
             mass = begin
                 if anti_atom == false
-                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
+                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
                 elseif anti_atom == true
-                    nmass = uconvert(u"eV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in amu
+                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in amu
                     nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
                 end
             end
@@ -170,9 +172,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
                 planck_spin = 0.5 * iso
             end
             if anti_atom == false
-                return Species(AS, charge*u"q", mass*u"eV/c^2", planck_spin*u"ħ", 0*u"eV/T", iso) # return the object to track
+                return Species(AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"ħ", 0*u"J/T", iso) # return the object to track
             elseif anti_atom == true
-                return Species("anti-" * AS, charge*u"q", mass*u"eV/c^2", planck_spin*u"ħ", 0u"eV/T", iso)
+                return Species("anti-" * AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"ħ", 0u"J/T", iso)
             end
 
 
