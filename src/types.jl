@@ -9,7 +9,8 @@ struct Species
     iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
 end;
 export Species
-
+# The docstring for this struct is with its constructor, in the file 
+# src/constructors.jl
 
 #####################################################################
 #####################################################################
