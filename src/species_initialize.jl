@@ -17,10 +17,10 @@ subatomic_particle
 
 function subatomic_particle(name::String)
     # write the particle out directly
-    return Species(name, SUBATOMIC_SPECIES[name].charge*u"q",
-        SUBATOMIC_SPECIES[name].mass*u"eV/c^2",
-        SUBATOMIC_SPECIES[name].planck_spin*u"ħ",
-        SUBATOMIC_SPECIES[name].mu*u"J/T",
+    return Species(name, SUBATOMIC_SPECIES[name].charge,
+        SUBATOMIC_SPECIES[name].mass,
+        SUBATOMIC_SPECIES[name].planck_spin,
+        SUBATOMIC_SPECIES[name].mu,
         0)
 end
 
