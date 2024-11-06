@@ -8,13 +8,14 @@ using Reexport
 @reexport using Unitful
 
 include("units_definition.jl")
-include("physical_constants.jl")
-include("atomic_isotopes.jl")
+include("constants.jl")
+include("types.jl")
+include("constructors.jl")
+include("isotopes.jl")
 include("subatomic_species.jl")
-include("species_initialize.jl")
 include("update_pion_mass.jl")
 include("update_constants.jl")
-include("update_iso_masses.jl")
+include("update_isos.jl")
 include("particle_functions.jl")
 include("set_units.jl")
 
@@ -25,7 +26,7 @@ export C_LIGHT, H_PLANCK, H_BAR_PLANCK, R_E, R_P, E_CHARGE, MU_0_VAC, EPS_0_VAC,
 export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
-export Atomic_Particles
+export ATOMIC_SPECIES
 export setCODATA
 export @u_str, NewUnits
 

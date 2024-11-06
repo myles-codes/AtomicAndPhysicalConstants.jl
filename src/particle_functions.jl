@@ -1,16 +1,6 @@
 
 
-"""
-    charge_per_mass(particle::Species)
 
-Calculate the charge per unit mass in whichever unit system you're using.
-"""
-charge_per_mass
-
-function charge_per_mass(particle::Species)
-    return particle.charge / particle.mass
-end;
-export charge_per_mass
 
 
 # ------------------------------------------------------------------------------------------------------------
@@ -24,8 +14,8 @@ Get the atomic number (positive nuclear charge) of a tracked particle.
 atomicnumber
 
 function atomicnumber(particle::Species)
-    if haskey(Atomic_Particles, particle.name)
-        return Atomic_Particles[name].Z
+    if haskey(ATOMIC_SPECIES, particle.name)
+        return ATOMIC_SPECIES[name].Z
     else
         print(f"{particle.name} is not an atom, and thus no atomic number.")
         return
