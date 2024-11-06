@@ -51,20 +51,20 @@ const __b_J_per_eV = 1.602176634e-19 * u"J/eV"
 
 
 
-const __b_mu_deuteron = 4.330735087e-27 * u"eV/T"
-# deuteron magnetic moment in [eV/T]
-const __b_mu_electron = -9.2847646917e-24 * u"eV/T"
-# electron magnetic moment in [eV/T]
-const __b_mu_helion = -1.07461755198e-26 * u"eV/T"
-# helion magnetic moment in [eV/T]
-const __b_mu_muon = -4.4904483e-26 * u"eV/T"
-# muon magnetic moment in [eV/T]
-const __b_mu_neutron = -9.6623653e-27 * u"eV/T"
-# neutron magnetic moment in [eV/T]
-const __b_mu_proton = 1.41060679545e-26 * u"eV/T"
-# proton magnetic moment in [eV/T]
-const __b_mu_triton = 1.5046095178e-26 * u"eV/T"
-# triton magnetic moment in [eV/T]
+const __b_mu_deuteron = 4.330735087e-27 * u"J/T"
+# deuteron magnetic moment in [J/T]
+const __b_mu_electron = -9.2847646917e-24 * u"J/T"
+# electron magnetic moment in [J/T]
+const __b_mu_helion = -1.07461755198e-26 * u"J/T"
+# helion magnetic moment in [J/T]
+const __b_mu_muon = -4.4904483e-26 * u"J/T"
+# muon magnetic moment in [J/T]
+const __b_mu_neutron = -9.6623653e-27 * u"J/T"
+# neutron magnetic moment in [J/T]
+const __b_mu_proton = 1.41060679545e-26 * u"J/T"
+# proton magnetic moment in [J/T]
+const __b_mu_triton = 1.5046095178e-26 * u"J/T"
+# triton magnetic moment in [J/T]
 
 
 
@@ -94,9 +94,9 @@ const __b_eps_0_vac = 8.8541878188e-12 * u"F/m"
 
 # constants mysteriously missing from the release
 # picked up from PDG
-const __b_m_pion_0 = 1.349768277676847e8 * u"eV/c^2"
+const __b_m_pion_0 = 1.349768277676847e2 * u"MeV/c^2"
 # uncharged pion mass [eV]/c^2
-const __b_m_pion_charged = 1.3957039098368132e8 * u"eV/c^2"
+const __b_m_pion_charged = 1.3957039098368132e2 * u"MeV/c^2"
 # charged pion mass [eV]/c^2
 
 

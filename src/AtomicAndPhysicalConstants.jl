@@ -9,6 +9,7 @@ using Reexport
 
 include("units_definition.jl")
 include("physical_constants.jl")
+include("types.jl")
 include("atomic_isotopes.jl")
 include("subatomic_species.jl")
 include("species_initialize.jl")
