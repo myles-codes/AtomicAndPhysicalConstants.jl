@@ -2,7 +2,7 @@
 
 struct Species
     name::String # name of the particle to track
-    charge::typeof(1u"q") # charge of the particle (important to consider ionized atoms) in [e]
+    charge::typeof(1u"e") # charge of the particle (important to consider ionized atoms) in [e]
     mass::typeof(1.0u"MeV/c^2") # mass of the particle in [eV/c^2]
     planck_spin::typeof(1.0u"ħ") # spin of the particle in [ħ]
     moment::typeof(1.0u"J/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
@@ -39,7 +39,7 @@ SubatomicSpecies
 
 struct SubatomicSpecies
   species_name::String              # common species_name of the particle
-  charge::typeof(1.0u"q")                     # charge on the particle in units of e+
+  charge::typeof(1.0u"e")                     # charge on the particle in units of e+
   mass::typeof(1.0u"MeV/c^2")                    # mass of the particle in [eV/c^2]
   mu::typeof(1.0u"J/T")       # anomalous magnetic moment 
   planck_spin::typeof(1.0u"ħ")                    # spin magnetic moment in [ħ]
