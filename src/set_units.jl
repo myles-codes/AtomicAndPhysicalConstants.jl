@@ -129,8 +129,8 @@ function setunits(unitsystem=ACCELERATOR;
   eval(:(r_e() = uconvert($length_unit, __b_r_e)))
   eval(:(r_p() = uconvert($length_unit, __b_r_p)))
   eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
-  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")))
-  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")))
+  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV)))
+  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
   return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
