@@ -155,7 +155,7 @@ function massof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
-  return (species.mass |> unit).val
+  return species.mass |> unit
 end
 
 
@@ -179,7 +179,7 @@ function chargeof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("charge unit doesn't have proper dimension"))
   end
-  return (species.charge |> unit).val
+  return species.charge |> unit
 end
 
 

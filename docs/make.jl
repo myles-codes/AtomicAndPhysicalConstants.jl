@@ -8,7 +8,8 @@ makedocs(
   [
     "Home" => "index.md",
     "Set Units" => "set_units.md",
-    "Physical Constants" => "physical_constants.md"
+    "Constants Getter Functions" => "constants.md",
+    "Constants Used" => "constants_used.md"
   ]
 )
 
