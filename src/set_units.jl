@@ -151,10 +151,7 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function massof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
@@ -178,10 +175,7 @@ return charge of 'species' in current unit or unit of the user's choice
 """
 chargeof
 
-function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function chargeof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("charge unit doesn't have proper dimension"))
   end
