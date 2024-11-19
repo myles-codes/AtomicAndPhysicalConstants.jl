@@ -123,14 +123,14 @@ function setunits(unitsystem=ACCELERATOR;
     throw(ErrorException("unit for charge does not have proper dimension"))
   end
 
-  eval(:(c_light() = uconvert($length_unit / $time_unit, __b_c_light)))
-  eval(:(h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)))
-  eval(:(h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
-  eval(:(r_e() = uconvert($length_unit, __b_r_e)))
-  eval(:(r_p() = uconvert($length_unit, __b_r_p)))
-  eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
-  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass)))
-  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
+  c_light() = uconvert($length_unit / $time_unit, __b_c_light)
+  h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)
+  h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)
+  r_e() = uconvert($length_unit, __b_r_e)
+  r_p() = uconvert($length_unit, __b_r_p)
+  e_charge() = uconvert($charge_unit, __b_e_charge)
+  massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")
+  chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")
   return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
@@ -151,11 +151,14 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Unitful.FreeUnits)
+function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
+  if unit isa AbstractString
+    unit = uparse(unit)
+  end
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
-  return species.mass |> unit
+  return (species.mass |> unit).val
 end
 
 
@@ -175,11 +178,14 @@ return charge of 'species' in current unit or unit of the user's choice
 """
 chargeof
 
-function chargeof(species::Species, unit::Unitful.FreeUnits)
+function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
+  if unit isa AbstractString
+    unit = uparse(unit)
+  end
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("charge unit doesn't have proper dimension"))
   end
-  return species.charge |> unit
+  return (species.charge |> unit).val
 end
 
 
