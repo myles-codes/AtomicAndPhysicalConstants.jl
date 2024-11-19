@@ -55,14 +55,18 @@ const CGS = [
   u"J",
   u"C"]
 
+
+macro m()
+  @__MODULE__
+end
+
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
-      mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
-      length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.length,
-      time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
-      energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.energy,
-      charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.charge,
-      print_units::Bool = true
+      mass_unit::Unitful.FreeUnits=unitsystem.mass,
+      length_unit::Unitful.FreeUnits=unitsystem.length,
+      time_unit::Unitful.FreeUnits=unitsystem.time,
+      energy_unit::Unitful.FreeUnits=unitsystem.energy,
+      charge_unit::Unitful.FreeUnits=unitsystem.charge,
     )
 
 ## Description:
@@ -123,14 +127,14 @@ function setunits(unitsystem=ACCELERATOR;
     throw(ErrorException("unit for charge does not have proper dimension"))
   end
 
-  c_light() = uconvert($length_unit / $time_unit, __b_c_light)
-  h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)
-  h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)
-  r_e() = uconvert($length_unit, __b_r_e)
-  r_p() = uconvert($length_unit, __b_r_p)
-  e_charge() = uconvert($charge_unit, __b_e_charge)
-  massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")
-  chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")
+  AtomicAndPhysicalConstants.@m().eval(:(c_light() = uconvert($length_unit / $time_unit, __b_c_light)))
+  AtomicAndPhysicalConstants.@m().eval(:(h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)))
+  AtomicAndPhysicalConstants.@m().eval(:(h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
+  AtomicAndPhysicalConstants.@m().eval(:(r_e() = uconvert($length_unit, __b_r_e)))
+  AtomicAndPhysicalConstants.@m().eval(:(r_p() = uconvert($length_unit, __b_r_p)))
+  AtomicAndPhysicalConstants.@m().eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
+  AtomicAndPhysicalConstants.@m().eval(:(massof(species::Species) = uconvert($mass_unit, species.mass)))
+  AtomicAndPhysicalConstants.@m().eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
   return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
@@ -151,14 +155,11 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function massof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
-  return (species.mass |> unit).val
+  return species.mass |> unit
 end
 
 
@@ -178,17 +179,12 @@ return charge of 'species' in current unit or unit of the user's choice
 """
 chargeof
 
-function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function chargeof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("charge unit doesn't have proper dimension"))
   end
-  return (species.charge |> unit).val
+  return species.charge |> unit
 end
-
-
 
 
 function c_light(unit::Unitful.FreeUnits)
