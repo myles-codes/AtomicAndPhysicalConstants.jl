@@ -129,8 +129,8 @@ function setunits(unitsystem=ACCELERATOR;
   eval(:(r_e() = uconvert($length_unit, __b_r_e)))
   eval(:(r_p() = uconvert($length_unit, __b_r_p)))
   eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
-  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")))
-  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")))
+  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass)))
+  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
   return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
@@ -151,14 +151,11 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function massof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"kg")
     error("mass unit doesn't have proper dimension")
   end
-  return (species.mass |> unit).val
+  return species.mass |> unit
 end
 
 
@@ -178,14 +175,11 @@ return charge of 'species' in current unit or unit of the user's choice
 """
 chargeof
 
-function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
+function chargeof(species::Species, unit::Unitful.FreeUnits)
   if dimension(unit) != dimension(u"C")
     throw(ErrorException("charge unit doesn't have proper dimension"))
   end
-  return (species.charge |> unit).val
+  return species.charge |> unit
 end
 
 
