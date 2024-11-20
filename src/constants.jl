@@ -8,7 +8,7 @@
 # constants with dimension [mass]
 #####################################################################
 
-const __b_m_electron = .51099895069 * u"MeV/c^2"
+const __b_m_electron = 0.51099895069 * u"MeV/c^2"
 # Electron Mass [MeV]/c^2
 const __b_m_proton = 9.382720894300001e2 * u"eV/c^2"
 # Proton Mass [MeV]/c^2
@@ -84,15 +84,15 @@ const __b_e_charge = 1.602176634e-19 * u"C";
 # elementary charge [C]
 const __b_r_e = 2.8179403205e-15 * u"m";
 # classical electron radius [m]
-const __b_r_p = __b_r_e * __b_m_electron / __b_m_proton *u"m";
+const __b_r_p = __b_r_e * __b_m_electron / __b_m_proton;
 # classical proton radius [m]
 const __b_c_light = 2.99792458e8 * u"m/s";
 # speed of light [m/s]
 const __b_h_planck = 4.135667696e-15 * u"eV*s";
 # Planck's constant [eV*s]
-const __b_h_bar_planck = __b_h_planck / 2pi * u"eV*s";
+const __b_h_bar_planck = __b_h_planck / 2pi;
 # h_planck/twopi [eV*s]
-const __b_classical_radius_factor = __b_r_e * __b_m_electron * u"MeV*m/c^2";
+const __b_classical_radius_factor = __b_r_e * __b_m_electron;
 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2.
 # Is same for all particles of charge +/- 1.
 

@@ -56,9 +56,13 @@ const CGS = [
   u"C"]
 
 
-macro m()
-  @__MODULE__
+macro define_function(name, body)
+  return :(function $(name)()
+    $body
+  end)
 end
+
+
 
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
@@ -103,41 +107,41 @@ Prints current units at the end (optional).
 """
 setunits
 
-function setunits(unitsystem=ACCELERATOR;
-  mass_unit::Unitful.FreeUnits=unitsystem[1],
-  length_unit::Unitful.FreeUnits=unitsystem[2],
-  time_unit::Unitful.FreeUnits=unitsystem[3],
-  energy_unit::Unitful.FreeUnits=unitsystem[4],
-  charge_unit::Unitful.FreeUnits=unitsystem[5],
-)
-  # check dimensions of units
-  if dimension(mass_unit) != dimension(u"kg")
-    throw(ErrorException("unit for mass does not have proper dimension"))
+macro setunits(unitsystem=ACCELERATOR)
+  return quote
+    local mass_unit = $(esc(unitsystem))[1]
+    local length_unit = $(esc(unitsystem))[2]
+    local time_unit = $(esc(unitsystem))[3]
+    local energy_unit = $(esc(unitsystem))[4]
+    local charge_unit = $(esc(unitsystem))[5]
+    # check dimensions of units
+    if dimension(mass_unit) != dimension(u"kg")
+      error("unit for mass does not have proper dimension")
+    end
+    if dimension(length_unit) != dimension(u"m")
+      error("unit for length does not have proper dimension")
+    end
+    if dimension(time_unit) != dimension(u"s")
+      error("unit for time does not have proper dimension")
+    end
+    if dimension(energy_unit) != dimension(u"J")
+      error("unit for energy does not have proper dimension")
+    end
+    if dimension(charge_unit) != dimension(u"C")
+      error("unit for charge does not have proper dimension")
+    end
+    global $(esc(:C_LIGHT)) = uconvert(length_unit / time_unit, $__b_c_light)
+    global $(esc(:H_PLANCK)) = uconvert(energy_unit * time_unit, $__b_h_planck)
+    global $(esc(:H_BAR_PLANCK)) = uconvert(energy_unit * time_unit, $__b_h_bar_planck)
+    global $(esc(:R_E)) = uconvert(length_unit, $__b_r_e)
+    global $(esc(:R_P)) = uconvert(length_unit, $__b_r_p)
+    global $(esc(:E_CHARGE)) = uconvert(charge_unit, $__b_e_charge)
+    global $(esc(:massof)) = (species::Species, unit::Union{Unitful.FreeUnits,Nothing}=nothing) -> unit === nothing ? uconvert(mass_unit, species.mass) : uconvert(unit, species.mass)
+    global $(esc(:chargeof)) = (species::Species, unit::Union{Unitful.FreeUnits,Nothing}=nothing) -> unit === nothing ? uconvert(charge_unit, species.mass) : uconvert(unit, species.mass)
   end
-  if dimension(length_unit) != dimension(u"m")
-    throw(ErrorException("unit for length does not have proper dimension"))
-  end
-  if dimension(time_unit) != dimension(u"s")
-    throw(ErrorException("unit for time does not have proper dimension"))
-  end
-  if dimension(energy_unit) != dimension(u"J")
-    throw(ErrorException("unit for energy does not have proper dimension"))
-  end
-  if dimension(charge_unit) != dimension(u"C")
-    throw(ErrorException("unit for charge does not have proper dimension"))
-  end
-
-  AtomicAndPhysicalConstants.@m().eval(:(c_light() = uconvert($length_unit / $time_unit, __b_c_light)))
-  AtomicAndPhysicalConstants.@m().eval(:(h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)))
-  AtomicAndPhysicalConstants.@m().eval(:(h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
-  AtomicAndPhysicalConstants.@m().eval(:(r_e() = uconvert($length_unit, __b_r_e)))
-  AtomicAndPhysicalConstants.@m().eval(:(r_p() = uconvert($length_unit, __b_r_p)))
-  AtomicAndPhysicalConstants.@m().eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
-  AtomicAndPhysicalConstants.@m().eval(:(massof(species::Species) = uconvert($mass_unit, species.mass)))
-  AtomicAndPhysicalConstants.@m().eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge)))
-  return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
 
 end
+
 
 """
     massof(
@@ -155,13 +159,7 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Unitful.FreeUnits)
-  if dimension(unit) != dimension(u"kg")
-    error("mass unit doesn't have proper dimension")
-  end
-  return species.mass |> unit
-end
-
+const massof = nothing
 
 """
     chargeof(
@@ -179,12 +177,14 @@ return charge of 'species' in current unit or unit of the user's choice
 """
 chargeof
 
-function chargeof(species::Species, unit::Unitful.FreeUnits)
-  if dimension(unit) != dimension(u"C")
-    throw(ErrorException("charge unit doesn't have proper dimension"))
-  end
-  return species.charge |> unit
-end
+const chargeof = nothing
+
+const C_LIGHT = nothing
+const H_PLANCK = nothing
+const H_BAR_PLANCK = nothing
+const R_E = nothing
+const R_P = nothing
+const E_CHARGE = nothing
 
 
 function c_light(unit::Unitful.FreeUnits)
