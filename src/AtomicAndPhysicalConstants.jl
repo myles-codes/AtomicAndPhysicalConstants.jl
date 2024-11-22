@@ -19,7 +19,7 @@ include("update_isos.jl")
 include("particle_functions.jl")
 include("set_units.jl")
 
-export @setunits
+export @AAPCdef
 export ACCELERATOR, MKS, CGS
 export massof, chargeof
 export c_light, h_planck, h_bar_planck, r_e, r_p, e_charge, mu_0_vac, eps_0_vac, classical_radius_factor, fine_structure, N_avogadro

@@ -105,15 +105,22 @@ Prints current units at the end (optional).
 - unit for `classical radius` factor is 'length'*'mass'
 
 """
-setunits
+AAPCdef
 
-macro setunits(unitsystem=ACCELERATOR)
+
+macro AAPCdef(exs...)
   return quote
-    local mass_unit = $(esc(unitsystem))[1]
-    local length_unit = $(esc(unitsystem))[2]
-    local time_unit = $(esc(unitsystem))[3]
-    local energy_unit = $(esc(unitsystem))[4]
-    local charge_unit = $(esc(unitsystem))[5]
+    #default parameter
+    CODATA = 2022
+    unitsystem = $ACCELERATOR
+    unitful = false
+    #evaluate the parameter
+    $(exs...)
+    local mass_unit = unitsystem[1]
+    local length_unit = unitsystem[2]
+    local time_unit = unitsystem[3]
+    local energy_unit = unitsystem[4]
+    local charge_unit = unitsystem[5]
     # check dimensions of units
     if dimension(mass_unit) != dimension(u"kg")
       error("unit for mass does not have proper dimension")
@@ -130,14 +137,14 @@ macro setunits(unitsystem=ACCELERATOR)
     if dimension(charge_unit) != dimension(u"C")
       error("unit for charge does not have proper dimension")
     end
-    global $(esc(:C_LIGHT)) = uconvert(length_unit / time_unit, $__b_c_light)
-    global $(esc(:H_PLANCK)) = uconvert(energy_unit * time_unit, $__b_h_planck)
-    global $(esc(:H_BAR_PLANCK)) = uconvert(energy_unit * time_unit, $__b_h_bar_planck)
-    global $(esc(:R_E)) = uconvert(length_unit, $__b_r_e)
-    global $(esc(:R_P)) = uconvert(length_unit, $__b_r_p)
-    global $(esc(:E_CHARGE)) = uconvert(charge_unit, $__b_e_charge)
-    global $(esc(:massof)) = (species::Species, unit::Union{Unitful.FreeUnits,Nothing}=nothing) -> unit === nothing ? uconvert(mass_unit, species.mass) : uconvert(unit, species.mass)
-    global $(esc(:chargeof)) = (species::Species, unit::Union{Unitful.FreeUnits,Nothing}=nothing) -> unit === nothing ? uconvert(charge_unit, species.mass) : uconvert(unit, species.mass)
+    const global $(esc(:C_LIGHT)) = unitful ? uconvert(length_unit / time_unit, $__b_c_light) : uconvert(length_unit / time_unit, $__b_c_light).val
+    const global $(esc(:H_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_planck) : uconvert(energy_unit * time_unit, $__b_h_planck).val
+    const global $(esc(:H_BAR_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_bar_planck) : uconvert(energy_unit * time_unit, $__b_h_bar_planck).val
+    const global $(esc(:R_E)) = unitful ? uconvert(length_unit, $__b_r_e) : uconvert(length_unit, $__b_r_e).val
+    const global $(esc(:R_P)) = unitful ? uconvert(length_unit, $__b_r_p) : uconvert(length_unit, $__b_r_p).val
+    const global $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
+    const global $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
+    const global $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.mass) : uconvert(charge_unit, species.mass).val
   end
 
 end
@@ -159,7 +166,6 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-const massof = nothing
 
 """
     chargeof(
@@ -176,69 +182,3 @@ return charge of 'species' in current unit or unit of the user's choice
 
 """
 chargeof
-
-const chargeof = nothing
-
-const C_LIGHT = nothing
-const H_PLANCK = nothing
-const H_BAR_PLANCK = nothing
-const R_E = nothing
-const R_P = nothing
-const E_CHARGE = nothing
-
-
-function c_light(unit::Unitful.FreeUnits)
-  return __b_c_light |> unit
-end
-
-function h_planck(unit::Unitful.FreeUnits)
-  return __b_h_planck |> unit
-end
-
-
-function h_bar_planck(unit::Unitful.FreeUnits)
-  return __b_h_bar_planck |> unit
-end
-
-
-function r_e(unit::Unitful.FreeUnits)
-  return __b_r_e |> unit
-end
-
-function r_p(unit::Unitful.FreeUnits)
-  return __b_r_p |> unit
-end
-
-function e_charge(unit::Unitful.FreeUnits)
-  return __b_e_charge |> unit
-end
-
-
-function mu_0_vac()
-  return __b_mu_0_vac
-end
-
-function mu_0_vac(unit::Unitful.FreeUnits)
-  return __b_mu_0_vac |> unit
-end
-
-
-function eps_0_vac()
-  return __b_eps_0_vac
-end
-
-function eps_0_vac(unit::Unitful.FreeUnits)
-  return __b_eps_0_vac |> unit
-end
-
-function classical_radius_factor()
-  return __b_classical_radius_factor
-end
-
-function fine_structure()
-  return __b_classical_radius_factor
-end
-
-function N_avogadro()
-  return __b_N_avogadro
-end
