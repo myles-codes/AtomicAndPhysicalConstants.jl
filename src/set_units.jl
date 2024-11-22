@@ -144,7 +144,7 @@ macro AAPCdef(exs...)
     const global $(esc(:R_P)) = unitful ? uconvert(length_unit, $__b_r_p) : uconvert(length_unit, $__b_r_p).val
     const global $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
     const global $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
-    const global $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.mass) : uconvert(charge_unit, species.mass).val
+    const global $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
   end
 
 end
