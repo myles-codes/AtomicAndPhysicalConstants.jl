@@ -111,9 +111,9 @@ AAPCdef
 macro AAPCdef(exs...)
   return quote
     #default parameter
-    CODATA = 2022
-    unitsystem = $ACCELERATOR
-    unitful = false
+    local CODATA = 2022
+    local unitsystem = $ACCELERATOR
+    local unitful = true
     #evaluate the parameter
     $(exs...)
     local mass_unit = unitsystem[1]
