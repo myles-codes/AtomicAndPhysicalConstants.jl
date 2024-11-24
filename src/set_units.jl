@@ -55,15 +55,6 @@ const CGS = [
   u"J",
   u"C"]
 
-
-macro define_function(name, body)
-  return :(function $(name)()
-    $body
-  end)
-end
-
-
-
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
       mass_unit::Unitful.FreeUnits=unitsystem.mass,
@@ -105,15 +96,15 @@ Prints current units at the end (optional).
 - unit for `classical radius` factor is 'length'*'mass'
 
 """
-AAPCdef
+APCdef
 
 
-macro AAPCdef(exs...)
+macro APCdef(exs...)
   return quote
     #default parameter
     local CODATA = 2022
     local unitsystem = $ACCELERATOR
-    local unitful = true
+    local unitful = false
     #evaluate the parameter
     $(exs...)
     local mass_unit = unitsystem[1]
@@ -137,14 +128,14 @@ macro AAPCdef(exs...)
     if dimension(charge_unit) != dimension(u"C")
       error("unit for charge does not have proper dimension")
     end
-    const global $(esc(:C_LIGHT)) = unitful ? uconvert(length_unit / time_unit, $__b_c_light) : uconvert(length_unit / time_unit, $__b_c_light).val
-    const global $(esc(:H_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_planck) : uconvert(energy_unit * time_unit, $__b_h_planck).val
-    const global $(esc(:H_BAR_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_bar_planck) : uconvert(energy_unit * time_unit, $__b_h_bar_planck).val
-    const global $(esc(:R_E)) = unitful ? uconvert(length_unit, $__b_r_e) : uconvert(length_unit, $__b_r_e).val
-    const global $(esc(:R_P)) = unitful ? uconvert(length_unit, $__b_r_p) : uconvert(length_unit, $__b_r_p).val
-    const global $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
-    const global $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
-    const global $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
+    const $(esc(:C_LIGHT)) = unitful ? uconvert(length_unit / time_unit, $__b_c_light) : uconvert(length_unit / time_unit, $__b_c_light).val
+    const $(esc(:H_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_planck) : uconvert(energy_unit * time_unit, $__b_h_planck).val
+    const $(esc(:H_BAR_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_bar_planck) : uconvert(energy_unit * time_unit, $__b_h_bar_planck).val
+    const $(esc(:R_E)) = unitful ? uconvert(length_unit, $__b_r_e) : uconvert(length_unit, $__b_r_e).val
+    const $(esc(:R_P)) = unitful ? uconvert(length_unit, $__b_r_p) : uconvert(length_unit, $__b_r_p).val
+    const $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
+    const $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
+    const $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
   end
 
 end
