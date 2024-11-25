@@ -50,7 +50,7 @@ of information specifice to the chosen particle.
 																		 	 - use the 'mass()' function to get the mass 
 																			 - in the desired units
 
-4. `planck_spin::typeof(1.0u"ħ")': 					 the spin of the particle in ħ
+4. `planck_spin::typeof(1.0u"hb")': 					 the spin of the particle in ħ
 
 5. `moment::typeof(1.0u"eV/T")': 					 the magnetic moment of the particle in eV/T
 
@@ -172,9 +172,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
                 planck_spin = 0.5 * iso
             end
             if anti_atom == false
-                return Species(AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"ħ", 0*u"J/T", iso) # return the object to track
+                return Species(AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"hb", 0*u"J/T", iso) # return the object to track
             elseif anti_atom == true
-                return Species("anti-" * AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"ħ", 0u"J/T", iso)
+                return Species("anti-" * AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"hb", 0u"J/T", iso)
             end
 
 
