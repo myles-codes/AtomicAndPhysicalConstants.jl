@@ -101,7 +101,6 @@ APCdef
 
 macro APCdef(exs...)
   return quote
-    import AtomicAndPhysicalConstants: massof
     #default parameter
     local CODATA = 2022
     local unitsystem = $ACCELERATOR
