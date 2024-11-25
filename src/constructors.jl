@@ -86,7 +86,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	# define a garbage species to hold places for bookkeeping
 	if lowercase(name) == "null"
-		return Species(name, NaN*u"e", NaN*u"MeV/c^2", NaN*u"h_bar", NaN*u"J/T", NaN)
+		return Species(name, 0*u"e", -1*u"MeV/c^2", 0*u"h_bar", 0*u"J/T", 0)
 	end
 
 	anti = r"Anti\-|anti\-"
