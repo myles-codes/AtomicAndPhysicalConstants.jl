@@ -148,21 +148,21 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 					return
 				end
         if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
-            if iso ∉ keys(ATOMIC_SPECIES[AS].mass_in_amu) # error handling if the isotope isn't available
+            if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
                 error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
                 return
             end
             mass = begin
                 if anti_atom == false
-                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
+                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
                     nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
                 elseif anti_atom == true
-                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass_in_amu[iso]u"amu"); # mass of the positively charged isotope in amu
+                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in amu
                     nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
                 end
             end
             if iso == -1 # if it's the average, make an educated guess at the spin
-                partonum = round(ATOMIC_SPECIES[AS].mass_in_amu[iso])
+                partonum = round(ATOMIC_SPECIES[AS].mass[iso])
                 if anti_atom == false
                     planck_spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
                 elseif anti_atom == true
