@@ -15,7 +15,7 @@ a dictionary of all the available subatomic species;
 the key is the particle's species_name, 
 and the value is the relevant SubatomicSpecies struct, _eg_ 
 
-Subatomic_Particles["some-particle"] = SubatomicSpecies("some-particle", ...)
+SUBATOMIC_SPECIES["some-particle"] = SubatomicSpecies("some-particle", ...)
 """
 
 const SUBATOMIC_SPECIES = Dict{String,SubatomicSpecies}(
