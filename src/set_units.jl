@@ -101,6 +101,7 @@ APCdef
 
 macro APCdef(exs...)
   return quote
+    import AtomicAndPhysicalConstants: massof
     #default parameter
     local CODATA = 2022
     local unitsystem = $ACCELERATOR
@@ -156,7 +157,6 @@ return mass of 'species' in current unit or unit of the user's choice
 
 """
 massof
-
 
 """
     chargeof(

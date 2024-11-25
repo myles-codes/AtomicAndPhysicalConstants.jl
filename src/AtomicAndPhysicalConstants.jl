@@ -21,9 +21,6 @@ include("set_units.jl")
 
 export @APCdef
 export ACCELERATOR, MKS, CGS
-export massof, chargeof
-export c_light, h_planck, h_bar_planck, r_e, r_p, e_charge, mu_0_vac, eps_0_vac, classical_radius_factor, fine_structure, N_avogadro
-export C_LIGHT, H_PLANCK, H_BAR_PLANCK, R_E, R_P, E_CHARGE
 export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
