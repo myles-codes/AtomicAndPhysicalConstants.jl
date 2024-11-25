@@ -50,7 +50,7 @@ of information specifice to the chosen particle.
 																		 	 - use the 'mass()' function to get the mass 
 																			 - in the desired units
 
-4. `spin::typeof(1.0u"hb")': 					 the spin of the particle in ħ
+4. `spin::typeof(1.0u"h_bar")': 					 the spin of the particle in ħ
 
 5. `moment::typeof(1.0u"eV/T")': 					 the magnetic moment of the particle in eV/T
 
@@ -86,7 +86,7 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 
 	# define a garbage species to hold places for bookkeeping
 	if lowercase(name) == "null"
-		return Species(name, NaN*u"e", NaN*u"MeV/c^2", NaN*u"hb", NaN*u"J/T", NaN)
+		return Species(name, NaN*u"e", NaN*u"MeV/c^2", NaN*u"h_bar", NaN*u"J/T", NaN)
 	end
 
 	anti = r"Anti\-|anti\-"
@@ -181,9 +181,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 					spin = 0.5 * iso
 				end
 				if anti_atom == false
-					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"hb", 0*u"J/T", iso) # return the object to track
+					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso) # return the object to track
 				else
-					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"hb", 0u"J/T", iso)
+					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso)
 				end
 
 
