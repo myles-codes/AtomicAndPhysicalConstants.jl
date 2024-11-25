@@ -57,12 +57,11 @@ const CGS = [
 
 """
     setunits(unitsystem::UnitSystem=ACCELERATOR;
-      mass_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.mass,
-      length_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.length,
-      time_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.time,
-      energy_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.energy,
-      charge_unit::Union{Unitful.FreeUnits,AbstractString}=unitsystem.charge,
-      print_units::Bool = true
+      mass_unit::Unitful.FreeUnits=unitsystem.mass,
+      length_unit::Unitful.FreeUnits=unitsystem.length,
+      time_unit::Unitful.FreeUnits=unitsystem.time,
+      energy_unit::Unitful.FreeUnits=unitsystem.energy,
+      charge_unit::Unitful.FreeUnits=unitsystem.charge,
     )
 
 ## Description:
@@ -97,43 +96,50 @@ Prints current units at the end (optional).
 - unit for `classical radius` factor is 'length'*'mass'
 
 """
-setunits
+APCdef
 
-function setunits(unitsystem=ACCELERATOR;
-  mass_unit::Unitful.FreeUnits=unitsystem[1],
-  length_unit::Unitful.FreeUnits=unitsystem[2],
-  time_unit::Unitful.FreeUnits=unitsystem[3],
-  energy_unit::Unitful.FreeUnits=unitsystem[4],
-  charge_unit::Unitful.FreeUnits=unitsystem[5],
-)
-  # check dimensions of units
-  if dimension(mass_unit) != dimension(u"kg")
-    throw(ErrorException("unit for mass does not have proper dimension"))
-  end
-  if dimension(length_unit) != dimension(u"m")
-    throw(ErrorException("unit for length does not have proper dimension"))
-  end
-  if dimension(time_unit) != dimension(u"s")
-    throw(ErrorException("unit for time does not have proper dimension"))
-  end
-  if dimension(energy_unit) != dimension(u"J")
-    throw(ErrorException("unit for energy does not have proper dimension"))
-  end
-  if dimension(charge_unit) != dimension(u"C")
-    throw(ErrorException("unit for charge does not have proper dimension"))
-  end
 
-  eval(:(c_light() = uconvert($length_unit / $time_unit, __b_c_light)))
-  eval(:(h_planck() = uconvert($energy_unit * $time_unit, __b_h_planck)))
-  eval(:(h_bar_planck() = uconvert($energy_unit * $time_unit, __b_h_bar_planck)))
-  eval(:(r_e() = uconvert($length_unit, __b_r_e)))
-  eval(:(r_p() = uconvert($length_unit, __b_r_p)))
-  eval(:(e_charge() = uconvert($charge_unit, __b_e_charge)))
-  eval(:(massof(species::Species) = uconvert($mass_unit, species.mass_in_eV * u"eV/c^2")))
-  eval(:(chargeof(species::Species) = uconvert($charge_unit, species.charge * u"e")))
-  return [mass_unit, length_unit, time_unit, energy_unit, charge_unit]
+macro APCdef(exs...)
+  return quote
+    #default parameter
+    local CODATA = 2022
+    local unitsystem = $ACCELERATOR
+    local unitful = false
+    #evaluate the parameter
+    $(exs...)
+    local mass_unit = unitsystem[1]
+    local length_unit = unitsystem[2]
+    local time_unit = unitsystem[3]
+    local energy_unit = unitsystem[4]
+    local charge_unit = unitsystem[5]
+    # check dimensions of units
+    if dimension(mass_unit) != dimension(u"kg")
+      error("unit for mass does not have proper dimension")
+    end
+    if dimension(length_unit) != dimension(u"m")
+      error("unit for length does not have proper dimension")
+    end
+    if dimension(time_unit) != dimension(u"s")
+      error("unit for time does not have proper dimension")
+    end
+    if dimension(energy_unit) != dimension(u"J")
+      error("unit for energy does not have proper dimension")
+    end
+    if dimension(charge_unit) != dimension(u"C")
+      error("unit for charge does not have proper dimension")
+    end
+    const $(esc(:C_LIGHT)) = unitful ? uconvert(length_unit / time_unit, $__b_c_light) : uconvert(length_unit / time_unit, $__b_c_light).val
+    const $(esc(:H_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_planck) : uconvert(energy_unit * time_unit, $__b_h_planck).val
+    const $(esc(:H_BAR_PLANCK)) = unitful ? uconvert(energy_unit * time_unit, $__b_h_bar_planck) : uconvert(energy_unit * time_unit, $__b_h_bar_planck).val
+    const $(esc(:R_E)) = unitful ? uconvert(length_unit, $__b_r_e) : uconvert(length_unit, $__b_r_e).val
+    const $(esc(:R_P)) = unitful ? uconvert(length_unit, $__b_r_p) : uconvert(length_unit, $__b_r_p).val
+    const $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
+    const $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
+    const $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
+  end
 
 end
+
 
 """
     massof(
@@ -151,17 +157,6 @@ return mass of 'species' in current unit or unit of the user's choice
 """
 massof
 
-function massof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
-  if dimension(unit) != dimension(u"kg")
-    error("mass unit doesn't have proper dimension")
-  end
-  return (species.mass |> unit).val
-end
-
-
 """
     chargeof(
       species::Species,
@@ -177,72 +172,3 @@ return charge of 'species' in current unit or unit of the user's choice
 
 """
 chargeof
-
-function chargeof(species::Species, unit::Union{Unitful.FreeUnits,AbstractString})
-  if unit isa AbstractString
-    unit = uparse(unit)
-  end
-  if dimension(unit) != dimension(u"C")
-    throw(ErrorException("charge unit doesn't have proper dimension"))
-  end
-  return (species.charge |> unit).val
-end
-
-
-
-
-function c_light(unit::Unitful.FreeUnits)
-  return __b_c_light |> unit
-end
-
-function h_planck(unit::Unitful.FreeUnits)
-  return __b_h_planck |> unit
-end
-
-
-function h_bar_planck(unit::Unitful.FreeUnits)
-  return __b_h_bar_planck |> unit
-end
-
-
-function r_e(unit::Unitful.FreeUnits)
-  return __b_r_e |> unit
-end
-
-function r_p(unit::Unitful.FreeUnits)
-  return __b_r_p |> unit
-end
-
-function e_charge(unit::Unitful.FreeUnits)
-  return __b_e_charge |> unit
-end
-
-
-function mu_0_vac()
-  return __b_mu_0_vac
-end
-
-function mu_0_vac(unit::Unitful.FreeUnits)
-  return __b_mu_0_vac |> unit
-end
-
-
-function eps_0_vac()
-  return __b_eps_0_vac
-end
-
-function eps_0_vac(unit::Unitful.FreeUnits)
-  return __b_eps_0_vac |> unit
-end
-
-function classical_radius_factor()
-  return __b_classical_radius_factor
-end
-
-function fine_structure()
-  return __b_classical_radius_factor
-end
-
-function N_avogadro()
-  return __b_N_avogadro
-end
