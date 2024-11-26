@@ -23,7 +23,7 @@ function subatomic_particle(name::String)
         SUBATOMIC_SPECIES[name].mass,
         SUBATOMIC_SPECIES[name].spin,
         SUBATOMIC_SPECIES[name].mu,
-        0)
+        0.)
 end
 
 
@@ -84,10 +84,6 @@ Species
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
-	# define a garbage species to hold places for bookkeeping
-	if lowercase(name) == "null"
-		return Species(name, 0*u"e", -1*u"MeV/c^2", 0*u"h_bar", 0*u"J/T", 0)
-	end
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
@@ -159,19 +155,19 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 			end
 			mass = begin
 				if anti_atom == false
-					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); 
+					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]); 
 					# ^ mass of the positively charged isotope in eV/c^2
 					nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) 
 					# ^ put it in eV/c^2 and remove the electrons
 				elseif anti_atom == true
-					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); 
+					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]); 
 					# ^ mass of the positively charged isotope in amu
 					nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) 
 					# ^ put it in eV/c^2 and remove the positrons
 				end
 			end
 				if iso == -1 # if it's the average, make an educated guess at the spin
-					partonum = round(ATOMIC_SPECIES[AS].mass[iso])
+					partonum = round(ATOMIC_SPECIES[AS].mass[iso].val)
 					if anti_atom == false
 						spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
 					else
