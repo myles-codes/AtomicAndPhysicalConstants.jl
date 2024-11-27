@@ -105,6 +105,7 @@ macro APCdef(exs...)
     local CODATA = 2022
     local unitsystem = $ACCELERATOR
     local unitful = false
+		
     #evaluate the parameter
     $(exs...)
     local mass_unit = unitsystem[1]
@@ -136,6 +137,14 @@ macro APCdef(exs...)
     const $(esc(:E_CHARGE)) = unitful ? uconvert(charge_unit, $__b_e_charge) : uconvert(charge_unit, $__b_e_charge).val
     const $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
     const $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
+		const $(esc(:chargeof2)) = begin
+			(species::Species) -> if species.populated == IsDef.Full 
+				(unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val)
+			# else
+			# 	error("""Can't get the charge of an undefined particle; 
+			# 	the Species constructor for this object was called with no arguments.""")
+			end
+		end
   end
 
 end
@@ -154,8 +163,8 @@ return mass of 'species' in current unit or unit of the user's choice
 - `species`     -- type:`Species`, the species whose mass you want to know
 - `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the mass variable
 
-"""
-massof
+""" massof
+
 
 """
     chargeof(
@@ -170,5 +179,4 @@ return charge of 'species' in current unit or unit of the user's choice
 - `species`     -- type:`Species`, the species whose charge you want to know
 - `unit`        -- type:`Union{Unitful.FreeUnits,AbstractString}`, default to the unit set from setunits(), the unit of the charge variable
 
-"""
-chargeof
+""" chargeof

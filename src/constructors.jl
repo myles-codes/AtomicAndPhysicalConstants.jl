@@ -21,9 +21,9 @@ function subatomic_particle(name::String)
     # write the particle out directly
     return Species(name, SUBATOMIC_SPECIES[name].charge,
         SUBATOMIC_SPECIES[name].mass,
-        SUBATOMIC_SPECIES[name].planck_spin,
+        SUBATOMIC_SPECIES[name].spin,
         SUBATOMIC_SPECIES[name].mu,
-        0)
+        0., IsDef.Full)
 end
 
 
@@ -50,7 +50,7 @@ of information specifice to the chosen particle.
 																		 	 - use the 'mass()' function to get the mass 
 																			 - in the desired units
 
-4. `planck_spin::typeof(1.0u"hb")': 					 the spin of the particle in ħ
+4. `spin::typeof(1.0u"h_bar")': 					 the spin of the particle in ħ
 
 5. `moment::typeof(1.0u"eV/T")': 					 the magnetic moment of the particle in eV/T
 
@@ -81,118 +81,124 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 Species
 
 
+Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, IsDef.Empty)
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
-    anti = r"Anti\-|anti\-"
-    # is the anti-particle in the Subatomic_Particles dictionary?
-    if occursin(anti, name) && haskey(SUBATOMIC_SPECIES, name[6:end])
-        if name[6:end] == "electron"
-            return subatomic_particle("positron")
-        else
-            return subatomic_particle("anti_" * name[6:end])
-        end
 
-        # check subatomics first so we don't accidentally strip a name
-    elseif haskey(SUBATOMIC_SPECIES, name) # is the particle in the Subatomic_Particles dictionary?
-        # write the particle out directly
-        return subatomic_particle(name)
+	anti = r"Anti\-|anti\-"
+	# is the anti-particle in the Subatomic_Particles dictionary?
+	if occursin(anti, name) && haskey(SUBATOMIC_SPECIES, name[6:end])
+		if name[6:end] == "electron"
+				return subatomic_particle("positron")
+		else
+				return subatomic_particle("anti_" * name[6:end])
+		end
 
-    else
-        # make sure to use the optional arguments
-        charge = charge
-        iso = iso
+			# check subatomics first so we don't accidentally strip a name
+	elseif haskey(SUBATOMIC_SPECIES, name) # is the particle in the Subatomic_Particles dictionary?
+		# write the particle out directly
+		return subatomic_particle(name)
 
-        # define regex for the name String
+	else
+		# make sure to use the optional arguments
+		charge = charge
+		iso = iso
 
-        rgas = r"[A-Z][a-z]|[A-Z]" # atomic symbol regex
-        rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]" # atomic mass regex
-        rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]|\+\+|\+" # positive charge regex
-        rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]|\-[0-9]|\-\-|\-" # negative charge regex
+		# define regex for the name String
 
-        anti_atom = false
+		rgas = r"[A-Z][a-z]|[A-Z]" # atomic symbol regex
+		rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]" # atomic mass regex
+		rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]|\+\+|\+" # positive charge regex
+		rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]|\-[0-9]|\-\-|\-" # negative charge regex
 
-        if occursin(anti, name)
-            name = name[6:end]
-            anti_atom = true
-        end
+		anti_atom::Bool = false
 
-        AS = match(rgas, name) # grab just the atomic symbol
-        AS = AS.match # throw out the wrapper
-        isom = match(rgm, name)
-        if typeof(isom) != Nothing
-            isostr = strip(isom.match, '#')
-            iso = tryparse(Int, isostr)
-        end
-        if occursin(rgcp, name) == true
-            chstr = match(rgcp, name).match
-            if chstr == "+"
-                charge = 1
-            elseif chstr == "++"
-                charge = 2
-            else
-                charge = tryparse(Int, chstr)
-            end
-        elseif occursin(rgcm, name) == true
-            chstr = match(rgcm, name).match
-            if chstr == "-"
-                charge = -1
-            elseif chstr == "--"
-                charge = -2
-            else
-                charge = tryparse(Int, chstr)
-            end
-        end
-				if count('+', name) != 0 && count('-', name) != 0
-					error(f"""You made a typo in "{name}". You have both a + and a - in the name. """)
-					return
+		if occursin(anti, name)
+			name = name[6:end]
+			anti_atom = true
+		end
+
+		AS = match(rgas, name) # grab just the atomic symbol
+		AS = AS.match # throw out the wrapper
+		isom = match(rgm, name)
+		if typeof(isom) != Nothing
+			isostr = strip(isom.match, '#')
+			iso = tryparse(Int, isostr)
+		end
+		if occursin(rgcp, name) == true
+			chstr = match(rgcp, name).match
+			if chstr == "+"
+					charge = 1
+			elseif chstr == "++"
+					charge = 2
+			else
+					charge = tryparse(Int, chstr)
+			end
+		elseif occursin(rgcm, name) == true
+			chstr = match(rgcm, name).match
+			if chstr == "-"
+					charge = -1
+			elseif chstr == "--"
+					charge = -2
+			else
+					charge = tryparse(Int, chstr)
+			end
+		end
+		if count('+', name) != 0 && count('-', name) != 0
+			error(f"""You made a typo in "{name}". You have both a + and a - in the name. """)
+			return
+		end
+		if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
+			if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
+				error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
+				return
+			end
+			mass = begin
+				if anti_atom == false
+					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]); 
+					# ^ mass of the positively charged isotope in eV/c^2
+					nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) 
+					# ^ put it in eV/c^2 and remove the electrons
+				elseif anti_atom == true
+					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]); 
+					# ^ mass of the positively charged isotope in amu
+					nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) 
+					# ^ put it in eV/c^2 and remove the positrons
 				end
-        if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
-            if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
-                error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
-                return
-            end
-            mass = begin
-                if anti_atom == false
-                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in eV/c^2
-                    nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge) # put it in eV/c^2 and remove the electrons
-                elseif anti_atom == true
-                    nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]u"amu"); # mass of the positively charged isotope in amu
-                    nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge) # put it in eV/c^2 and remove the positrons
-                end
-            end
-            if iso == -1 # if it's the average, make an educated guess at the spin
-                partonum = round(ATOMIC_SPECIES[AS].mass[iso])
-                if anti_atom == false
-                    planck_spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
-                elseif anti_atom == true
-                    planck_spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
-                end
-            else # otherwise, use the sum of proton and neutron spins
-                planck_spin = 0.5 * iso
-            end
-            if anti_atom == false
-                return Species(AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"hb", 0*u"J/T", iso) # return the object to track
-            elseif anti_atom == true
-                return Species("anti-" * AS, charge*u"q", mass*u"MeV/c^2", planck_spin*u"hb", 0u"J/T", iso)
-            end
+			end
+				if iso == -1 # if it's the average, make an educated guess at the spin
+					partonum = round(ATOMIC_SPECIES[AS].mass[iso].val)
+					if anti_atom == false
+						spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
+					else
+						spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
+					end
+				else # otherwise, use the sum of proton and neutron spins
+					spin = 0.5 * iso
+				end
+				if anti_atom == false
+					return Species{IsDef}(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, IsDef.Full) # return the object to track
+				else
+					return Species{IsDef}("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, IsDef.Full)
+				end
 
 
-        else # handle the case where the given name is garbage
-            error("The specified particle name does not exist in this library.")
-            #=
-            println("Available subatomic particles are: ")
-            for p in keys(SUBATOMIC_SPECIES)
-            	println(p)
-            end
-            println("Available atomic elements are")
-            for p in keys(ATOMIC_SPECIES)
-            	println(p)
-            end
-            =#
-            return
-        end
-    end
+		else # handle the case where the given name is garbage
+			error("The specified particle name does not exist in this library.")
+			#=
+			println("Available subatomic particles are: ")
+			for p in keys(SUBATOMIC_SPECIES)
+				println(p)
+			end
+			println("Available atomic elements are")
+			for p in keys(ATOMIC_SPECIES)
+				println(p)
+			end
+			=#
+			return
+		end
+	end
 end;
 export Species
 

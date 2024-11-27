@@ -1,12 +1,17 @@
 # types.Julia
 
-struct Species
+
+@enumx IsDef Full Empty
+export IsDef
+
+struct Species 
     name::String # name of the particle to track
     charge::typeof(1u"e") # charge of the particle (important to consider ionized atoms) in [e]
     mass::typeof(1.0u"MeV/c^2") # mass of the particle in [eV/c^2]
-    planck_spin::typeof(1.0u"hb") # spin of the particle in [ħ]
+    spin::typeof(1.0u"h_bar") # spin of the particle in [ħ]
     moment::typeof(1.0u"J/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
-    iso::Int # if the particle is an atomic isotope, this is the mass number, otherwise 0
+    iso::Float64 # if the particle is an atomic isotope, this is the mass number, otherwise 0
+		populated
 end;
 export Species
 # The docstring for this struct is with its constructor, in the file 
@@ -16,7 +21,7 @@ export Species
 #####################################################################
 
 """
-SubtomicSpecies 
+SubatomicSpecies 
 
 ### Description:
 > mutable struct to store all (possibly degenerate) information about a subatomic particle<
@@ -41,8 +46,8 @@ struct SubatomicSpecies
   species_name::String              # common species_name of the particle
   charge::typeof(1.0u"e")                     # charge on the particle in units of e+
   mass::typeof(1.0u"MeV/c^2")                    # mass of the particle in [eV/c^2]
-  mu::typeof(1.0u"J/T")       # anomalous magnetic moment 
-  planck_spin::typeof(1.0u"hb")                    # spin magnetic moment in [ħ]
+  mu::typeof(1.0u"J/T")       # magnetic moment 
+  spin::typeof(1.0u"h_bar")                    # spin magnetic moment in [ħ]
 end;
 
 
