@@ -142,7 +142,7 @@ macro APCdef(exs...)
 				(unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val)
 			else
 				error("""Can't get the charge of an undefined particle; 
-				exitthe Species constructor for this object was called with no arguments.""")
+				the Species constructor for this object was called with no arguments.""")
 			end
 		end
   end
