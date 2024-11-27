@@ -3,14 +3,14 @@
 
 @enumx IsDef Full Empty
 
-struct Species{T} 
+struct Species 
     name::String # name of the particle to track
     charge::typeof(1u"e") # charge of the particle (important to consider ionized atoms) in [e]
     mass::typeof(1.0u"MeV/c^2") # mass of the particle in [eV/c^2]
     spin::typeof(1.0u"h_bar") # spin of the particle in [ħ]
     moment::typeof(1.0u"J/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
     iso::Float64 # if the particle is an atomic isotope, this is the mass number, otherwise 0
-		pop::IsDef.T
+		populated
 end;
 export Species
 # The docstring for this struct is with its constructor, in the file 

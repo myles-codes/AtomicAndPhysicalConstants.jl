@@ -138,11 +138,11 @@ macro APCdef(exs...)
     const $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
     const $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
 		const $(esc(:chargeof2)) = begin
-			(species::Species) -> if species.pop == IsDef.Full 
+			(species::Species) -> if species.populated == IsDef.Full 
 				(unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val)
-			else
-				error("""Can't get the charge of an undefined particle; 
-				the Species constructor for this object was called with no arguments.""")
+			# else
+			# 	error("""Can't get the charge of an undefined particle; 
+			# 	the Species constructor for this object was called with no arguments.""")
 			end
 		end
   end

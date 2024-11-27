@@ -19,7 +19,7 @@ subatomic_particle
 
 function subatomic_particle(name::String)
     # write the particle out directly
-    return Species{IsDef}(name, SUBATOMIC_SPECIES[name].charge,
+    return Species(name, SUBATOMIC_SPECIES[name].charge,
         SUBATOMIC_SPECIES[name].mass,
         SUBATOMIC_SPECIES[name].spin,
         SUBATOMIC_SPECIES[name].mu,
@@ -81,7 +81,7 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 Species
 
 
-Species() = Species{IsDef}("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, IsDef.Empty)
+Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, IsDef.Empty)
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
