@@ -178,9 +178,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 					spin = 0.5 * iso
 				end
 				if anti_atom == false
-					return Species{IsDef}(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, IsDef.Full) # return the object to track
+					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, IsDef.Full) # return the object to track
 				else
-					return Species{IsDef}("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, IsDef.Full)
+					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, IsDef.Full)
 				end
 
 
