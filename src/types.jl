@@ -2,6 +2,7 @@
 
 
 @enumx IsDef Full Empty
+export IsDef
 
 struct Species 
     name::String # name of the particle to track
