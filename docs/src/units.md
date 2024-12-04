@@ -1,5 +1,7 @@
-# setunits()
-## Description
+# Setting Units for Constants And Particle Functions, Basic Unitful Usage
+
+## @APCdef
+### Description
 
 `setunits()` should be called at the initialization of the package. `setunits()` sets the units for physical constants, species mass and charge. 
 
@@ -8,7 +10,7 @@ The user have the freedom to choice the unit they want for `mass`, `length`, `ti
 `setunits()` will return an array with units for each dimension.
 
 
-## Syntax
+### Syntax
 ```julia
 setunits(unitsystem;
   mass_unit,
@@ -18,9 +20,9 @@ setunits(unitsystem;
   charge_unit,
 )
 ```
-## Options
+### Options
 
-## Examples
+### Examples
 ```julia
 setunits() #sets unit system to ACCELERATOR (default).
 ```
@@ -35,4 +37,10 @@ setunits(CGS, mass_unit=u"kg", charge=u"e") #sets unit system to CGS, but mass u
 ```
 ## Unitful
 
+### Create units
 
+### Conversion to Float
+
+### Unit Conversions
+
+### More Detail
