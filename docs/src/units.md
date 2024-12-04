@@ -37,10 +37,12 @@ setunits(CGS, mass_unit=u"kg", charge=u"e") #sets unit system to CGS, but mass u
 ```
 ## Unitful
 
-### Create units
+### Units
 
 ### Conversion to Float
 
 ### Unit Conversions
+
+### Package-specific Units
 
 ### More Detail

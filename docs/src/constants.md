@@ -18,11 +18,11 @@ julia> c_light
 #### Classical electron radius: `R_E`
 #### Classical proton radius: `R_P`
 #### Elementary charge:  `E_CHARGE`
-#### Vacuum permeability: `mu_0_vac()`
-#### Permittivity of free space: `eps_0_vac()`
-#### Classical Radius Factor: `classical_radius_factor()`
-#### Fine structure constant: `fine_structure()`
-#### Avogadro's constant: `N_avogadro()`
+#### Vacuum permeability: `MU_0_VAC`
+#### Permittivity of free space: `EPS_0_VAC`
+#### Classical Radius Factor: `CLASSICAL_RADIUS_FACTOR`
+#### Fine structure constant: `FINE_STRUCTURE`
+#### Avogadro's constant: `N_AVOGADRO`
 
 ### Species Mass and Charge
 
@@ -40,3 +40,15 @@ julia> chargeof(e)
 -1.0 e
 
 ```
+
+## Constants Sources and Updates
+
+The data for the constants are provided by CODATA. Users have the freedom to choose the year of CODATA in `@APCdef`. For example: 
+```julia
+julia> @APC CODATA = 2018
+```
+The data are downloaded to the local file.
+
+The isotope data are provided by NIST. The way we obtain data is by
+
+The pion0 and pion+- data are provided by PDG(Particle Data Group). We extracted the data from the database of **pdgapi.lbl.gov**

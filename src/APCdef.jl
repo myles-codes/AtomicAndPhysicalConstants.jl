@@ -138,8 +138,8 @@ macro APCdef(exs...)
     const $(esc(:MU_0_VAC)) = unitful ? $__b_mu_0_vac : $__b_mu_0_vac.val
     const $(esc(:EPS_0_VAC)) = unitful ? $__b_eps_0_vac : $__b_eps_0_vac.val
     const $(esc(:CLASSICAL_RADIUS_FACTOR)) = unitful ? $__b_classical_radius_factor : $__b_classical_radius_factor.val
-    const $(esc(:FINE_STRUCTURE)) = unitful ? $__b_fine_structure : $__b_fine_structure.val
-    const $(esc(:N_AVOGADRO)) = unitful ? $__b_N_avogadro : $__b_N_avogadro.val
+    const $(esc(:FINE_STRUCTURE)) = $__b_fine_structure
+    const $(esc(:N_AVOGADRO)) = $__b_N_avogadro
 
     const $(esc(:massof)) = (species::Species) -> unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
     const $(esc(:chargeof)) = (species::Species) -> unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
