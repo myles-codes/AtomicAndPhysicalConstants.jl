@@ -91,22 +91,23 @@ function full_name(species::Species)
 		if species.iso > 0
 				isostring = "#" * f"{species.iso}"
 		end
-		if species.charge != 0
-			if species.charge == 1
+		if species.charge.val != 0
+			if species.charge.val == 1
 					chargestring = "+"
-			elseif species.charge == -1
-					chargestring == "-"
-			elseif species.charge == 2
+			elseif species.charge.val == -1
+					chargestring = "-"
+			elseif species.charge.val == 2
 					chargestring = "++"
-			elseif species.charge == -2
-					chargestring == "--"
-			elseif species.charge > 2
-					chargestring = f"+{species.charge}"
+			elseif species.charge.val == -2
+					chargestring = "--"
+			elseif species.charge.val > 2
+					chargestring = f"+{abs(species.charge.val)}"
 			elseif species.charge < -2
-					chargestring == f"-{species.charge}"
+					chargestring = f"-{abs(species.charge.val)}"
 			end
 		end
 		return isostring * species.name * chargestring
 	end
 end;
 export full_name
+ 
