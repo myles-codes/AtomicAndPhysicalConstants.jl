@@ -1,8 +1,10 @@
 # types.Julia
 
 
+
 @enumx Scale Atom Hadron Lepton GBoson Null
 export Scale
+
 
 struct Species 
     name::String # name of the particle to track
