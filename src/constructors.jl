@@ -25,7 +25,7 @@ function subatomic_particle(name::String)
 					SUBATOMIC_SPECIES[name].mass,
 					SUBATOMIC_SPECIES[name].spin,
 					SUBATOMIC_SPECIES[name].mu,
-					0., Kind.GBOSON)
+					0., Kind.PHOTON)
 		elseif lowercase(name) in leptons
 			return Species(name, SUBATOMIC_SPECIES[name].charge,
 					SUBATOMIC_SPECIES[name].mass,
