@@ -1,8 +1,10 @@
 # types.Julia
 
 
-@enumx IsDef Full Empty
-export IsDef
+
+@enumx Scale Atom Hadron Lepton GBoson Null
+export Scale
+
 
 struct Species 
     name::String # name of the particle to track
@@ -11,7 +13,7 @@ struct Species
     spin::typeof(1.0u"h_bar") # spin of the particle in [ħ]
     moment::typeof(1.0u"J/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
     iso::Float64 # if the particle is an atomic isotope, this is the mass number, otherwise 0
-		populated
+		variety
 end;
 export Species
 # The docstring for this struct is with its constructor, in the file 

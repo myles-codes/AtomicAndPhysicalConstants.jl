@@ -19,11 +19,26 @@ subatomic_particle
 
 function subatomic_particle(name::String)
     # write the particle out directly
-    return Species(name, SUBATOMIC_SPECIES[name].charge,
-        SUBATOMIC_SPECIES[name].mass,
-        SUBATOMIC_SPECIES[name].spin,
-        SUBATOMIC_SPECIES[name].mu,
-        0., IsDef.Full)
+		leptons = ["electron", "positron", "muon", "anti-muon"]
+		if lowercase(name) == "photon"
+			return Species(name, SUBATOMIC_SPECIES[name].charge,
+					SUBATOMIC_SPECIES[name].mass,
+					SUBATOMIC_SPECIES[name].spin,
+					SUBATOMIC_SPECIES[name].mu,
+					0., Scale.GBoson)
+		elseif lowercase(name) in leptons
+			return Species(name, SUBATOMIC_SPECIES[name].charge,
+					SUBATOMIC_SPECIES[name].mass,
+					SUBATOMIC_SPECIES[name].spin,
+					SUBATOMIC_SPECIES[name].mu,
+					0., Scale.Lepton)
+		else
+			return Species(name, SUBATOMIC_SPECIES[name].charge,
+					SUBATOMIC_SPECIES[name].mass,
+					SUBATOMIC_SPECIES[name].spin,
+					SUBATOMIC_SPECIES[name].mu,
+					0., Scale.Hadron)
+		end
 end
 
 
@@ -81,24 +96,24 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 Species
 
 
-Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, IsDef.Empty)
+Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Scale.Null)
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
 
 	anti = r"Anti\-|anti\-"
 	# is the anti-particle in the Subatomic_Particles dictionary?
-	if occursin(anti, name) && haskey(SUBATOMIC_SPECIES, name[6:end])
-		if name[6:end] == "electron"
+	if occursin(anti, lowercase(name)) && haskey(SUBATOMIC_SPECIES, lowercase(name[6:end]))
+		if lowercase(name[6:end]) == "electron"
 				return subatomic_particle("positron")
 		else
-				return subatomic_particle("anti_" * name[6:end])
+				return subatomic_particle("anti_" * lowercase(name[6:end]))
 		end
 
 			# check subatomics first so we don't accidentally strip a name
-	elseif haskey(SUBATOMIC_SPECIES, name) # is the particle in the Subatomic_Particles dictionary?
+	elseif haskey(SUBATOMIC_SPECIES, lowercase(name)) # is the particle in the Subatomic_Particles dictionary?
 		# write the particle out directly
-		return subatomic_particle(name)
+		return subatomic_particle(lowercase(name))
 
 	else
 		# make sure to use the optional arguments
@@ -178,9 +193,10 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 					spin = 0.5 * iso
 				end
 				if anti_atom == false
-					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, IsDef.Full) # return the object to track
+					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, Scale.Atom) # return the object to track
 				else
-					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, IsDef.Full)
+					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, Scale.Atom)
+
 				end
 
 
