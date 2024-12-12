@@ -2,7 +2,7 @@
 
 
 
-@enumx Kind ATOM HADRON LEPTON GBOSON NULL
+@enumx Kind ATOM HADRON LEPTON PHOTON NULL
 export Kind
 
 # The docstring for this struct is with its constructor, in the file 
