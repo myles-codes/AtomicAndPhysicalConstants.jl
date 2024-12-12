@@ -169,6 +169,9 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 				error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
 				return
 			end
+			if charge > ATOMIC_SPECIES[AS].Z
+				error(f"You have specified a larger positive charge than the fully stripped {ATOMIC_SPECIES[AS].species_name} atom has, which is unphysical.")
+			end
 			mass = begin
 				if anti_atom == false
 					nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso]); 
