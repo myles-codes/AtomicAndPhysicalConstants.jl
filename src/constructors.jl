@@ -25,19 +25,19 @@ function subatomic_particle(name::String)
 					SUBATOMIC_SPECIES[name].mass,
 					SUBATOMIC_SPECIES[name].spin,
 					SUBATOMIC_SPECIES[name].mu,
-					0., Scale.GBoson)
+					0., Kind.GBOSON)
 		elseif lowercase(name) in leptons
 			return Species(name, SUBATOMIC_SPECIES[name].charge,
 					SUBATOMIC_SPECIES[name].mass,
 					SUBATOMIC_SPECIES[name].spin,
 					SUBATOMIC_SPECIES[name].mu,
-					0., Scale.Lepton)
+					0., Kind.LEPTON)
 		else
 			return Species(name, SUBATOMIC_SPECIES[name].charge,
 					SUBATOMIC_SPECIES[name].mass,
 					SUBATOMIC_SPECIES[name].spin,
 					SUBATOMIC_SPECIES[name].mu,
-					0., Scale.Hadron)
+					0., Kind.HADRON)
 		end
 end
 
@@ -96,7 +96,7 @@ If an anti-particle (subatomic or otherwise) prepend "anti-" to the name.
 Species
 
 
-Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Scale.Null)
+Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
 function Species(name::String, charge::Int=0, iso::Int=-1)
 
@@ -161,12 +161,12 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 			end
 		end
 		if count('+', name) != 0 && count('-', name) != 0
-			error(f"""You made a typo in "{name}". You have both a + and a - in the name. """)
+			error(f"""You made a typo in "{name}". You have both + and - in the name. """)
 			return
 		end
 		if haskey(ATOMIC_SPECIES, AS) # is the particle in the Atomic_Particles dictionary?
 			if iso ∉ keys(ATOMIC_SPECIES[AS].mass) # error handling if the isotope isn't available
-				error("The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.")
+				error("""The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.""")
 				return
 			end
 			if charge > ATOMIC_SPECIES[AS].Z
@@ -196,9 +196,10 @@ function Species(name::String, charge::Int=0, iso::Int=-1)
 					spin = 0.5 * iso
 				end
 				if anti_atom == false
-					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, Scale.Atom) # return the object to track
+					return Species(AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0*u"J/T", iso, Kind.ATOM) # return the object to track
 				else
-					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, Scale.Atom)
+					return Species("anti-" * AS, charge*u"e", mass*u"MeV/c^2", spin*u"h_bar", 0u"J/T", iso, Kind.ATOM)
+
 				end
 
 

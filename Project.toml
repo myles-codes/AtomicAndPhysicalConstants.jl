@@ -1,7 +1,7 @@
 name = "AtomicAndPhysicalConstants"
 uuid = "5c0d271c-5419-4163-b387-496237733d8b"
 authors = ["David Sagan <david.sagan@cornell.edu> and contributors"]
-version = "0.3.0"
+version = "0.5.0"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -11,6 +11,7 @@ HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 PyFormattedStrings = "5f89f4a4-a228-4886-b223-c468a82ed5b9"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
