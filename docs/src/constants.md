@@ -2,11 +2,11 @@
 # Constants 
 
 ## Available Constants
-Constants are accessed by a getter function. If a unit is provided, then the value with that unit is returned. If units is not provided, then the units will be in the units determined by `setunits()`. For Example:
+The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md)). The following example is how to use the macro and the phyical constants.
 
 ```julia
 julia> @APCdef
-julia> c_light
+julia> C_LIGHT
 2.99792458e8
 ```
 
@@ -26,12 +26,12 @@ julia> c_light
 
 ### Species Mass and Charge
 
-To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. Similarly, if a unit is not provided, the function will return unit defined by `setunits()`. For Example:
+To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to `@APCdef`. For Example:
 
 ```julia
 julia> e = Species("electron") 
 
-julia> @APCdef unitful = true # set units to ACCELERATOR unit system, where mass unit is eV/c^2 and charge unit is elementary charge
+julia> @APCdef unitsystem = ACCELERATOR unitful = true # set units to ACCELERATOR unit system, where mass unit is eV/c^2 and charge unit is elementary charge
 
 julia> massof(e) 
 510998.95069 eV c⁻²
@@ -45,10 +45,12 @@ julia> chargeof(e)
 
 The data for the constants are provided by CODATA. Users have the freedom to choose the year of CODATA in `@APCdef`. For example: 
 ```julia
-julia> @APC CODATA = 2018
+julia> @APCdef CODATA = 2018
 ```
 The data are downloaded to the local file.
 
-The isotope data are provided by NIST. The way we obtain data is by
+The isotope data are provided by NIST. We extract the isotope data from their database. The NIST doesn't store old releases, so the isotope data will always be the newest release.
 
 The pion0 and pion+- data are provided by PDG(Particle Data Group). We extracted the data from the database of **pdgapi.lbl.gov**
+
+## `setCODATA` usage
