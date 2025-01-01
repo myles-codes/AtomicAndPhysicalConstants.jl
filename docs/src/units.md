@@ -14,7 +14,7 @@ The users have the freedom to choose whether they want the constants to be of ty
 
 ### Syntax
 ```julia
-@APCdef CODATA = 2022 unitsystem = ACCELERATOR unitful = false
+@APCdef(CODATA = 2022, unitsystem = ACCELERATOR, unitful = false)
 ```
 ### Options
 
