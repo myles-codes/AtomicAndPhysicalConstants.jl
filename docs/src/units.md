@@ -3,7 +3,7 @@
 ## @APCdef
 ### Description
 
-`@APCdef` should be called at the initialization of the package. `@APCdef` sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data.
+`@APCdef` should be called at the initialization of the package. `@APCdef` sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data, see [this page](constants.md) for more detail.
 
 The user have the freedom to choose the unit they want for `mass`, `length`, `time`, `energy`, and `charge`. by using our predefined unitsystems `ACCELERATOR` (default), `MKS`, and `CGS` to quickly setup the units.
 
@@ -22,7 +22,7 @@ The users have the freedom to choose whether they want the constants to be of ty
 
 `unitsystem` defines the set of units for the constants. There are 3 available options: `ACCELERATOR`,`MKS`,`CGS`. Default to `ACCELERATOR`.
 
-`unitful` is a boolean. If it is set to `true`, the constants will be a Unitful type. If it is set to `false`, it will be a `Float64`. Defualt to `false`.
+`unitful` is a boolean. If it is set to `true`, the constants will be a Unitful type. If it is set to `false`, it will be a `Float64`. Default to `false`.
 
 `ACCELERATOR` units:
 - `mass`: eV/c^2
@@ -82,7 +82,7 @@ julia> a.val
 
 ### Unit Conversions
 
-Unitful provides a convient way to creat new units with expressions. Suffixs can also be directly added.
+Unitful provides a convenent way to create new units with expressions. Prefix can also be directly added.
 ```julia
 julia> m = 0.511u"MeV/c^2"
 ```
@@ -94,7 +94,7 @@ julia> uconvert(u"kg",m)
 
 ### Package-specific Units
 
-`AtomicAndPhysicalConstants` defined 3 units that is not from the Unitful package. Within the package, users can directly use `@u_str` macro to acess these units, just like any other units.
+`AtomicAndPhysicalConstants` defined 3 units that is not from the Unitful package. Within the package, users can directly use `@u_str` macro to access these units, just like any other units.
 
 - `amu` : It represents the atomic mass unit. 
 

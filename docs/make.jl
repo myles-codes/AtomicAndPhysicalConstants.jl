@@ -2,7 +2,7 @@ using Documenter, AtomicAndPhysicalConstants
 
 makedocs(
   sitename="AtomicAndPhysicalConstants.jl",
-  authors="Alex Coxe et al.",
+  authors="Alex Coxe, Lixing Li, Matt Signorelli, David Sagan et al.",
   format=Documenter.HTMLWriter.HTML(size_threshold=nothing),
   pages=
   [

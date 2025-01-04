@@ -2,7 +2,7 @@
 # Constants 
 
 ## Available Constants
-The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md)). The following example is how to use the macro and the phyical constants.
+The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md)). The following example is how to use the macro and the physical constants.
 
 ```julia
 julia> @APCdef
@@ -12,17 +12,17 @@ julia> C_LIGHT
 
 ### Constants Defined by @APCdef
 
-#### Speed of light: `C_LIGHT`
-#### Planck's constant: `H_PLANCK`
-#### Reduced Planck's constant: `H_BAR_PLANCK`
-#### Classical electron radius: `R_E`
-#### Classical proton radius: `R_P`
-#### Elementary charge:  `E_CHARGE`
-#### Vacuum permeability: `MU_0_VAC`
-#### Permittivity of free space: `EPS_0_VAC`
-#### Classical Radius Factor: `CLASSICAL_RADIUS_FACTOR`
-#### Fine structure constant: `FINE_STRUCTURE`
-#### Avogadro's constant: `N_AVOGADRO`
+- Speed of light: `C_LIGHT`
+- Planck's constant: `H_PLANCK`
+- Reduced Planck's constant: `H_BAR_PLANCK`
+- Classical electron radius: `R_E`
+- Classical proton radius: `R_P`
+- Elementary charge:  `E_CHARGE`
+- Vacuum permeability: `MU_0_VAC`
+- Permittivity of free space: `EPS_0_VAC`
+- Classical Radius Factor: `CLASSICAL_RADIUS_FACTOR`
+- Fine structure constant: `FINE_STRUCTURE`
+- Avogadro's constant: `N_AVOGADRO`
 
 ### Species Mass and Charge
 
@@ -52,5 +52,3 @@ The data are downloaded to the local file.
 The isotope data are provided by NIST. We extract the isotope data from their database. The NIST doesn't store old releases, so the isotope data will always be the newest release.
 
 The pion0 and pion+- data are provided by PDG(Particle Data Group). We extracted the data from the database of **pdgapi.lbl.gov**
-
-## `setCODATA` usage
