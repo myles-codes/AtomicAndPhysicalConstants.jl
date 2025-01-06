@@ -39,7 +39,27 @@ Constants are pulled from the NIST table of the **2022 CODATA release**. Note th
 #### Joules per eV: `J_per_eV` = 1.602176634e-19
 
 
+Subatomic particles included with information about
+charge, mass, anomalous magnetic moment, and spin
+are:
+- `photon`
+- `pion0`
+- `pion+`
+- `pion-`
+- `muon`
+- `antimuon`
+- `electron`
+- `positron`
+- `proton`
+- `anti-proton`
+- `neutron`
+- `anti-neutron`
+- `deuteron`
+- `anti-deuteron`
 
+
+In addition, a collection of all the isotopes documented by NIST
+is included. Values may be updated with setIsos()
 
 
 

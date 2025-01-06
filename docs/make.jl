@@ -2,14 +2,14 @@ using Documenter, AtomicAndPhysicalConstants
 
 makedocs(
   sitename="AtomicAndPhysicalConstants.jl",
-  authors="Alex Coxe et al.",
+  authors="Alex Coxe, Lixing Li, Matt Signorelli, David Sagan et al.",
   format=Documenter.HTMLWriter.HTML(size_threshold=nothing),
   pages=
   [
     "Home" => "index.md",
-    "Set Units" => "set_units.md",
-    "Constants Getter Functions" => "constants.md",
-    "Constants Used" => "constants_used.md"
+    "APCdef" => "units.md",
+    "Constants" => "constants.md",
+    "Species" => "species.md"
   ]
 )
 

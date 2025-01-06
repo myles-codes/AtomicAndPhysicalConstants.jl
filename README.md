@@ -1,63 +1,56 @@
-# AtomicAndPhysicalConstants
+# AtomicAndPhysicalConstants.jl
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/)
 [![Build Status](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
+# AtomicAndPhysicalConstants.jl
 
+`AtomicAndPhysicalConstants.jl` provides a quick way to access information about different species and physical constants.
 
-AtomicAndPhysicalConstants is a package which provides numerical constants and
-simulation-ready objects for tracking through an accelerator lattice, as well as
-other possible scenarios. It includes information about a number of hadrons and
-fundamental particles, listed below; also included is detailed information about
-every isotope of every atomic element documented by NIST.
+It is designed to provide atomic and physical constants including things like the speed of light, subatomic particle properties, atomic isotope properties, etc. 
 
-The numerical constants are:
-- `c_light`: speed of light
-- `h_planck`: Planck's constant
-- `h_bar_planck`: Planck's constant / 2pi
-- `mu_0_vac`: vacuum permeability
-- `eps_0_vac`: vacuum permittivity
-- `fine_structure`: fine structure constant
-- `N_avogadro`: Avogadro's constant
-- `m_electron`: electron mass
-- `r_e`: electron radius
-- `anom_mag_moment_electron`: anomalous magnetic moment of the electron
-- `m_proton`: proton mass
-- `r_p`: proton radius
-- `anom_mag_moment_proton`: anomalous magnetic moment of the proton
-- `m_neutron`: neutron mass
-- `anom_mag_moment_neutron`: anomalous magnetic moment of the neutron
-- `m_muon`: muon mass
-- `anom_mag_moment_muon`: anomalous magnetic moment of the muon
-- `m_helion`: Helion (He3 nucleus) mass
-- `anom_mag_moment_He3`: anomalous magnetic moment of the helion
-- `m_deuteron`: deuteron mass
-- `anom_mag_moment_deuteron`: anomalous magnetic moment of the deuteron
-- `m_pion_0`: mass of a neutral pion
-- `m_pion_charged`: mass of a charged pion
-- `kg_per_amu`: mass conversion factor between kg and dalton
-- `eV_per_amu`: mass conversion factor between eV/c^2 and dalton
+Values are obtained from CODATA (Committee on Data of the International Science Council), NIST (National Institute of Standards and Technology), and PDG (Particle Data Group). This package enables users to access and customize units for the constants. 
 
+The package is compatible with Julia's `Unitful.jl` library for convenient unit manipulation. 
 
-Subatomic particles included with information about
-charge, mass, anomalous magnetic moment, and spin
-are:
-- `photon`
-- `pion0`
-- `pion+`
-- `pion-`
-- `muon`
-- `antimuon`
-- `electron`
-- `positron`
-- `proton`
-- `anti-proton`
-- `neutron`
-- `anti-neutron`
-- `deuteron`
-- `anti-deuteron`
+`AtomicAndPhysicalConstants.jl` has the following main features and advantages:
 
+1. **Simple Unit Manipulation**: Users can define the units they want to use in a simple and consistent way. `Unitful.jl` provides a simple way to do unit conversion and calculations.
+2. **Rigorous and Up-to-Date Data**: We uses the most updated values from creditable sources. We also provided the option to use past data for specific purposes.
+3. **Simple usage**: Users can access data of a wide range of particles and physic constants by simply defining a species with their name or call a variable in the namespace. 
 
-In addition, a collection of all the isotopes documented by NIST
-is included. Values may be updated with setIsos()
+## Setup
+## Basic Usage
+
+### Defining Physical Constants
+
+The macro `@APCdef` helps you define a set of useful physical constants in your namespace. 
+
+```julia
+julia> @APCdef
+julia> C_LIGHT
+2.99792458e8
+```
+
+Users have the options for choosing the type and unit of the constants, see [this page](units.md)
+
+### Defining Species
+
+The constructor `Species()` helps you create a structure with all the information of the species stored in it.
+
+```julia
+julia> e = Species("electron")
+julia> hydrogen = Species("H")
+```
+
+You could use getter functions to access its properties or directly calling its fields. 
+
+```julia
+julia> massof(e)
+510998.95069
+julia> hydrogen.spin
+1.0 h_bar
+```
+
+See more about `Species()` constructors and getter functions [here](species.md)
