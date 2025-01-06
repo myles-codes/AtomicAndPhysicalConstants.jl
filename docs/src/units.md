@@ -9,7 +9,7 @@ The user have the freedom to choose the unit they want for `mass`, `length`, `ti
 
 The users have the freedom to choose the version of CODATA they prefer.
 
-The users have the freedom to choose whether they want the constants to be of type `Float64` or Unitful types, which makes unit calculations easier. See more about `Unitful` [here](#unitful).
+The users have the freedom to choose whether they want the constants to be of type `Float64` or Unitful types, which makes unit calculations easier. 
 
 
 ### Syntax

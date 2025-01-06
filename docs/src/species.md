@@ -53,7 +53,7 @@ Example:
 julia> Species("anti-proton")
 ```
 
-See the list of all available subatomic species [here](#list-of-available-subatomic-species)
+See the list of all available subatomic species at the end of this page.
 
 ### Constructing Atomic Species
 
