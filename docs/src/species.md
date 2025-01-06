@@ -72,17 +72,19 @@ julia> Species("C#13+") #Carbon-13 with a single positive charge
 
 - If mass number is not provided, the average will be used
 - If charge is not provided, a neutral atom will be returned.
-- charge can be provided by the following format
+- Charge can be provided by the following format
     - "+" represents single positive charge
     - "++" represents double positive charge
     - "+n" represents n positive charge
     - "-" represents single negative charge
     - "--" represents double negative charge
     - "-n" represents n negative charge
+- To construct an anti atom, put "anti-" in the front.
 
 Example:
 ```julia
 julia> Species("Al+4") #average Aluminum with 3 positive charge
+julia> Species("anti-H") #anti-hydrogen
 ```
 
 ### Alternative Way of Constructing Atomic Species
@@ -115,6 +117,8 @@ Species functions take a `Species` as their only parameter and returns a specifi
 - `gyromagnetic_anomaly()`
 - `g_nucleon()`
 - `fullname()`
+
+**Note**: One must call `@APCdef` before calling `massof()` and `chargeof()`.
 
 ## List of Available subatomic species
 
