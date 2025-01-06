@@ -6,7 +6,7 @@
 
 # AtomicAndPhysicalConstants.jl
 
-`AtomicAndPhysicalConstants.jl` provides a quick way to access information about different species and physical constants.
+`AtomicAndPhysicalConstants.jl` provides a quick way to access information about different species and physical constants optimized for faster compile time and simulations.
 
 It is designed to provide atomic and physical constants including things like the speed of light, subatomic particle properties, atomic isotope properties, etc. 
 
@@ -33,7 +33,7 @@ julia> C_LIGHT
 2.99792458e8
 ```
 
-Users have the options for choosing the type and unit of the constants, see [this page](units.md)
+Users have the options for choosing the type and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/)
 
 ### Defining Species
 
@@ -53,4 +53,4 @@ julia> hydrogen.spin
 1.0 h_bar
 ```
 
-See more about `Species()` constructors and getter functions [here](species.md)
+See more about `Species()` constructors and getter functions [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/species/)
