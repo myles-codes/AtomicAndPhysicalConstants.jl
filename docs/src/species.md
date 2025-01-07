@@ -17,9 +17,11 @@ struct Species
 	kind    # the kind of particle.
 end;
 ```
-There are 5 kinds of species: `ATOM` `HADRON` `LEPTON` `PHOTON` `NULL`. The kind of species is stored within the `kind` field.
+There are 5 kinds of species: `ATOM` `HADRON` `LEPTON` `PHOTON` `NULL`. 
+The kind of species is stored within the `kind` field.
 
-The fields are stored with a set of units. If the fields are directly accessed, it will return a Unitful value. For example:
+The fields are stored with a set of units. If the fields are directly accessed, 
+it will return a Unitful value. For example:
 ```julia
 julia> Species("electron").mass
 0.51099895069 MeV c^-2
@@ -30,16 +32,27 @@ The default units are:
 - `spin`: $\hbar$
 - `moment`: J/T
 
-We recommended using our getter functions `massof()` an d `chargeof()` to obtain values in units you prefer. See [this page](constants.md) for more information.
+We recommended using our getter functions `massof()` an d `chargeof()` to obtain values 
+in units you prefer. See [this page](constants.md) for more information.
 
 
 ## Construct a Species
 
 Construct the particle with the constructor `Species(name)`.
 
+### Constructing a Null species
+
+The `Null` species is usful for bookkeeping purposes. For example, as a place holder for a struct
+component to indicate that the species has not yet been set. To instantiate use:
+```julia
+julia> Species("Null")
+julia> Species()        # Same as above
+```
+
 ### Constructing Subatomic Species
 
-To construct a subatomic species, put the name of the subatomic species in the field `name`. **Note that the name must be provided exactly.**
+To construct a subatomic species, put the name of the subatomic species in the field `name`. 
+**Note that the name must be provided exactly.**
 
 Example:
 ```julia
@@ -95,11 +108,11 @@ Species(name::String, charge::Int, iso::Int)
 ```
 where users can enter charge and mass number as separate parameter.
 
- The parameter `charge` and `iso` are optional and it will use default values if not provided. Defaults are neutral atom and average atom.
+The parameter `charge` and `iso` are optional and it will use default values if not provided. 
+Defaults are neutral atom and average atom.
 
- **Note**
-
- If charge or mass number are also provided in `name`. The charge and mass number in `name` will override the one given in the parameter.
+**Note** If charge or mass number are also provided in `name`. 
+The charge and mass number in `name` will override the one given in the parameter.
 
 Example:
 ```julia
@@ -108,7 +121,8 @@ julia> Species("C",charge = 1, iso = 13) #Carbon-13 with a single positive charg
 
 ## Species Functions
 
-Species functions take a `Species` as their only parameter and returns a specific property of it. Here is the list of species functions:
+Species functions take a `Species` as their only parameter and returns a specific property of it. 
+Here is the list of species functions:
 
 - `massof()`
 - `chargeof()`
