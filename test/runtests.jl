@@ -34,3 +34,13 @@ end
   @test massof(e) ≈ 510998.95069
   @test chargeof(e) ≈ -1
 end
+
+@testset "testSpecies" begin
+  #test '+' and '-' signs to charge
+  @test chargeof(Species("H+")) ≈ 1
+  @test chargeof(Species("Mg++")) ≈ 2
+  @test chargeof(Species("Al+3")) ≈ 3
+  @test chargeof(Species("Cl-")) ≈ -1
+  @test chargeof(Species("O--")) ≈ -2
+  @test chargeof(Species("N-3")) ≈ -3
+end
