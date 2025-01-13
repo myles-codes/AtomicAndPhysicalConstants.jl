@@ -15,7 +15,7 @@ Constants are pulled from the NIST table of the **2022 CODATA release**. Note th
 
 ## Species Mass
 #### Electron Mass: `m_electron` = 0.51099895069 * u"MeV/c^2"
-#### Proton Mass: `m_proton` = 9.382720894300001e2 * u"eV/c^2"
+#### Proton Mass: `m_proton` = 938.2720894300001 * u"MeV/c^2"
 #### Neutron Mass: `m_neutron` = 9.395654219399999e2 * u"MeV/c^2"
 #### Muon Mass: `m_muon` = 1.056583755e2 * u"MeV/c^2"
 #### Helion Mass He3 nucleus: `m_helion` = 2.80839161112e3 * u"MeV/c^2"
