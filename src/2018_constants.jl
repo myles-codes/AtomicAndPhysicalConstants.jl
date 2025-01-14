@@ -10,7 +10,7 @@
 
 const __b_m_electron = 0.51099895069 * u"MeV/c^2"
 # Electron Mass [MeV]/c^2
-const __b_m_proton = 9.382720894300001e2 * u"eV/c^2"
+const __b_m_proton = 9.382720894300001e2 * u"MeV/c^2"
 # Proton Mass [MeV]/c^2
 const __b_m_neutron = 9.395654219399999e2 * u"MeV/c^2"
 # Neutron Mass [MeV]/c^2

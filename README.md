@@ -4,7 +4,6 @@
 [![Build Status](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-# AtomicAndPhysicalConstants.jl
 
 `AtomicAndPhysicalConstants.jl` provides a quick way to access information about different species and physical constants optimized for faster compile time and simulations.
 
