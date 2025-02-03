@@ -50,7 +50,8 @@ downloadCODATA
 function downloadCODATA(year::Int)
     myYear = year
     NIST_releases = [1969, 1973, 1986, 1998, 2002, 2006, 2010, 2014, 2018, 2022]
-    ixyear = findmin(myYear .- NIST_releases)
+    diffs = abs.(myYear .- NIST_releases)
+    ixyear = findmin(diffs)
     year = NIST_releases[ixyear[2]]
     if ixyear[1] != 0
         println(f"The year requested isn't available: downloading the {year} CODATA release instead.")
