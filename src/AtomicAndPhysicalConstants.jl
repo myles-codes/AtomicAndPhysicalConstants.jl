@@ -26,7 +26,7 @@ export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export setCODATA
+export useCODATA
 export @u_str, NewUnits
 
 end

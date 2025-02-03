@@ -48,21 +48,21 @@ returns the path to the local copy"""
 downloadCODATA
 
 function downloadCODATA(year::Int)
-    myYear = year
-    NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
-    diffs = abs.(myYear .- NIST_releases)
-    ixyear = findmin(diffs)
-    year = NIST_releases[ixyear[2]]
-    if ixyear[1] != 0
-        println(f"The year requested isn't available: downloading the {year} CODATA release instead.")
+  NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
+  if year ∉ NIST_releases
+    println("The CODATA release years are:")
+    for y in NIST_releases
+      println(y)
     end
-    if year != 2022
-        url = "https://physics.nist.gov/cuu/Constants/ArchiveASCII/allascii_" * string(year) * ".txt"
-    else
-        url = "https://physics.nist.gov/cuu/Constants/Table/allascii.txt"
-    end
-    path = download(url)
-    return path
+    error(f"The year requested isn't available, please select a valid year.")
+  end
+  if year != 2022
+    url = "https://physics.nist.gov/cuu/Constants/ArchiveASCII/allascii_" * string(year) * ".txt"
+  else
+    url = "https://physics.nist.gov/cuu/Constants/Table/allascii.txt"
+  end
+  path = download(url)
+  return path
 end
 
 
@@ -230,4 +230,25 @@ function setCODATA(year::Int)
     writeCODATA(year, new_consts)
 
 end;
+
+
+"""
+    useCODATA(year::Int)
+
+Sets the values of the base constants to those of a particular CODATA 
+release. Valid only in the current scope."""
+useCODATA
+
+function useCODATA(year::Int)
+  NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
+  if year ∈ NIST_releases
+    include(f"{year}_constants.jl")
+  else
+    println("The available CODATA release years are:")
+    for y in NIST_releases
+      println(y)
+    end
+    error(f"The year requested isn't available, please select a valid year.")
+  end
+end
 

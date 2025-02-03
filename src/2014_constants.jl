@@ -1,6 +1,10 @@
-# AtomicAndPhysicalConstants/src/2018_constants.jl
+# AtomicAndPhysicalConstants/src/2014_constants.jl
 # Constants pulled from the NIST table of
-# the 2018 CODATA release
+# the 2014 CODATA release
+
+
+
+
 
 
 #####################################################################
@@ -10,7 +14,7 @@
 
 const __b_m_electron = 0.51099895069 * u"MeV/c^2"
 # Electron Mass [MeV]/c^2
-const __b_m_proton = 9.382720894300001e2 * u"MeV/c^2"
+const __b_m_proton = 9.382720894300001e2 * u"eV/c^2"
 # Proton Mass [MeV]/c^2
 const __b_m_neutron = 9.395654219399999e2 * u"MeV/c^2"
 # Neutron Mass [MeV]/c^2
@@ -94,7 +98,7 @@ const __b_J_per_eV = 1.602176634e-19 * u"J/eV";
 
 
 #####################################################################
-# constants with miscellaneous dimension
+# constants with miscelaneous dimension
 #####################################################################
 
 
