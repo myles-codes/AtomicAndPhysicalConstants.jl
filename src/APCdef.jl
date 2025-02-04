@@ -103,11 +103,11 @@ macro APCdef(name=:APC, exs...)
     $(exs...)
 
     # extract the units from the unit system
-    mass_unit = unitsystem[1]
-    length_unit = unitsystem[2]
-    time_unit = unitsystem[3]
-    energy_unit = unitsystem[4]
-    charge_unit = unitsystem[5]
+    mass_unit::Unitful.FreeUnits = unitsystem[1]
+    length_unit::Unitful.FreeUnits = unitsystem[2]
+    time_unit::Unitful.FreeUnits = unitsystem[3]
+    energy_unit::Unitful.FreeUnits = unitsystem[4]
+    charge_unit::Unitful.FreeUnits = unitsystem[5]
     # check dimensions of units
     if dimension(mass_unit) != dimension(u"kg")
       error("unit for mass does not have proper dimension")
@@ -165,9 +165,21 @@ macro APCdef(name=:APC, exs...)
 
     #massof and charge of
     function $(esc(:massof))(species::Species)::Union{Float64,Quantity,Int64}
+      @assert species.mass isa Quantity
       return unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
     end
     function $(esc(:chargeof))(species::Species)::Union{Float64,Quantity,Int64}
+      @assert species.charge isa Quantity
+      return unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
+    end
+
+    #added options for string input
+    function $(esc(:massof))(speciesname::String)::Union{Float64,Quantity,Int64}
+      species = Species(speciesname)
+      return unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
+    end
+    function $(esc(:chargeof))(speciesname::String)::Union{Float64,Quantity,Int64}
+      species = Species(speciesname)
       return unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
     end
     #$(esc(:chargeof2)) = begin
