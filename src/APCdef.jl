@@ -77,7 +77,23 @@ It defines the physical constants and getter functions for species mass and char
 
 """
 macro APCdef(name=:APC, exs...)
-  # sort and collect the dictionary
+  # define a dictionary that relates symbols to constants already defined
+  # I'm doing inside the APCdef macro which could slow things a bit, but silos the dictionary
+  # There are a few things I'm not sure about here, including why so many constants are missing.
+  CONSTANTS = Dict(
+    :C_LIGHT => __b_c_light,
+    :H_PLANCK => __b_h_planck,
+    :H_BAR_PLANCK => __b_h_bar_planck,
+    :R_E => __b_r_e,
+    :R_P => __b_r_p,
+    :E_CHARGE => __b_e_charge,
+    :MU_0_VAC => __b_mu_0_vac,
+    :EPS_0_VAC => __b_eps_0_vac,
+    :CLASSICAL_RADIUS_FACTOR => __b_classical_radius_factor,
+    :FINE_STRUCTURE => __b_fine_structure,
+    :N_AVOGADRO => __b_N_avogadro,
+  )
+  # sort and collect the dictionary 
   # since elements in the dictionary does not have a preferred order, sorting it increases stability
   # pairs_sorted is an array of key and value pair of the CONSTANTS dictionary
   pairs_sorted = sort(collect(CONSTANTS), by=x -> first(x))

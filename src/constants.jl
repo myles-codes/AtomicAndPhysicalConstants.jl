@@ -3,21 +3,6 @@
 # the 2022 CODATA release
 
 
-# constant in a dictionary
-
-const CONSTANTS = Dict(
-    :C_LIGHT => 2.99792458e8 * u"m/s",
-    :H_PLANCK => 4.135667696e-15 * u"eV*s",
-    :H_BAR_PLANCK => 4.135667696e-15 * u"eV*s" / 2pi,
-    :R_E => 2.8179403205e-15 * u"m",
-    :R_P => 2.8179403205e-15 * u"m" * 0.51099895069 * u"MeV/c^2" / (938.2720894300001 * u"MeV/c^2"),
-    :E_CHARGE => 1.602176634e-19 * u"C",
-    :MU_0_VAC => 8.8541878188e-12 * u"F/m",
-    :EPS_0_VAC => 1.25663706127e-6 * u"N/A^2",
-    :CLASSICAL_RADIUS_FACTOR => 2.8179403205e-15 * u"m" * 0.51099895069 * u"MeV/c^2",
-    :FINE_STRUCTURE => 0.0072973525643,
-    :N_AVOGADRO => 6.02214076e23,
-)
 
 
 #####################################################################
