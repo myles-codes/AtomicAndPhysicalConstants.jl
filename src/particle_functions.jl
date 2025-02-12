@@ -80,8 +80,12 @@ export g_nucleon
 
 get the full name of a tracked species:
 - if species is subatomic, gives the name in the SUBATOMIC_SPECIES dictionary
-- if species is atomic, gives "mass number"*"atomic symbol"*"charge state"
+- if species is atomic, gives "mass number" * "atomic symbol" * "charge state", 
+  *e.g.* #3He-1 for a Helion with 3 bound electrons
 """
+
+ 
+
 function full_name(species::Species)
 	if haskey(SUBATOMIC_SPECIES, species.name)
 			return species.name
@@ -92,22 +96,14 @@ function full_name(species::Species)
 				isostring = "#" * f"{species.iso}"
 		end
 		if species.charge.val != 0
-			if species.charge.val == 1
-					chargestring = "+"
-			elseif species.charge.val == -1
-					chargestring = "-"
-			elseif species.charge.val == 2
-					chargestring = "++"
-			elseif species.charge.val == -2
-					chargestring = "--"
-			elseif species.charge.val > 2
-					chargestring = f"+{abs(species.charge.val)}"
-			elseif species.charge < -2
-					chargestring = f"-{abs(species.charge.val)}"
-			end
+			if species.charge.val < 0
+        chargestring = f"-{abs(species.charge.val)}"
+      elseif species.charge.val > 0
+        chargestring = f"-{abs(species.charge.val)}"
+    
+      end
 		end
 		return isostring * species.name * chargestring
 	end
 end;
 export full_name
- 
