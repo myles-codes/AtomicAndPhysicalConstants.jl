@@ -11,12 +11,12 @@
 """
 ACCELERATOR
 
-const ACCELERATOR = [
+const ACCELERATOR = (
   u"eV/c^2",
   u"m",
   u"s",
   u"eV",
-  u"e"]
+  u"e")
 
 #   MKS
 """
@@ -30,12 +30,12 @@ const ACCELERATOR = [
 """
 MKS
 
-const MKS = [
+const MKS = (
   u"kg",
   u"m",
   u"s",
   u"J",
-  u"C"]
+  u"C")
 #   quasi-CGS
 """
     CGS
@@ -48,12 +48,12 @@ const MKS = [
 """
 CGS
 
-const CGS = [
+const CGS = (
   u"g",
   u"cm",
   u"s",
   u"J",
-  u"C"]
+  u"C")
 
 """
     @APCdef(CODATA = 2022, unitsystem = ACCELERATOR, unitful = false)
@@ -76,138 +76,152 @@ It defines the physical constants and getter functions for species mass and char
 - `charge`: elementary charge
 
 """
-macro APCdef(name=:APC, exs...)
-  # define a dictionary that relates symbols to constants already defined
-  # I'm doing inside the APCdef macro which could slow things a bit, but silos the dictionary
-  # There are a few things I'm not sure about here, including why so many constants are missing.
-  CONSTANTS = Dict(
-    :C_LIGHT => __b_c_light,
-    :H_PLANCK => __b_h_planck,
-    :H_BAR_PLANCK => __b_h_bar_planck,
-    :R_E => __b_r_e,
-    :R_P => __b_r_p,
-    :E_CHARGE => __b_e_charge,
-    :MU_0_VAC => __b_mu_0_vac,
-    :EPS_0_VAC => __b_eps_0_vac,
-    :CLASSICAL_RADIUS_FACTOR => __b_classical_radius_factor,
-    :FINE_STRUCTURE => __b_fine_structure,
-    :N_AVOGADRO => __b_N_avogadro,
-  )
-  # sort and collect the dictionary 
-  # since elements in the dictionary does not have a preferred order, sorting it increases stability
-  # pairs_sorted is an array of key and value pair of the CONSTANTS dictionary
-  pairs_sorted = sort(collect(CONSTANTS), by=x -> first(x))
-  # generate the field of the structure
-  # the name of the field is the key of the dictionary, i.e. symbols with capitalized names
-  # the type of the field is "Union{Quantity,Float64}", meaning that it could either be an Unitful Quantity or a Float, depending
-  # on user's choice
-  # fields is an array with elements are expressions like "C_LIGHT::Union{Quantity,Float64}"
-  fields = [:($key::Union{Quantity,Float64}) for (key, _) in pairs_sorted]
+macro APCdef(kwargs...)
+  #defualt parameters
+  unitful::Bool = false
+  CODATA::Int64 = 2022
+  unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
+  name::Symbol = :APC
 
-  # define the structure with the field name as the constants name
-  struct_name = :ConstantsStructure # the name of the structure is ConstantsStructure
-  @eval struct $struct_name
-    $(fields...) # put the fields into the structure
+  # a dictionary that maps the name of the key word variables to their value
+  kwargdict = Dict(map(t -> Pair(t.args...), kwargs))
+
+  # obtain the keyword arguments
+  if (haskey(kwargdict, :unitful) && kwargdict[:unitful])
+    unitful = true
+  end
+  if (haskey(kwargdict, :CODATA))
+    CODATA = kwargdict[:CODATA]
+  end
+  if (haskey(kwargdict, :unitsystem))
+    unitsystem = eval(kwargdict[:unitsystem])
+  end
+  if (haskey(kwargdict, :name))
+    if (kwargdict[:name] isa String)
+      name = Symbol(kwargdict[:name])
+    else
+      name = eval(kwargdict[:name])
+    end
   end
 
-  return quote
-    #default parameter
-    CODATA = 2022
-    unitsystem = $ACCELERATOR
-    unitful = false
-    #evaluate the parameter
-    $(exs...)
+  # use the `CODATA` year data
+  # useCODATA(CODATA)
 
-    # extract the units from the unit system
-    mass_unit::Unitful.FreeUnits = unitsystem[1]
-    length_unit::Unitful.FreeUnits = unitsystem[2]
-    time_unit::Unitful.FreeUnits = unitsystem[3]
-    energy_unit::Unitful.FreeUnits = unitsystem[4]
-    charge_unit::Unitful.FreeUnits = unitsystem[5]
-    # check dimensions of units
-    if dimension(mass_unit) != dimension(u"kg")
-      error("unit for mass does not have proper dimension")
-    end
-    if dimension(length_unit) != dimension(u"m")
-      error("unit for length does not have proper dimension")
-    end
-    if dimension(time_unit) != dimension(u"s")
-      error("unit for time does not have proper dimension")
-    end
-    if dimension(energy_unit) != dimension(u"J")
-      error("unit for energy does not have proper dimension")
-    end
-    if dimension(charge_unit) != dimension(u"C")
-      error("unit for charge does not have proper dimension")
-    end
+  # extract the units from the unit system
+  mass_unit::Unitful.FreeUnits = unitsystem[1]
+  length_unit::Unitful.FreeUnits = unitsystem[2]
+  time_unit::Unitful.FreeUnits = unitsystem[3]
+  energy_unit::Unitful.FreeUnits = unitsystem[4]
+  charge_unit::Unitful.FreeUnits = unitsystem[5]
+  # check dimensions of units
+  if dimension(mass_unit) != dimension(u"kg")
+    error("unit for mass does not have proper dimension")
+  end
+  if dimension(length_unit) != dimension(u"m")
+    error("unit for length does not have proper dimension")
+  end
+  if dimension(time_unit) != dimension(u"s")
+    error("unit for time does not have proper dimension")
+  end
+  if dimension(energy_unit) != dimension(u"J")
+    error("unit for energy does not have proper dimension")
+  end
+  if dimension(charge_unit) != dimension(u"C")
+    error("unit for charge does not have proper dimension")
+  end
 
-    # this dictionary maps the dimension of the unit to the target unit that it should convert to
-    conversion = Dict(
-      dimension(u"kg") => mass_unit,
-      dimension(u"m") => length_unit,
-      dimension(u"s") => time_unit,
-      dimension(u"J") => energy_unit,
-      dimension(u"C") => charge_unit,
-      dimension(u"m/s") => length_unit / time_unit,
-      dimension(u"J*s") => energy_unit * time_unit,
-      dimension(u"kg*m") => mass_unit * length_unit,
-      dimension(u"m") => length_unit,
-      dimension(u"C") => charge_unit,
-    )
+  # this dictionary maps the dimension of the unit to the target unit that it should convert to
+  conversion = Dict(
+    dimension(u"kg") => mass_unit,
+    dimension(u"m") => length_unit,
+    dimension(u"s") => time_unit,
+    dimension(u"J") => energy_unit,
+    dimension(u"C") => charge_unit,
+    dimension(u"m/s") => length_unit / time_unit,
+    dimension(u"J*s") => energy_unit * time_unit,
+    dimension(u"kg*m") => mass_unit * length_unit,
+    dimension(u"m") => length_unit,
+    dimension(u"C") => charge_unit,
+  )
 
+  if unitful #suppose the user demand unitful quantity
+    constantsdict = Dict{Symbol,Union{Unitful.Quantity,Float64}}()
 
-    # generate the constructor parameter of the structure, converted to new units
-    values = [
-      if haskey(conversion, dimension(v)) #if the dimension is one of the dimensions in the dictionary
-        if unitful
-          uconvert(conversion[dimension(v)], v) # if the user demands unitful quantity, return unitful quantity
-        else
-          uconvert(conversion[dimension(v)], v).val # if the user demands Float, convert and return Float
-        end
-      else
-        if unitful # whether user wants a unitful quantity 
-          v # if the unit dimension is not in the dictionary such as that of eps_0_vac, then just return the unit without any conversion
-        elseif v isa Float64 # If the value does not have unit, such as Avogadro's number
-          v
-        else #If the user demands values in Float64
-          v.val
+    for (_, dict) in CODATA_Consts
+      for (name, value) in dict
+        if (!occursin("_m_", name) && !occursin(("_mu_"), name)) # if the variable is the mass of a particle
+          constantname = Symbol(uppercase(name[5:end])) # the name of the field by converting the name to upper case
+          if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+            constantsdict[constantname] = uconvert(conversion[dimension(value)], value)
+          else
+            constantsdict[constantname] = value
+          end
         end
       end
-      for (_, v) in $pairs_sorted # for all the values in the dictionary
-    ]
-
-    # initialize the structure with the constructor and values
-    $(esc(name))::$ConstantsStructure = $ConstantsStructure(values...)
-
-    #massof and charge of
-    function $(esc(:massof))(species::Species)::Union{Float64,Quantity,Int64}
-      @assert species.mass isa Quantity
-      return unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
-    end
-    function $(esc(:chargeof))(species::Species)::Union{Float64,Quantity,Int64}
-      @assert species.charge isa Quantity
-      return unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
     end
 
-    #added options for string input
-    function $(esc(:massof))(speciesname::String)::Union{Float64,Quantity,Int64}
-      species = Species(speciesname)
-      return unitful ? uconvert(mass_unit, species.mass) : uconvert(mass_unit, species.mass).val
+    masstype = typeof(1.0 * mass_unit)
+    chargetype = typeof(1.0 * charge_unit)
+    return quote
+      #massof and charge of
+      function $(esc(:massof))(species::Species)::$masstype
+        return uconvert($mass_unit, species.mass)
+      end
+      function $(esc(:chargeof))(species::Species)::$chargetype
+        return uconvert($charge_unit, species.charge)
+      end
+
+      #added options for string input
+      function $(esc(:massof))(speciesname::String)::$masstype
+        species = Species(speciesname)
+        return uconvert($mass_unit, species.mass)
+      end
+      function $(esc(:chargeof))(speciesname::String)::$chargetype
+        species = Species(speciesname)
+        return uconvert($charge_unit, species.charge)
+      end
+      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
     end
-    function $(esc(:chargeof))(speciesname::String)::Union{Float64,Quantity,Int64}
-      species = Species(speciesname)
-      return unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val
+  else
+    constantsdict = Dict{Symbol,Float64}()
+
+    for (_, dict) in CODATA_Consts
+      for (name, value) in dict
+        if (!occursin("_m_", name) && !occursin("_mu_", name)) # if the variable is the mass of a particle
+          constantname = Symbol(uppercase(name[5:end])) # the name of the field by converting the name to upper case
+          if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+            constantsdict[constantname] = uconvert(conversion[dimension(value)], value).val
+          elseif value isa Float64
+            constantsdict[constantname] = value # If the value does not have unit, such as Avogadro's number
+          else
+            constantsdict[constantname] = value.val
+          end
+        end
+      end
     end
-    #$(esc(:chargeof2)) = begin
-    #(species::Species) -> if species.populated == IsDef.Full
-    #(unitful ? uconvert(charge_unit, species.charge) : uconvert(charge_unit, species.charge).val)
-    # else
-    # 	error("""Can't get the charge of an undefined particle; 
-    # 	the Species constructor for this object was called with no arguments.""")
-    #end
-    #end
+
+    return quote
+      #massof and charge of
+      function $(esc(:massof))(species::Species)::Float64
+        return uconvert($mass_unit, species.mass).val
+      end
+      function $(esc(:chargeof))(species::Species)::Float64
+        return uconvert($charge_unit, species.charge).val
+      end
+
+      #added options for string input
+      function $(esc(:massof))(speciesname::String)::Float64
+        species = Species(speciesname)
+        return uconvert($mass_unit, species.mass).val
+      end
+      function $(esc(:chargeof))(speciesname::String)::Float64
+        species = Species(speciesname)
+        return uconvert($charge_unit, species.charge).val
+      end
+      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
+
+    end
   end
-
 end
 
 
