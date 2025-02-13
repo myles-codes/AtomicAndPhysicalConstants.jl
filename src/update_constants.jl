@@ -242,7 +242,7 @@ useCODATA
 function useCODATA(year::Int)
   NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
   if year ∈ NIST_releases
-    include(f"{year}_constants.jl")
+    include(f"src/{year}_constants.jl")
   else
     println("The available CODATA release years are:")
     for y in NIST_releases
