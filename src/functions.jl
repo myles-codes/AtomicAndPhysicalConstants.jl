@@ -121,10 +121,10 @@ function useCODATA(year::Int)
   NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
   if year ∈ NIST_releases
     include(f"src/{year}_constants.jl")
-    include("src/subatormic_species.jl")
+    include("src/subatomic_species.jl")
   else
     println("The available CODATA release years are:")
-    for y in NIST_releases
+    for y in NIST_releasesexit()
       println(y)
     end
     error(f"The year requested isn't available, please select a valid year.")
