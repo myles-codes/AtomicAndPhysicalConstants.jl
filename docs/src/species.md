@@ -96,7 +96,7 @@ julia> Species("C#13+") #Carbon-13 with a single positive charge
 
 Example:
 ```julia
-julia> Species("Al+4") #average Aluminum with 3 positive charge
+julia> Species("Al+3") #average Aluminum with 3 positive charge
 julia> Species("anti-H") #anti-hydrogen
 ```
 
