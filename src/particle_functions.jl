@@ -107,3 +107,32 @@ function full_name(species::Species)
     end
 end;
 export full_name
+
+
+const SUPERSCRIPT_MAP = Dict(
+    '⁰' => 0,
+    '¹' => 1,
+    '²' => 2,
+    '³' => 3,
+    '⁴' => 4,
+    '⁵' => 5,
+    '⁶' => 6,
+    '⁷' => 7,
+    '⁸' => 8,
+    '⁹' => 9,
+)
+function parse_unicode(species_name::String)
+    name = species_name
+    atomic_number::Int64 = 0
+    for c in name
+        if haskey(SUPERSCRIPT_MAP, c)
+            atomic_number = atomic_number * 10 + SUPERSCRIPT_MAP[c]
+            name = replace(name, c => "")
+        end
+    end
+    for (k, _) in SUPERSCRIPT_MAP
+        @assert !occursin(k, name) "$species_name has an invalid superscript"
+    end
+    return name, atomic_number
+end
+

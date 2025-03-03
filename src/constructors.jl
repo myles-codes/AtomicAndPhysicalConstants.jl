@@ -18,27 +18,27 @@ Create a particle struct for a subatomic particle with name=name
 subatomic_particle
 
 function subatomic_particle(name::String)
-    # write the particle out directly
-    leptons = ["electron", "positron", "muon", "anti-muon"]
-    if lowercase(name) == "photon"
-        return Species(name, SUBATOMIC_SPECIES[name].charge,
-            SUBATOMIC_SPECIES[name].mass,
-            SUBATOMIC_SPECIES[name].spin,
-            SUBATOMIC_SPECIES[name].mu,
-            0.0, Kind.PHOTON)
-    elseif lowercase(name) in leptons
-        return Species(name, SUBATOMIC_SPECIES[name].charge,
-            SUBATOMIC_SPECIES[name].mass,
-            SUBATOMIC_SPECIES[name].spin,
-            SUBATOMIC_SPECIES[name].mu,
-            0.0, Kind.LEPTON)
-    else
-        return Species(name, SUBATOMIC_SPECIES[name].charge,
-            SUBATOMIC_SPECIES[name].mass,
-            SUBATOMIC_SPECIES[name].spin,
-            SUBATOMIC_SPECIES[name].mu,
-            0.0, Kind.HADRON)
-    end
+  # write the particle out directly
+  leptons = ["electron", "positron", "muon", "anti-muon"]
+  if lowercase(name) == "photon"
+    return Species(name, SUBATOMIC_SPECIES[name].charge,
+      SUBATOMIC_SPECIES[name].mass,
+      SUBATOMIC_SPECIES[name].spin,
+      SUBATOMIC_SPECIES[name].mu,
+      0.0, Kind.PHOTON)
+  elseif lowercase(name) in leptons
+    return Species(name, SUBATOMIC_SPECIES[name].charge,
+      SUBATOMIC_SPECIES[name].mass,
+      SUBATOMIC_SPECIES[name].spin,
+      SUBATOMIC_SPECIES[name].mu,
+      0.0, Kind.LEPTON)
+  else
+    return Species(name, SUBATOMIC_SPECIES[name].charge,
+      SUBATOMIC_SPECIES[name].mass,
+      SUBATOMIC_SPECIES[name].spin,
+      SUBATOMIC_SPECIES[name].mu,
+      0.0, Kind.HADRON)
+  end
 end
 
 
@@ -99,15 +99,17 @@ Species
 Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
 function Species(name::String; charge::Int=0, iso::Int=-1)
-  if name == "Null"; return Species(); end
-
+  if name == "Null"
+    return Species()
+  end
+  name, iso = parse_unicode(name)
   anti = r"Anti\-|anti\-"
   # is the anti-particle in the Subatomic_Particles dictionary?
   if occursin(anti, lowercase(name)) && haskey(SUBATOMIC_SPECIES, lowercase(name[6:end]))
     if lowercase(name[6:end]) == "electron"
-        return subatomic_particle("positron")
+      return subatomic_particle("positron")
     else
-        return subatomic_particle("anti-" * lowercase(name[6:end]))
+      return subatomic_particle("anti-" * lowercase(name[6:end]))
     end
 
     # check subatomics first so we don't accidentally strip a name
@@ -116,7 +118,7 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
     return subatomic_particle(lowercase(name))
 
   else
-      # make sure to use the optional arguments
+    # make sure to use the optional arguments
     charge = charge
     iso = iso
 
@@ -124,17 +126,17 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
 
     rgas = r"[A-Z][a-z]|[A-Z]" # atomic symbol regex
     # atomic mass regex
-    rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]" 
+    rgm = r"#[0-9][0-9][0-9]|#[0-9][0-9]|#[0-9]"
     # positive charge regex
-    rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]|\+\+|\+" 
+    rgcp = r"\+[0-9][0-9][0-9]|\+[0-9][0-9]|\+[0-9]|\+\+|\+"
     # negative charge regex
-    rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]|\-[0-9]|\-\-|\-" 
+    rgcm = r"\-[0-9][0-9][0-9]|\-[0-9][0-9]|\-[0-9]|\-\-|\-"
 
     anti_atom::Bool = false
 
     if occursin(anti, name)
-        name = name[6:end]
-        anti_atom = true
+      name = name[6:end]
+      anti_atom = true
     end
 
     AS = match(rgas, name) # grab just the atomic symbol
@@ -145,7 +147,7 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
       if typeof(isom) != Nothing
         isostr = strip(isom.match, '#')
         iso = tryparse(Int, isostr)
-        np = replace(np, isom.match=>"")
+        np = replace(np, isom.match => "")
       end
       if count('+', name) != 0 && count('-', name) != 0
         error(f"""You made a typo in "{name}". 
@@ -160,7 +162,7 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
         else
           charge = tryparse(Int, chstr)
         end
-        np = replace(np, chstr=>"")
+        np = replace(np, chstr => "")
       elseif occursin(rgcm, name) == true
         chstr = match(rgcm, name).match
         if chstr == "-"
@@ -175,11 +177,11 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
       if np != ""
         error("""You have entered too many characters: please try again.""")
       end
-    
+
       # is the particle in the Atomic_Particles dictionary?
-      if haskey(ATOMIC_SPECIES, AS) 
+      if haskey(ATOMIC_SPECIES, AS)
         # error handling if the isotope isn't available
-        if iso ∉ keys(ATOMIC_SPECIES[AS].mass) 
+        if iso ∉ keys(ATOMIC_SPECIES[AS].mass)
           error("""The isotope you specified is not available: Isotopes are specified by the atomic symbol and integer mass number.""")
           return
         end
@@ -211,12 +213,12 @@ function Species(name::String; charge::Int=0, iso::Int=-1)
           spin = 0.5 * iso
         end
         # return the object to track
-        if anti_atom == false 
-          return Species(AS, charge*u"e", mass*u"MeV/c^2", 
-                        spin*u"h_bar", 0*u"J/T", iso, Kind.ATOM) 
+        if anti_atom == false
+          return Species(AS, charge * u"e", mass * u"MeV/c^2",
+            spin * u"h_bar", 0 * u"J/T", iso, Kind.ATOM)
         else
-          return Species("anti-"*AS, charge*u"e", mass*u"MeV/c^2", 
-                        spin*u"h_bar", 0*u"J/T", iso, Kind.ATOM)
+          return Species("anti-" * AS, charge * u"e", mass * u"MeV/c^2",
+            spin * u"h_bar", 0 * u"J/T", iso, Kind.ATOM)
         end
       end
 
@@ -239,3 +241,29 @@ end
 export Species
 
 
+const SUPERSCRIPT_MAP = Dict(
+  '⁰' => 0,
+  '¹' => 1,
+  '²' => 2,
+  '³' => 3,
+  '⁴' => 4,
+  '⁵' => 5,
+  '⁶' => 6,
+  '⁷' => 7,
+  '⁸' => 8,
+  '⁹' => 9,
+)
+function parse_unicode(species_name::String)
+  name = species_name
+  atom_number::Int64 = 0
+  for c in name
+    if haskey(SUPERSCRIPT_MAP, c)
+      atom_number = atom_number * 10 + SUPERSCRIPT_MAP[c]
+      name = replace(name, c => "")
+    end
+  end
+  for (k, _) in SUPERSCRIPT_MAP
+    @assert !occursin(k, name) "s$pecies_name has an invalid superscript"
+  end
+  return name, atom_number
+end
