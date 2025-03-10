@@ -17,7 +17,7 @@ include("subatomic_species.jl")
 include("update_pion_mass.jl")
 include("update_constants.jl")
 include("update_isos.jl")
-include("particle_functions.jl")
+include("functions.jl")
 include("APCdef.jl")
 
 export @APCdef
