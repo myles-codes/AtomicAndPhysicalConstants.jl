@@ -165,9 +165,11 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::$masstype
+        @assert species != Species() "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass)
       end
       function $(esc(:chargeof))(species::Species)::$chargetype
+        @assert species != Species() "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge)
       end
 
@@ -182,7 +184,7 @@ macro APCdef(kwargs...)
       end
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
     end
-  else
+  else #if the user does not want unitful
     constantsdict = Dict{Symbol,Float64}()
 
     for (_, dict) in CODATA_Consts
@@ -203,9 +205,11 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::Float64
+        @assert species != Species() "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
       end
       function $(esc(:chargeof))(species::Species)::Float64
+        @assert species != Species() "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge).val
       end
 
