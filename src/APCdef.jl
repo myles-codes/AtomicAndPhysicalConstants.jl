@@ -144,19 +144,24 @@ macro APCdef(kwargs...)
     dimension(u"C") => charge_unit,
   )
 
+  # this vector contains the names of the constants in symbols
+  constants::Vector{Symbol} = filter(x -> (
+      startswith(string(x), "__b_") && # the name starts with __b_
+      !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
+      (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
+    ), names(AtomicAndPhysicalConstants, all=true))
+
   if unitful #suppose the user demand unitful quantity
+
     constantsdict = Dict{Symbol,Union{Unitful.Quantity,Float64}}()
 
-    for (_, dict) in CODATA_Consts
-      for (name, value) in dict
-        if (!occursin("_m_", name) && !occursin(("_mu_"), name)) # if the variable is the mass of a particle
-          constantname = Symbol(uppercase(name[5:end])) # the name of the field by converting the name to upper case
-          if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-            constantsdict[constantname] = uconvert(conversion[dimension(value)], value)
-          else
-            constantsdict[constantname] = value
-          end
-        end
+    for sym in constants
+      value = eval(sym) # the value of the constant
+      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
+      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+        constantsdict[constantname] = uconvert(conversion[dimension(value)], value)
+      else
+        constantsdict[constantname] = value
       end
     end
 
@@ -187,18 +192,15 @@ macro APCdef(kwargs...)
   else #if the user does not want unitful
     constantsdict = Dict{Symbol,Float64}()
 
-    for (_, dict) in CODATA_Consts
-      for (name, value) in dict
-        if (!occursin("_m_", name) && !occursin("_mu_", name)) # if the variable is the mass of a particle
-          constantname = Symbol(uppercase(name[5:end])) # the name of the field by converting the name to upper case
-          if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-            constantsdict[constantname] = uconvert(conversion[dimension(value)], value).val
-          elseif value isa Float64
-            constantsdict[constantname] = value # If the value does not have unit, such as Avogadro's number
-          else
-            constantsdict[constantname] = value.val
-          end
-        end
+    for sym in constants
+      value = eval(sym) # the value of the constant
+      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
+      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+        constantsdict[constantname] = uconvert(conversion[dimension(value)], value).val
+      elseif value isa Float64
+        constantsdict[constantname] = value # If the value does not have unit, such as Avogadro's number
+      else
+        constantsdict[constantname] = value.val
       end
     end
 
