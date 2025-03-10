@@ -121,18 +121,3 @@ const SUPERSCRIPT_MAP = Dict(
     '⁸' => 8,
     '⁹' => 9,
 )
-function parse_unicode(species_name::String)
-    name = species_name
-    atomic_number::Int64 = 0
-    for c in name
-        if haskey(SUPERSCRIPT_MAP, c)
-            atomic_number = atomic_number * 10 + SUPERSCRIPT_MAP[c]
-            name = replace(name, c => "")
-        end
-    end
-    for (k, _) in SUPERSCRIPT_MAP
-        @assert !occursin(k, name) "$species_name has an invalid superscript"
-    end
-    return name, atomic_number
-end
-
