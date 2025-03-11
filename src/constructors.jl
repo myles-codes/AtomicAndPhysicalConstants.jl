@@ -199,7 +199,15 @@ function Species(speciesname::String)
   try
     left = name[1:index-1]
   catch
-    left = name[1:index-2] #unicode takes 2 bytes
+    try
+      left = name[1:index-2] #if unicode takes 2 bytes
+    catch
+      try
+        left = name[1:index-3] #if unicode takes 3 bytes
+      catch
+        left = name[1:index-4] #if unicode takes 3 bytes
+      end
+    end
   end
   #the substring after the symbol
   right::String = name[index+length(atom):end]
