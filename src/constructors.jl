@@ -190,6 +190,8 @@ function Species(speciesname::String)
   end
   # atom should not be empty
   @assert atom != "" "you did not specify an atomic species or subatomic species in $speciesname"
+
+
   #check for the isotope 
 
   #the substring before the symbol
@@ -202,7 +204,6 @@ function Species(speciesname::String)
   #the substring after the symbol
   right::String = name[index+length(atom):end]
 
-  # check for the isotope
   iso::Int64 = 0
 
   #if the user choose to put isotope in the front 
@@ -249,7 +250,7 @@ function Species(speciesname::String)
   right = replace(right, "⁺" => "+") # change superscript + to ASCII
   right = replace(right, "⁻" => "-") # change superscript - to ASCII
   charge::Int64 = 0
-  chargenum::Int64 = 1
+  chargenum::Int64 = 0
   @assert !(occursin("+", right) && occursin("-", right)) "You cannot have opposite charge in $speciesname"
 
   #replace all the superscript with number 
@@ -266,6 +267,9 @@ function Species(speciesname::String)
     for c in right
       chargenum = chargenum * 10 + parse(Int64, c) #parse the charge number 
     end
+    if chargenum == 0 #if the charge number is not specified
+      chargenum = 1
+    end
     charge *= chargenum
   elseif occursin("-", right) #if the charge is negative
     charge = -count(r"\-", right)
@@ -275,6 +279,9 @@ function Species(speciesname::String)
     right = replace(right, "-" => "")
     for c in right
       chargenum = chargenum * 10 + parse(Int64, c) #parse the charge number 
+    end
+    if chargenum == 0 #if the charge number is not specified
+      chargenum = 1
     end
     charge *= chargenum
   end
