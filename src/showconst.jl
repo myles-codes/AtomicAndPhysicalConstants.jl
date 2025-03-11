@@ -20,20 +20,25 @@ showconst
 function showconst(query::Symbol=:constants)
     # list all the physical constants and their values
     if (query == :constants)
-        for (key, dict) in CODATA_Consts
-            for (name, value) in dict
-                println("- $key")
-                println("\t- base value: $value")
-                if (occursin("_m_", name)) # if the variable is the mass of a particle
-                    speciesname = split(name, "_m_")[2]
-                    println("\t- access by: massof(\"$speciesname\")")
-                elseif (occursin("_mu_", name)) # if the variable is the magnetic moment of a particle
-                    speciesname = split(name, "_mu_")[2]
-                    println("\t- access by: Species(\"$speciesname\").moment")
-                else #a physical constant
-                    constantname = uppercase(name[5:end])
-                    println("\t- access by: @APCdef; APC.$constantname")
-                end
+
+        # this vector contains the names of the constants in symbols
+        constants::Vector{Symbol} = filter(x ->
+                startswith(string(x), "__b_"), names(AtomicAndPhysicalConstants, all=true))
+
+        for sym in constants
+            value = eval(sym) # the value of the constant
+            name = string(sym) # the name of the field
+            println("- $(name[5:end])")
+            println("\t- base value: $value")
+            if (occursin("_m_", name)) # if the variable is the mass of a particle
+                speciesname = split(name, "_m_")[2]
+                println("\t- access by: massof(\"$speciesname\")")
+            elseif (occursin("_mu_", name) && !occursin("__b_mu_0_vac", name)) # if the variable is the magnetic moment of a particle
+                speciesname = split(name, "_mu_")[2]
+                println("\t- access by: Species(\"$speciesname\").moment")
+            else #a physical constant
+                constantname = uppercase(name[5:end])
+                println("\t- access by: @APCdef; APC.$constantname")
             end
         end
         return
