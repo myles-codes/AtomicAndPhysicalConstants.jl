@@ -132,7 +132,7 @@ function useCODATA(year::Int)
 end
 
 
-const SUPERSCRIPT_MAP::Dict{Char,Int64} = Dict(
+const SUPERSCRIPT_MAP = Dict{Char,Int64}(
     '⁰' => 0,
     '¹' => 1,
     '²' => 2,

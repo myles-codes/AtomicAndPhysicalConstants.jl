@@ -178,7 +178,7 @@ function Species(speciesname::String)
   index::Int64 = 0
 
   # if the particle is not in the subatomic species dictionary, check the atomic species dictionary
-  for (k, _) in ATOMIC_SPECIES
+  for k in keys(ATOMIC_SPECIES)
     # whether the particle is in the atomic species dictionary
     if occursin(k, name)
       @assert atom == "" "You have specified more than one atomic species in $speciesname"
@@ -247,6 +247,7 @@ function Species(speciesname::String)
   right = replace(right, "⁺" => "+") # change superscript + to ASCII
   right = replace(right, "⁻" => "-") # change superscript - to ASCII
   charge::Int64 = 0
+  chargenum::Int64 = 1
   @assert !(occursin("+", right) && occursin("-", right)) "You cannot have opposite charge in $speciesname"
 
   #replace all the superscript with number 
@@ -260,17 +261,19 @@ function Species(speciesname::String)
     @assert right[1] == '+' || right[end] == '+' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
     right = replace(right, "+" => "")
+    chargenum = tryparse(Int64, right) === nothing ? 1 : tryparse(Int64, right)
+    charge *= chargenum
   elseif occursin("-", right) #if the charge is negative
     charge = -count(r"\-", right)
     #either put the charge symbol in the front or the back
     @assert right[1] == '-' || right[end] == '-' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
     right = replace(right, "-" => "")
+    chargenum = tryparse(Int64, right) === nothing ? 1 : tryparse(Int64, right)
+    charge *= chargenum
   end
   # when the charge symbol is removed, the rest of the string should be a number
   @assert all(isdigit, right) "The charge specification should only include '+', '-' and number"
-
-  charge *= tryparse(Int64, right)
 
   if anti
     charge = -charge
