@@ -180,12 +180,12 @@ function Species(speciesname::String)
   index::Int64 = 0
 
   # if the particle is not in the subatomic species dictionary, check the atomic species dictionary
-  for (k, _) in ATOMIC_SPECIES
+  for k in sort(collect(keys(ATOMIC_SPECIES)), by=length, rev=true) #  sort by length to find the longest match first
     # whether the particle is in the atomic species dictionary
     if occursin(k, name)
-      @assert atom == "" "You have specified more than one atomic species in $speciesname"
       atom = k
       index = findfirst(k, name).start  # find the first index of the atomic symbol
+      break
     end
   end
   # atom should not be empty
