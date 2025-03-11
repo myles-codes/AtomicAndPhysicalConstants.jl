@@ -102,29 +102,31 @@ function Species(name::String, charge::Int, iso::Int)
   # whether the atom is anti-atom
   anti_atom::Bool = occursin(r"Anti\-|anti\-|Anti|anti", name)
   # if the particle is an anti-particle, remove the prefix for easier lookup
-  AS = replace(name, r"Anti\-|anti\-|Anti|anti" => "")
+  AS::String = replace(name, r"Anti\-|anti\-|Anti|anti" => "")
 
   @assert haskey(ATOMIC_SPECIES, AS) "$AS is not a valid atomic species"
 
-  mass = begin
+  atom::AtomicSpecies = ATOMIC_SPECIES[AS]
+  nmass::Float64 = uconvert(u"MeV/c^2", atom.mass[iso]).val
+  spin::Float64 = 0.0
+
+  mass::Float64 = begin
     if anti_atom == false
-      nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso])
       # ^ mass of the positively charged isotope in eV/c^2
-      nmass.val + __b_m_electron.val * (ATOMIC_SPECIES[AS].Z - charge)
+      nmass + __b_m_electron.val * (atom.Z - charge)
       # ^ put it in eV/c^2 and remove the electrons
-    elseif anti_atom == true
-      nmass = uconvert(u"MeV/c^2", ATOMIC_SPECIES[AS].mass[iso])
+    else
       # ^ mass of the positively charged isotope in amu
-      nmass.val + __b_m_electron.val * (-ATOMIC_SPECIES[AS].Z + charge)
+      nmass + __b_m_electron.val * (-atom.Z + charge)
       # ^ put it in eV/c^2 and remove the positrons
     end
   end
   if iso == -1 # if it's the average, make an educated guess at the spin
-    partonum = round(ATOMIC_SPECIES[AS].mass[iso].val)
+    partonum::Float64 = round(atom.mass[iso].val)
     if anti_atom == false
-      spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z - charge))
+      spin = 0.5 * (partonum + (atom.Z - charge))
     else
-      spin = 0.5 * (partonum + (ATOMIC_SPECIES[AS].Z + charge))
+      spin = 0.5 * (partonum + (atom.Z + charge))
     end
   else # otherwise, use the sum of proton and neutron spins
     spin = 0.5 * iso
@@ -178,7 +180,7 @@ function Species(speciesname::String)
   index::Int64 = 0
 
   # if the particle is not in the subatomic species dictionary, check the atomic species dictionary
-  for k in keys(ATOMIC_SPECIES)
+  for (k, _) in ATOMIC_SPECIES
     # whether the particle is in the atomic species dictionary
     if occursin(k, name)
       @assert atom == "" "You have specified more than one atomic species in $speciesname"
@@ -261,7 +263,9 @@ function Species(speciesname::String)
     @assert right[1] == '+' || right[end] == '+' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
     right = replace(right, "+" => "")
-    chargenum = tryparse(Int64, right) === nothing ? 1 : tryparse(Int64, right)
+    for c in right
+      chargenum = chargenum * 10 + parse(Int64, c) #parse the charge number 
+    end
     charge *= chargenum
   elseif occursin("-", right) #if the charge is negative
     charge = -count(r"\-", right)
@@ -269,7 +273,9 @@ function Species(speciesname::String)
     @assert right[1] == '-' || right[end] == '-' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
     right = replace(right, "-" => "")
-    chargenum = tryparse(Int64, right) === nothing ? 1 : tryparse(Int64, right)
+    for c in right
+      chargenum = chargenum * 10 + parse(Int64, c) #parse the charge number 
+    end
     charge *= chargenum
   end
   # when the charge symbol is removed, the rest of the string should be a number
