@@ -18,7 +18,7 @@ The users have the freedom to choose whether they want the constants to be of ty
 ```
 ### Options
 
-`CODATA` sets the year of which the constants from CODATA is used. Enter the year number. Default to 2022.
+`CODATA` sets the year of which the constants from CODATA is used. Enter the year number. Default is 2022.
 
 `unitsystem` defines the set of units for the constants. There are 3 available options: `ACCELERATOR`,`MKS`,`CGS`. Default to `ACCELERATOR`.
 
