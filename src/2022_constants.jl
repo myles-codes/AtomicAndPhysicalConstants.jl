@@ -5,7 +5,15 @@
 
 
 
+module CODATA2022
 
+using PyFormattedStrings
+using Dates
+using HTTP
+using JSON
+using EnumX
+using Reexport
+@reexport using Unitful
 
 #####################################################################
 # constants with dimension [mass]
@@ -125,11 +133,27 @@ const __b_mu_0_vac::typeof(u"N/A^2") = 1.25663706127e-6 * u"N/A^2";
 # Vacuum permeability in [N/A^2] (newtons per ampere squared)
 
 
+include("units_definition.jl")
+include("constants.jl")
+include("types.jl")
+include("constructors.jl")
+include("isotopes.jl")
+include("subatomic_species.jl")
+include("functions.jl")
+include("APCdef.jl")
+include("showconst.jl")
+
+export @APCdef
+export ACCELERATOR, MKS, CGS
+export SubatomicSpecies
+export AtomicSpecies
+export SUBATOMIC_SPECIES
+export ATOMIC_SPECIES
+export @u_str, NewUnits
+export showconst
 
 
-
-
-
+end
 
 
 
