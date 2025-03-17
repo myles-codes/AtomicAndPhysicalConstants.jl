@@ -77,9 +77,14 @@ It defines the physical constants and getter functions for species mass and char
 
 """
 macro APCdef(kwargs...)
+
+  # check whether @APCdef has been called by checking whether massof is in the namespace
+  if names(Main, all=true) |> x -> :massof in x
+    @error "You can only call @APCdef once"
+    return
+  end
   #defualt parameters
   unitful::Bool = false
-  CODATA::Int64 = 2022
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
 
@@ -89,9 +94,6 @@ macro APCdef(kwargs...)
   # obtain the keyword arguments
   if (haskey(kwargdict, :unitful) && kwargdict[:unitful])
     unitful = true
-  end
-  if (haskey(kwargdict, :CODATA))
-    CODATA = kwargdict[:CODATA]
   end
   if (haskey(kwargdict, :unitsystem))
     unitsystem = eval(kwargdict[:unitsystem])
@@ -103,9 +105,6 @@ macro APCdef(kwargs...)
       name = eval(kwargdict[:name])
     end
   end
-
-  # use the `CODATA` year data
-  # useCODATA(CODATA)
 
   # extract the units from the unit system
   mass_unit::Unitful.FreeUnits = unitsystem[1]
@@ -170,11 +169,11 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::$masstype
-        @assert species != Species() "Can't call massof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass)
       end
       function $(esc(:chargeof))(species::Species)::$chargetype
-        @assert species != Species() "Can't call chargeof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge)
       end
 

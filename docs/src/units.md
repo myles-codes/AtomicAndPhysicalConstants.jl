@@ -7,18 +7,21 @@
 
 The user have the freedom to choose the unit they want for `mass`, `length`, `time`, `energy`, and `charge`. by using our predefined unitsystems `ACCELERATOR` (default), `MKS`, and `CGS` to quickly setup the units.
 
-The users have the freedom to choose the version of CODATA they prefer.
-
 The users have the freedom to choose whether they want the constants to be of type `Float64` or Unitful types, which makes unit calculations easier. 
+
+The constants are wrapped in a named tuple, the users can choose the name of the named tuple
+
+**Note**
+`@APCdef` should only be called once.
 
 
 ### Syntax
 ```julia
-@APCdef(CODATA = 2022, unitsystem = ACCELERATOR, unitful = false)
+@APCdef(name = :APC, unitsystem = ACCELERATOR, unitful = false)
 ```
 ### Options
 
-`CODATA` sets the year of which the constants from CODATA is used. Enter the year number. Default is 2022.
+`name` sets the name of the named tuple which stores the constants. Default is `APC`.
 
 `unitsystem` defines the set of units for the constants. There are 3 available options: `ACCELERATOR`,`MKS`,`CGS`. Default to `ACCELERATOR`.
 
