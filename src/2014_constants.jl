@@ -15,6 +15,10 @@ using Reexport
 @reexport using Unitful
 
 
+include("units_definition.jl")
+export @u_str, NewUnits
+
+
 #####################################################################
 # constants with dimension [mass]
 #####################################################################
@@ -24,7 +28,7 @@ const __b_m_electron = 0.51099895069 * u"MeV/c^2"
 # Electron Mass [MeV]/c^2
 const __b_m_proton = 9.382720894300001e2 * u"MeV/c^2"
 # Proton Mass [MeV]/c^2
-const __b_m_neutron::typeof(u"MeV/c^2") = 9.395654219399999e2 * u"MeV/c^2"
+const __b_m_neutron = 9.395654219399999e2 * u"MeV/c^2"
 # Neutron Mass [MeV]/c^2
 const __b_m_muon = 1.056583755e2 * u"MeV/c^2"
 # Muon Mass [MeV]/c^2
@@ -137,13 +141,12 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2";
 
 
 
-include("units_definition.jl")
-include("constants.jl")
+
 include("types.jl")
 include("constructors.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
-include("functions.jl")
+include("misc_functions.jl")
 include("APCdef.jl")
 include("showconst.jl")
 
@@ -153,7 +156,6 @@ export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export @u_str, NewUnits
 export showconst
 
 end

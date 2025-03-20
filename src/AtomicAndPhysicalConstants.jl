@@ -1,5 +1,8 @@
 module AtomicAndPhysicalConstants
 
+include("prerelease.jl")
+export CODATA_releases
+
 include("2002_constants.jl")
 include("2006_constants.jl")
 include("2010_constants.jl")

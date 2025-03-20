@@ -149,7 +149,7 @@ macro APCdef(kwargs...)
       startswith(string(x), "__b_") && # the name starts with __b_
       !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
       (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
-    ), names(AtomicAndPhysicalConstants, all=true))
+    ), names(AtomicAndPhysicalConstants.CODATA2002, all=true))
 
   if unitful #suppose the user demand unitful quantity
 

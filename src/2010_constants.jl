@@ -15,6 +15,10 @@ using EnumX
 using Reexport
 @reexport using Unitful
 
+
+include("units_definition.jl")
+export @u_str, NewUnits
+
 #####################################################################
 # constants with dimension [mass]
 #####################################################################
@@ -137,13 +141,11 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2";
 
 
 
-include("units_definition.jl")
-include("constants.jl")
 include("types.jl")
 include("constructors.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
-include("functions.jl")
+include("misc_functions.jl")
 include("APCdef.jl")
 include("showconst.jl")
 
@@ -153,7 +155,6 @@ export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export @u_str, NewUnits
 export showconst
 
 end
