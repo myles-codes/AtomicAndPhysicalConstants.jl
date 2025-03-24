@@ -16,9 +16,6 @@ include("types.jl")
 include("constructors.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
-include("update_pion_mass.jl")
-include("update_constants.jl")
-include("update_isos.jl")
 include("functions.jl")
 include("APCdef.jl")
 include("showconst.jl")
@@ -29,8 +26,6 @@ export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export useCODATA
-export NewUnits
 export showconst
 
 end
