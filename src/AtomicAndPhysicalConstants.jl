@@ -7,6 +7,7 @@ using JSON
 using EnumX
 using Reexport
 @reexport using Unitful
+import DynamicQuantities
 
 
 include("units_definition.jl")
@@ -25,7 +26,6 @@ export SubatomicSpecies
 export AtomicSpecies
 export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export @u_str, NewUnits
 export showconst
 
 end
