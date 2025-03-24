@@ -6,6 +6,7 @@ version = "0.6.2"
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DynamicQuantities = "06fc5a27-2a28-4c7c-a15d-362465fb6821"
 EnumX = "4e289a0a-7415-4d19-859d-a7e5c4648b56"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
