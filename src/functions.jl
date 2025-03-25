@@ -21,7 +21,7 @@ function atomicnumber(particle::Species)
     return
   end
 end;
-export atomicnumber
+
 
 
 
@@ -36,7 +36,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 function g_spin(species::Species)
     return 2 * species.mass * species.mu / (species.spin * species.charge)
 end;
-export g_spin
+
 
 
 """
@@ -53,7 +53,7 @@ function gyromagnetic_anomaly(species::Species)
     gs = g_spin(species)
     return (gs - 2) / 2
 end;
-export gyromagnetic_anomaly
+
 
 
 """
@@ -72,7 +72,7 @@ function g_nucleon(species::Species)
 
     return gs * Z * __b_m_proton.val / m
 end;
-export g_nucleon
+
 
 
 """
@@ -106,7 +106,6 @@ function full_name(species::Species)
         return isostring * species.name * chargestring
     end
 end;
-export full_name
 
 
 

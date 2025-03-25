@@ -92,17 +92,20 @@ macro APCdef(kwargs...)
   kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
-  if (haskey(kwargdict, :unittype))
-    unittype = kwargdict[:unittype]
-  end
-  if (haskey(kwargdict, :unitsystem))
-    unitsystem = eval(kwargdict[:unitsystem])
-  end
-  if (haskey(kwargdict, :name))
-    if (kwargdict[:name] isa String)
-      name = Symbol(kwargdict[:name])
+  for k in keys(kwargdict)
+    if k == :unittype
+      unittype = kwargdict[:unittype]
+    elseif k == :unitsystem
+      unitsystem = eval(kwargdict[:unitsystem])
+    elseif k == :name
+      if kwargdict[:name] isa String
+        name = Symbol(kwargdict[:name])
+      else
+        name = kwargdict[:name]
+      end
     else
-      name = kwargdict[:name]
+      @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
+      return
     end
   end
 
@@ -180,10 +183,12 @@ macro APCdef(kwargs...)
       #added options for string input
       function $(esc(:massof))(speciesname::String)::$masstype
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass)
       end
       function $(esc(:chargeof))(speciesname::String)::$chargetype
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge)
       end
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_unitful))}(values($constantsdict_unitful))
@@ -206,21 +211,23 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::Float64
-        @assert species != Species() "Can't call massof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
       end
       function $(esc(:chargeof))(species::Species)::Float64
-        @assert species != Species() "Can't call chargeof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge).val
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
       end
       function $(esc(:chargeof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge).val
       end
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
@@ -255,10 +262,12 @@ macro APCdef(kwargs...)
       #added options for string input
       function $(esc(:massof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return convert(DynamicQuantities.Quantity, uconvert($mass_unit, species.mass))
       end
       function $(esc(:chargeof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return convert(DynamicQuantities.Quantity, uconvert($charge_unit, species.charge))
       end
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
