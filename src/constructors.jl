@@ -141,7 +141,6 @@ function Species(name::String, charge::Int, iso::Int)
   end
 
 end
-export Species
 
 function Species(speciesname::String)
   name::String = speciesname
@@ -213,8 +212,6 @@ function Species(speciesname::String)
   right::String = name[index+length(atom):end]
 
   iso::Int64 = 0
-
-
 
   #if the user choose to put isotope in the front 
   if left != ""
