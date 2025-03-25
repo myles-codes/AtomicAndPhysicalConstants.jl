@@ -214,8 +214,14 @@ function Species(speciesname::String)
 
   iso::Int64 = 0
 
+
+
   #if the user choose to put isotope in the front 
   if left != ""
+    #if the left string starts with #, delete the #
+    if left[1] == '#'
+      left = left[2:end]
+    end
     # the substring should include only digits or unicode superscript
     @assert occursin(r"^[0-9⁰¹²³⁴⁵⁶⁷⁸⁹]+$", left) "To specify isotope, you should only include 
     numbers or superscript numbers before the atomic symbol in $speciesname"
@@ -228,24 +234,6 @@ function Species(speciesname::String)
       end
     end
     @assert haskey(ATOMIC_SPECIES[atom].mass, iso) "$iso is not a valid isotope of $atom"
-  end
-
-  # if the user choose to put isotope in the back
-  @assert !(iso != 0 && occursin("#", right)) "You cannot specified isotope in both front and back of the atomic symbol in $speciesname"
-
-  if occursin("#", right)
-    # there should not be anything except for space before the #
-    @assert replace(right, " " => "")[1] == '#' "You cannot put anything between atomic symbol and `#`"
-    # parse the isotope, the number should be in ASCII
-    @assert isdigit(right[2]) "use numbers (not superscripts) to specify isotope after `#`"
-    i = 2
-    while i <= length(right) && isdigit(right[i])
-      iso = iso * 10 + parse(Int64, right[i])
-      i += 1
-    end
-    @assert haskey(ATOMIC_SPECIES[atom].mass, iso) "$iso is not a valid isotope of $atom"
-    # the rest of the string should be charge
-    right = right[i:end]
   end
 
   # if iso is not specified, use the most abundant isotope
