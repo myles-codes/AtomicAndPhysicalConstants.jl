@@ -14,12 +14,12 @@ Get the atomic number (positive nuclear charge) of a tracked particle.
 atomicnumber
 
 function atomicnumber(particle::Species)
-    if haskey(ATOMIC_SPECIES, particle.name)
-        return ATOMIC_SPECIES[name].Z
-    else
-        print(f"{particle.name} is not an atom, and thus no atomic number.")
-        return
-    end
+  if haskey(ATOMIC_SPECIES, particle.name)
+    return ATOMIC_SPECIES[particle.name].Z
+  else
+    print(f"{particle.name} is not an atom, and thus no atomic number.")
+    return
+  end
 end;
 
 
@@ -93,13 +93,13 @@ function full_name(species::Species)
         isostring = ""
         chargestring = ""
         if species.iso > 0
-            isostring = "#" * f"{species.iso}"
+            isostring = "#" * f"{convert(Int64, species.iso)}"
         end
         if species.charge.val != 0
             if species.charge.val < 0
-                chargestring = f"-{abs(species.charge.val)}"
+              chargestring = f"-{convert(Int64, abs(species.charge.val))}"
             elseif species.charge.val > 0
-                chargestring = f"-{abs(species.charge.val)}"
+              chargestring = f"+{convert(Int64, abs(species.charge.val))}"
 
             end
         end
@@ -109,26 +109,6 @@ end;
 
 
 
-"""
-    useCODATA(year::Int)
-
-Sets the values of the base constants to those of a particular CODATA 
-release. Valid only in the current scope."""
-useCODATA
-
-function useCODATA(year::Int)
-    NIST_releases = [2002, 2006, 2010, 2014, 2018, 2022]
-    if year ∈ NIST_releases
-        include(f"src/{year}_constants.jl")
-        include("src/subatomic_species.jl")
-    else
-        println("The available CODATA release years are:")
-        for y in NIST_releasesexit()
-            println(y)
-        end
-        error(f"The year requested isn't available, please select a valid year.")
-    end
-end
 
 
 const SUPERSCRIPT_MAP = Dict{Char,Int64}(
@@ -143,3 +123,16 @@ const SUPERSCRIPT_MAP = Dict{Char,Int64}(
     '⁸' => 8,
     '⁹' => 9,
 )
+
+function find_superscript(num::Int64)
+  digs = reverse(digits(num))
+  sup::String = ""
+  for n ∈ digs
+    for (k, v) in SUPERSCRIPT_MAP
+      if n == v
+        sup = sup * k
+      end
+    end
+  end
+  return sup
+end
