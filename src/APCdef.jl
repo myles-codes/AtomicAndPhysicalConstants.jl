@@ -92,17 +92,20 @@ macro APCdef(kwargs...)
   kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
-  if (haskey(kwargdict, :unittype))
-    unittype = kwargdict[:unittype]
-  end
-  if (haskey(kwargdict, :unitsystem))
-    unitsystem = eval(kwargdict[:unitsystem])
-  end
-  if (haskey(kwargdict, :name))
-    if (kwargdict[:name] isa String)
-      name = Symbol(kwargdict[:name])
+  for k in keys(kwargdict)
+    if k == :unittype
+      unittype = kwargdict[:unittype]
+    elseif k == :unitsystem
+      unitsystem = eval(kwargdict[:unitsystem])
+    elseif k == :name
+      if kwargdict[:name] isa String
+        name = Symbol(kwargdict[:name])
+      else
+        name = kwargdict[:name]
+      end
     else
-      name = kwargdict[:name]
+      @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
+      return
     end
   end
 
