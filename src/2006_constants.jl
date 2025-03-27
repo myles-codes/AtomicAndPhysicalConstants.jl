@@ -6,6 +6,7 @@
 
 module CODATA2006
 
+
 export @APCdef
 export ACCELERATOR, MKS, CGS
 export Species
@@ -28,18 +29,12 @@ using HTTP
 using JSON
 using EnumX
 using Reexport
+using AtomicAndPhysicalConstants.NewUnits
 @reexport using Unitful
 import DynamicQuantities
 
 
-include("units_definition.jl")
-include("types.jl")
-include("constructors.jl")
-include("isotopes.jl")
-include("subatomic_species.jl")
-include("functions.jl")
-include("APCdef.jl")
-include("showconst.jl")
+
 
 #####################################################################
 # constants with dimension [mass]
@@ -160,6 +155,15 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2";
 
 
 
+
+
+include("types.jl")
+include("constructors.jl")
+include("isotopes.jl")
+include("subatomic_species.jl")
+include("functions.jl")
+include("APCdef.jl")
+include("showconst.jl")
 
 
 end
