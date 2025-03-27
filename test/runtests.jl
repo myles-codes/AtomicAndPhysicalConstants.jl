@@ -105,7 +105,7 @@ end
 end
 
 module APCdefWithChangedName
-using AtomicAndPhysicalConstants
+using AtomicAndPhysicalConstants.CODATA2022
 using Test
 
 # test default APCdef settings
@@ -128,7 +128,7 @@ end
 end
 
 module APCdefWithDifferentUnitSystem
-using AtomicAndPhysicalConstants
+using AtomicAndPhysicalConstants.CODATA2022
 using Test
 
 # test default APCdef settings
