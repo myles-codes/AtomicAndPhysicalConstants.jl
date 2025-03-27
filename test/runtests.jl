@@ -21,7 +21,7 @@ using Test
   #test massof() and chargeof()
   H = Species("H")
 
-  @test massof(H) ≈ 9.394018682512946e8
+  @test massof(H) ≈ 9.388908693006046e8
   @test chargeof(H) ≈ 0
 
   e = Species("electron")
