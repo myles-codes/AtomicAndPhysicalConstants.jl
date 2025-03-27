@@ -1,5 +1,5 @@
 module DefaultAPCDef
-using AtomicAndPhysicalConstants
+using AtomicAndPhysicalConstants.CODATA2022
 using Test
 
 # test default APCdef settings
