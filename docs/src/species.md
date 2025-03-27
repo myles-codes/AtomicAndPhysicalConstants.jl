@@ -68,32 +68,35 @@ Example:
 julia> Species("anti-proton")
 ```
 
-See the list of all available subatomic species at the end of this page.
+See the [list](#list-of-available-subatomic-species) of all available subatomic species at the end of this page.
 
 ### Constructing Atomic Species
 
 To construct an atomic species, put the following 3 things in `name`:
 
 - Atomic Symbol
-- "#" followed by the mass number of the atomic (optional)
-- charge (optional)
+- mass number of the atom (optional), format:
+    - mass number in front of the atomic symbol (accepts unicode superscript)
+    - "#" followed by the mass number (does not accept unicode superscript)
+- charge (optional), format (all accepts unicode superscript):
+    - "+" represents single positive charge
+    - "++" represents double positive charge
+    - "+n" or "n+" represents n positive charge
+    - "-" represents single negative charge
+    - "--" represents double negative charge
+    - "-n" or "n-" represents n negative charge
 
 Example:
 ```julia
 julia> Species("C#13+") #Carbon-13 with a single positive charge
+julia> Species("¹⁵N³⁻") #Nitrogen-15 with a 3 negative charge
 ```
+
 
 **Note**
 
 - If mass number is not provided, the average will be used
 - If charge is not provided, a neutral atom will be returned.
-- Charge can be provided by the following format
-    - "+" represents single positive charge
-    - "++" represents double positive charge
-    - "+n" represents n positive charge
-    - "-" represents single negative charge
-    - "--" represents double negative charge
-    - "-n" represents n negative charge
 - To construct an anti atom, put "anti-" in the front.
 
 Example:
@@ -109,12 +112,6 @@ We also provide the constructor
 Species(name::String, charge::Int, iso::Int)
 ```
 where users can enter charge and mass number as separate parameter.
-
-The parameter `charge` and `iso` are optional and it will use default values if not provided. 
-Defaults are neutral atom and average atom.
-
-**Note** If charge or mass number are also provided in `name`. 
-The charge and mass number in `name` will override the one given in the parameter.
 
 Example:
 ```julia

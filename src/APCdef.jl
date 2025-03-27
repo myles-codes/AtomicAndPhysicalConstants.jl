@@ -77,35 +77,37 @@ It defines the physical constants and getter functions for species mass and char
 
 """
 macro APCdef(kwargs...)
+
+  # check whether @APCdef has been called by checking whether massof is in the namespace
+  if names(Main, all=true) |> x -> :massof in x
+    @error "You can only call @APCdef once"
+    return
+  end
   #defualt parameters
-  unitful::Bool = false
-  CODATA::Int64 = 2022
+  unittype::Symbol = :Float
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
 
   # a dictionary that maps the name of the key word variables to their value
-  kwargdict = Dict(map(t -> Pair(t.args...), kwargs))
+  kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
-  if (haskey(kwargdict, :unitful) && kwargdict[:unitful])
-    unitful = true
-  end
-  if (haskey(kwargdict, :CODATA))
-    CODATA = kwargdict[:CODATA]
-  end
-  if (haskey(kwargdict, :unitsystem))
-    unitsystem = eval(kwargdict[:unitsystem])
-  end
-  if (haskey(kwargdict, :name))
-    if (kwargdict[:name] isa String)
-      name = Symbol(kwargdict[:name])
+  for k in keys(kwargdict)
+    if k == :unittype
+      unittype = kwargdict[:unittype]
+    elseif k == :unitsystem
+      unitsystem = eval(kwargdict[:unitsystem])
+    elseif k == :name
+      if kwargdict[:name] isa String
+        name = Symbol(kwargdict[:name])
+      else
+        name = kwargdict[:name]
+      end
     else
-      name = eval(kwargdict[:name])
+      @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
+      return
     end
   end
-
-  # use the `CODATA` year data
-  # useCODATA(CODATA)
 
   # extract the units from the unit system
   mass_unit::Unitful.FreeUnits = unitsystem[1]
@@ -113,7 +115,7 @@ macro APCdef(kwargs...)
   time_unit::Unitful.FreeUnits = unitsystem[3]
   energy_unit::Unitful.FreeUnits = unitsystem[4]
   charge_unit::Unitful.FreeUnits = unitsystem[5]
-  # check dimensions of units
+  # check dimensions of units?
   if dimension(mass_unit) != dimension(u"kg")
     error("unit for mass does not have proper dimension")
   end
@@ -151,17 +153,17 @@ macro APCdef(kwargs...)
       (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
     ), names(AtomicAndPhysicalConstants, all=true))
 
-  if unitful #suppose the user demand unitful quantity
+  if unittype == :Unitful #suppose the user demand unitful quantity
 
-    constantsdict = Dict{Symbol,Union{Unitful.Quantity,Float64}}()
+    constantsdict_unitful::Dict{Symbol,Union{Unitful.Quantity,Float64}} = Dict()
 
     for sym in constants
       value = eval(sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-        constantsdict[constantname] = uconvert(conversion[dimension(value)], value)
+        constantsdict_unitful[constantname] = uconvert(conversion[dimension(value)], value)
       else
-        constantsdict[constantname] = value
+        constantsdict_unitful[constantname] = value
       end
     end
 
@@ -170,65 +172,113 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::$masstype
-        @assert species != Species() "Can't call massof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass)
       end
       function $(esc(:chargeof))(species::Species)::$chargetype
-        @assert species != Species() "Can't call chargeof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge)
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::$masstype
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass)
       end
       function $(esc(:chargeof))(speciesname::String)::$chargetype
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge)
       end
-      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
+      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_unitful))}(values($constantsdict_unitful))
     end
-  else #if the user does not want unitful
-    constantsdict = Dict{Symbol,Float64}()
+  elseif unittype == :Float #if the user wants Float quantity
+    constantsdict_float::Dict{Symbol,Float64} = Dict()
 
     for sym in constants
       value = eval(sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-        constantsdict[constantname] = uconvert(conversion[dimension(value)], value).val
+        constantsdict_float[constantname] = uconvert(conversion[dimension(value)], value).val
       elseif value isa Float64
-        constantsdict[constantname] = value # If the value does not have unit, such as Avogadro's number
+        constantsdict_float[constantname] = value # If the value does not have unit, such as Avogadro's number
       else
-        constantsdict[constantname] = value.val
+        constantsdict_float[constantname] = value.val
       end
     end
 
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::Float64
-        @assert species != Species() "Can't call massof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
       end
       function $(esc(:chargeof))(species::Species)::Float64
-        @assert species != Species() "Can't call chargeof() on a null Species object"
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge).val
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
       end
       function $(esc(:chargeof))(speciesname::String)::Float64
         species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, species.charge).val
       end
-      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
+      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
 
     end
+  elseif unittype == :DynamicQuantities #if the user wants DynamicQuantities
+
+    constantsdict_dynamicquantities::Dict{Symbol,Union{Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}} = Dict()
+
+    for sym in constants
+      value = eval(sym) # the value of the constant
+      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
+      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+        constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, uconvert(conversion[dimension(value)], value))
+      elseif value isa Float64
+        constantsdict_dynamicquantities[constantname] = value # If the value does not have unit, such as Avogadro's number
+      else
+        constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, value) # directly convert to DynamicQuantities
+      end
+    end
+
+    return quote
+      #massof and charge of
+      function $(esc(:massof))(species::Species)::Float64
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, species.mass))
+      end
+      function $(esc(:chargeof))(species::Species)::Float64
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, species.charge))
+      end
+      #added options for string input
+      function $(esc(:massof))(speciesname::String)::Float64
+        species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, species.mass))
+      end
+      function $(esc(:chargeof))(speciesname::String)::Float64
+        species = Species(speciesname)
+        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, species.charge))
+      end
+      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
+
+    end
+
+  else
+    error("`unittype` should be one of Float, Unitful, DynamicQuantities")
   end
 end
+
 
 
 """
