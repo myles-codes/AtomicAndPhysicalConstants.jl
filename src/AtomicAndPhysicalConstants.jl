@@ -3,6 +3,8 @@ module AtomicAndPhysicalConstants
 include("units_definition.jl")
 export NewUnits
 
+include("prerelease.jl")
+
 include("2002_constants.jl")
 export CODATA2002
 
