@@ -158,7 +158,7 @@ macro APCdef(kwargs...)
     constantsdict_unitful::Dict{Symbol,Union{Unitful.Quantity,Float64}} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(AtomicAndPhysicalConstants, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_unitful[constantname] = uconvert(conversion[dimension(value)], value)
@@ -197,7 +197,7 @@ macro APCdef(kwargs...)
     constantsdict_float::Dict{Symbol,Float64} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(AtomicAndPhysicalConstants, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_float[constantname] = uconvert(conversion[dimension(value)], value).val
@@ -238,7 +238,7 @@ macro APCdef(kwargs...)
     constantsdict_dynamicquantities::Dict{Symbol,Union{Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(AtomicAndPhysicalConstants, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, uconvert(conversion[dimension(value)], value))
