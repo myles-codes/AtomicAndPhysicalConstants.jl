@@ -56,18 +56,20 @@ const CGS = (
   u"C")
 
 """
-    @APCdef(CODATA = 2022, unitsystem = ACCELERATOR, unitful = false)
+    @APCdef(unitsystem = ACCELERATOR, unittype = Float64, name = :APC)
 
 ## Description:
 It defines the physical constants and getter functions for species mass and charge with the proper unit and data.
 
-## positional parameters:
-- `CODATA`       -- type: `Int`. Specify the year of the data source. Default to `2022``
-- `unitsystem`   -- type: `UnitSystem`. Specify the unit system, default to `ACCELERATOR`, which sets units to 'Default units' (see above).
+## keyword parameters:
+- `unitsystem`   -- type: 5-Tuple of `Unitful` units. Specify the unit system, default to `ACCELERATOR`, which sets units to 'Default units' (see below).
                                         The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
-- `unitful`      -- type: `Bool`. If it is set to `true`, the constants will be a Unitful type. If it is set to `false`, it will be a `Float64`. Defualt to `false`.
-                        
+- `unittype`     -- Sets the return type of the constants and the getter functions. It can be `Float`, `Unitful`, or `DynamicQuantities`. Default to `Float`.
+- `name`         -- Sets the name of the module that contains the constants and getter functions. Default to `APC`.
     
+## Note
+- @APCdef can be called only once in a module.
+
 ## Default units:
 - `mass`: eV/c^2
 - `length`: m
@@ -158,7 +160,7 @@ macro APCdef(kwargs...)
     constantsdict_unitful::Dict{Symbol,Union{Unitful.Quantity,Float64}} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_unitful[constantname] = uconvert(conversion[dimension(value)], value)
@@ -197,7 +199,7 @@ macro APCdef(kwargs...)
     constantsdict_float::Dict{Symbol,Float64} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_float[constantname] = uconvert(conversion[dimension(value)], value).val
@@ -209,7 +211,7 @@ macro APCdef(kwargs...)
     end
 
     return quote
-      #massof and chargeof
+      #massof and charge of
       function $(esc(:massof))(species::Species)::Float64
         @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
         return uconvert($mass_unit, species.mass).val
@@ -238,7 +240,7 @@ macro APCdef(kwargs...)
     constantsdict_dynamicquantities::Dict{Symbol,Union{Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}} = Dict()
 
     for sym in constants
-      value = eval(sym) # the value of the constant
+      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
       constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
       if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
         constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, uconvert(conversion[dimension(value)], value))
@@ -284,6 +286,9 @@ end
 """
     massof(
       species::Species,
+    ),
+    massof(
+      speciesname::String,
     )
 
 ## Description:
