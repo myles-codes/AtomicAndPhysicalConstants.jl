@@ -2,7 +2,7 @@
 # Constants Used
 
 Here is a list of constants used in the package.
-Constants are pulled from the NIST table of the **2022 CODATA release**. Note that `m_pion_0` and `m_pion_charged` are pulled from **PDG**.
+The following constants values are pulled from the NIST table of the **2022 CODATA release**. Note that `m_pion_0` and `m_pion_charged` are pulled from **PDG**.
 
 ## Physical Constants
 #### Speed of light: `c_light` = 2.99792458e8 * u"m/s"
