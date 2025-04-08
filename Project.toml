@@ -18,7 +18,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 [compat]
 Dates = "1"
 Documenter = "1"
-DynamicQuantities = "1.8"
+DynamicQuantities = "1.1"
 EnumX = "1"
 HTTP = "1"
 JSON = "0.21"
