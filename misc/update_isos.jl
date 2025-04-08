@@ -1,25 +1,25 @@
-"""downloadIsos() downloads the current  \n\
+"""downloadisos() downloads the current  \n\
 ascii table of isotopic data as NIST  \n\
 doesn't appear to make old releases  \n\
 available"""
-downloadIsos
+downloadisos
 
-function downloadIsos()
+function downloadisos()
   url = "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=&ascii=ascii2&isotype=all"
   path = download(url)
   return path
 end;
 
 
-"""getIsos(path::String) opens the file at  \n\
+"""getisos(path::String) opens the file at  \n\
 path (which is expected to be a linearized table  \n\
 of isotopes from NIST) and writes the information  \n\
 for each isotope to a dictionary. The function  \n\
 returns a vector containing all these dictionaries  \n\
 for further processing."""
-getIsos
+getisos
 
-function getIsos(path::String)
+function getisos(path::String)
   f = open(path)
   everyline = readlines(f)
   isos = []
@@ -86,14 +86,14 @@ function buildIsoDict(List::Vector{Any})
 end;
 
 
-"""writeIsos(Elements::Dict{Int64, AtomicSpecies}) takes \n\
+"""writeisos(Elements::Dict{Int64, AtomicSpecies}) takes \n\
 as input a dictionary of the elements with nuclear charges \n\
 as keys, and writes the same dictionary with the keys swapped \n\
 for the atomic symbol (eg "H", "He", etc.) to a file named \n\
 yyyy-mm-dd_AtomicSpecies.jl located in the src folder."""
-writeIsos
+writeisos
 
-function writeIsos(Elements::Dict{Int64,AtomicSpecies})
+function writeisos(Elements::Dict{Int64,AtomicSpecies})
   date = today()
 
   Z_eles = 1:1:118
@@ -143,22 +143,22 @@ function writeIsos(Elements::Dict{Int64,AtomicSpecies})
 end;
 
 
-"""setIsos() uses the functions \n\
-downloadIsos(), \n\
-getIsos(path), \n\
+"""setisos() uses the functions \n\
+downloadisos(), \n\
+getisos(path), \n\
 buildIsoDict(List), and \n\
 writeisos(Elements) \n\
 to write a Julia file containing a \n\
 usable dictionary of each element  \n\
 with all of their isotopes"""
-setIsos
+setisos
 
-function setIsos()
+function setisos()
   # println(eV_per_amu)
-  path = downloadIsos()
-  vec = getIsos(path)
+  path = downloadisos()
+  vec = getisos(path)
   numdict = buildIsoDict(vec)
-  writeIsos(numdict)
+  writeisos(numdict)
 end;
 
 

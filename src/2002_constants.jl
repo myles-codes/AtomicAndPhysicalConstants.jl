@@ -19,7 +19,7 @@ export showconst
 export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
-export setIsos
+export setisos
 
 
 using PyFormattedStrings

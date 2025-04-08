@@ -1,106 +1,138 @@
 # Setting Units for Constants And Particle Functions, Basic Unitful Usage
 
-## @APCdef
-### Description
+# **@APCdef**
 
-`@APCdef` should be called at the initialization of the package. `@APCdef` sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data, see [this page](constants.md) for more detail.
+## **Description**
 
-The user have the freedom to choose the unit they want for `mass`, `length`, `time`, `energy`, and `charge`. by using our predefined unitsystems `ACCELERATOR` (default), `MKS`, and `CGS` to quickly setup the units.
+`@APCdef` must be called during package initialization. It sets units for physical constants, species mass, and charge. The macro defines physical constants and creates getter functions for species mass and charge with appropriate units and data. See this page for more details.
 
-The users have the freedom to choose whether they want the constants to be of type `Float64` or Unitful types, which makes unit calculations easier. 
+[Species](species.md)
 
-The constants are wrapped in a named tuple, the users can choose the name of the named tuple
+Users can choose their preferred units for `mass`, `length`, `time`, `energy`, and `charge` using predefined unit systems: `ACCELERATOR` (default), `MKS`, or `CGS`.
 
-**Note**
-`@APCdef` should only be called once.
+Users can also specify whether constants should be of type `Float64` (default), `Unitful`, or `Dynamic Quantities` for easier unit calculations.
 
+All constants are stored in a named tuple, whose name can be customized (defaults to `APC`).
 
-### Syntax
+**Note** `@APCdef` should only be called once.
+
+## **Syntax**
+
 ```julia
-@APCdef(name = :APC, unitsystem = ACCELERATOR, unitful = false)
-```
-### Options
-
-`name` sets the name of the named tuple which stores the constants. Default is `APC`.
-
-`unitsystem` defines the set of units for the constants. There are 3 available options: `ACCELERATOR`,`MKS`,`CGS`. Default to `ACCELERATOR`.
-
-`unitful` is a boolean. If it is set to `true`, the constants will be a Unitful type. If it is set to `false`, it will be a `Float64`. Default to `false`.
-
-`ACCELERATOR` units:
-- `mass`: eV/c^2
-- `length`: m
-- `time`: s
-- `energy`: eV
-- `charge`: elementary charge
-
-`MKS` units:
-- `mass`: kg
-- `length`: m
-- `time`: s
-- `energy`: J
-- `charge`: C
-
-`CGS` units:
-- `mass`: g
-- `length`: cm
-- `time`: s
-- `energy`: J
-- `charge`: C
-
-### Example
-```julia
-julia> @APCdef # Sets unit system to ACCELERATOR (default). define constants with type Float64
-julia> C_LIGHT
-2.99792458e8 # Now the constant C_LIGHT is defined with units m/s and type Float64.
+@APCdef(name = APC, unitsystem = ACCELERATOR, unittype = Float)
 ```
 
-## Unitful
+## Keyword Parameters
 
-[Unitful.jl](https://github.com/PainterQubits/Unitful.jl) is a powerful package for managing physical units.
+- `name` specifies the named tuple that stores the constants (default: `APC`).
+- `unitsystem` sets the unit system for constants: `ACCELERATOR` (default), `MKS`, or `CGS`.
+- `unittype` sets the constant type: `Float` (default), `Unitful`, or `DynamicQuantities`. This determines the return type of both the named tuple and the `massof()` and `chargeof()` functions.
 
-### Units
+## Unit Systems
 
-Unitful uses the macro `@u_str` to create units. 
+- `ACCELERATOR` units:
+    - `mass`: eV/c^2
+    - `length`: m
+    - `time`: s
+    - `energy`: eV
+    - `charge`: elementary charge
+- `MKS` units:
+    - `mass`: kg
+    - `length`: m
+    - `time`: s
+    - `energy`: J
+    - `charge`: C
+- `CGS` units:
+    - `mass`: g
+    - `length`: cm
+    - `time`: s
+    - `energy`: J
+    - `charge`: C
+
+## **Example**
+
+```julia
+julia> @APCdef# Sets unit system to ACCELERATOR (default). define constants with type Float64
+
+julia> APC.C_LIGHT #Access the constant within the named tuple `APC`
+2.99792458e8 # Now the constant is defined with units m/s and type Float64.
+```
+
+# **Unitful**
+
+[Unitful.jl](https://github.com/PainterQubits/Unitful.jl) is a powerful package for managing physical units. This package uses `Unitful` internally to store constants.
+
+## **Units**
+
+Unitful uses the macro `@u_str` to create units.
+
 ```julia
 julia> kg = u"kg"
 ```
+
 The variable `kg` represents the unit kilogram.
 
-To create constants with units, simply write the number in front of the unit.
+Creating constants with units is straightforward—simply write the number before the unit.
+
 ```julia
 julia> M = 1u"kg"
 ```
 
-Now `M` is a variable that represents 1 kilogram.
+Now `M` represents 1 kilogram.
 
-### Conversion to Float
+## **Conversion to Float**
 
-To convert a Unitful object to Float64, use the field `.val`
+To convert a Unitful object to Float64, access the `.val` field.
+
 ```julia
 julia> a = 1.5u"kg"
 julia> a.val
 1.5
 ```
 
-### Unit Conversions
+## **Unit Conversions**
 
-Unitful provides a convenent way to create new units with expressions. Prefix can also be directly added.
+Unitful provides a convenient way to create new units with expressions. You can also add prefixes directly.
+
 ```julia
 julia> m = 0.511u"MeV/c^2"
 ```
-To convert between units, use the function `uconvert()`, putting the new unit in the first parameter and the variable in the second parameter.
+
+To convert between units, use the `uconvert()` function with the target unit as the first parameter and the variable as the second.
+
 ```julia
 julia> uconvert(u"kg",m)
 9.109402419518556e-31 kg
 ```
 
-### Package-specific Units
+## @APCdef returning Unitful type
 
-`AtomicAndPhysicalConstants` defined 3 units that is not from the Unitful package. Within the package, users can directly use `@u_str` macro to access these units, just like any other units.
+To use Unitful-typed constants, set `unittype` to `Unitful`.
 
-- `amu` : It represents the atomic mass unit. 
+```julia
+julia> @APCdef unittype = Unitful 
 
-- `e` : It represents the elementary charge.
+julia> APC.C_LIGHT 
+2.99792458e8 m s⁻¹ # Now the constant is a Unitful quantity.
+```
 
-- `h_bar` : It represents the reduced Planck's constant. It is used as the unit for spin.
+## @APCdef returning DynamicQuantities.jl type
+
+[DynamicQuantities.jl](https://github.com/SymbolicML/DynamicQuantities.jl) is another popular package for managing units. We also support returning constants in DynamicQuantities type.
+
+```julia
+julia> @APCdef unittype = DynamicQuantities
+
+julia> APC.C_LIGHT 
+2.99792458e8 m s⁻¹ # Now the constant is a DynamicQuantities quantity.
+```
+
+**Note**: setting the unit type to DynamicQuantities will return units only in SI units.
+
+# **Package-specific Units**
+
+`AtomicAndPhysicalConstants` defines three custom units not found in the Unitful package. Users can access these units with the `@u_str` macro, just like standard units.
+
+- `amu`: It represents the atomic mass unit.
+- `e`: It represents the elementary charge.
+- `h_bar`: It represents the reduced Planck's constant. It is used as the unit for spin.

@@ -9,7 +9,8 @@ makedocs(
     "Home" => "index.md",
     "APCdef" => "units.md",
     "Constants" => "constants.md",
-    "Species" => "species.md"
+    "Species" => "species.md",
+    "Helper Functions" => "helper_functions.md"
   ]
 )
 

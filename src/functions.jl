@@ -34,7 +34,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 
 function g_spin(species::Species)
-    return 2 * species.mass * species.mu / (species.spin * species.charge)
+  return 2 * species.mass * species.mu / (species.spin * species.charge)
 end;
 
 
@@ -50,8 +50,8 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species)
-    gs = g_spin(species)
-    return (gs - 2) / 2
+  gs = g_spin(species)
+  return (gs - 2) / 2
 end;
 
 
@@ -66,11 +66,11 @@ Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
 g_nucleon
 
 function g_nucleon(species::Species)
-    Z = species.charge
-    m = species.mass
-    gs = g_spin(species)
+  Z = species.charge
+  m = species.mass
+  gs = g_spin(species)
 
-    return gs * Z * __b_m_proton.val / m
+  return gs * Z * __b_m_proton.val / m
 end;
 
 
@@ -83,47 +83,60 @@ get the full name of a tracked species:
 - if species is atomic, gives "mass number" * "atomic symbol" * "charge state", 
   *e.g.* #3He-1 for a Helion with 3 bound electrons
 """
+full_name
 
 
 
 function full_name(species::Species)
-    if haskey(SUBATOMIC_SPECIES, species.name)
-        return species.name
-    else
-        isostring = ""
-        chargestring = ""
-        if species.iso > 0
-            isostring = "#" * f"{convert(Int64, species.iso)}"
-        end
-        if species.charge.val != 0
-            if species.charge.val < 0
-              chargestring = f"-{convert(Int64, abs(species.charge.val))}"
-            elseif species.charge.val > 0
-              chargestring = f"+{convert(Int64, abs(species.charge.val))}"
-
-            end
-        end
-        return isostring * species.name * chargestring
+  if haskey(SUBATOMIC_SPECIES, species.name)
+    return species.name
+  else
+    isostring = ""
+    chargestring = ""
+    if species.iso > 0
+      isostring = "#" * f"{convert(Int64, species.iso)}"
     end
+    if species.charge.val != 0
+      if species.charge.val < 0
+        chargestring = f"-{convert(Int64, abs(species.charge.val))}"
+      elseif species.charge.val > 0
+        chargestring = f"+{convert(Int64, abs(species.charge.val))}"
+
+      end
+    end
+    return isostring * species.name * chargestring
+  end
 end;
 
 
 
 
-
+"""
+    SUPERSCRIPT_MAP
+    A dictionary mapping superscript characters to their corresponding integer values.
+    This is used to convert superscript numbers in species names to their integer values.
+"""
 const SUPERSCRIPT_MAP = Dict{Char,Int64}(
-    '⁰' => 0,
-    '¹' => 1,
-    '²' => 2,
-    '³' => 3,
-    '⁴' => 4,
-    '⁵' => 5,
-    '⁶' => 6,
-    '⁷' => 7,
-    '⁸' => 8,
-    '⁹' => 9,
+  '⁰' => 0,
+  '¹' => 1,
+  '²' => 2,
+  '³' => 3,
+  '⁴' => 4,
+  '⁵' => 5,
+  '⁶' => 6,
+  '⁷' => 7,
+  '⁸' => 8,
+  '⁹' => 9,
 )
 
+"""
+    find_superscript(num::Int64)
+
+## Description:
+Convert an integer to its superscript representation.
+This function takes an integer and returns a string containing the corresponding
+superscript characters for each digit in the integer.
+"""
 function find_superscript(num::Int64)
   digs = reverse(digits(num))
   sup::String = ""

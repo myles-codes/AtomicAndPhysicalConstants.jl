@@ -1,27 +1,19 @@
 module AtomicAndPhysicalConstants
 
+export CODATA_releases
+export CODATA2002, CODATA2006, CODATA2010, CODATA2014, CODATA2018, CODATA2022
+
 include("units_definition.jl")
-export NewUnits
-
 include("prerelease.jl")
-
 include("2002_constants.jl")
-export CODATA2002
-
 include("2006_constants.jl")
-export CODATA2006
-
 include("2010_constants.jl")
-export CODATA2010
-
 include("2014_constants.jl")
-export CODATA2014
-
 include("2018_constants.jl")
-export CODATA2018
-
 include("2022_constants.jl")
-export CODATA2022
+
+using Reexport
+@reexport using .CODATA2022
 
 
 
