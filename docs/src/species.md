@@ -111,22 +111,6 @@ julia> Species("Al+3")#average Aluminum with 3 positive charge
 julia> Species("anti-H")#anti-hydrogen
 ```
 
-### **Alternative Constructor for Atomic Species**
-
-Another way to create atomic species is through a constructor that takes charge and mass number as separate parameters:
-
-```julia
-Species(name::String, charge::Int, iso::Int)
-```
-
-- The name parameter must be an atomic symbol, optionally prefixed with "anti-".
-
-Example:
-
-```julia
-julia> Species("C",charge = 1, iso = 13)#Carbon-13 with a single positive charge
-```
-
 ## **Species Functions**
 
 Species functions each take a `Species` as their parameter and return a specific property. Here are the available functions:

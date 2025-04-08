@@ -94,12 +94,13 @@ end
 end
 
 @testset "test Species parsing" begin
-  @test Species("¹H") == Species("H", 0, 1)
-  @test Species("H⁺") == Species("H", 1, -1)
-  @test Species("³H⁺") == Species("H", 1, 3)
-  @test Species("¹⁵N³⁻") == Species("N", -3, 15)
-  @test Species("⁴He") == Species("He", 0, 4)
-  @test Species("²³⁶U⁺") == Species("U", 1, 236)
+  import AtomicAndPhysicalConstants.CODATA2022: create_atomic_species
+  @test Species("¹H") == create_atomic_species("H", 0, 1)
+  @test Species("H⁺") == create_atomic_species("H", 1, -1)
+  @test Species("³H⁺") == create_atomic_species("H", 1, 3)
+  @test Species("¹⁵N³⁻") == create_atomic_species("N", -3, 15)
+  @test Species("⁴He") == create_atomic_species("He", 0, 4)
+  @test Species("²³⁶U⁺") == create_atomic_species("U", 1, 236)
 end
 
 end
