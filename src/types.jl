@@ -1,12 +1,12 @@
 # types.Julia
 
 
-
+# kind enum stores the kind of particle
+# NULL is for null species (placeholder species)
 @enumx Kind ATOM HADRON LEPTON PHOTON NULL
 
 
-# The docstring for this struct is with its constructor, in the file 
-# src/constructors.jl
+#The docstring for this struct is with its constructor, in the file `src/constructors.jl`
 
 struct Species
   name::String # name of the particle to track
@@ -28,20 +28,20 @@ kindof(species::Species) = species.kind
 """
 SubatomicSpecies 
 
-### Description:
+## Description:
 > mutable struct to store all (possibly degenerate) information about a subatomic particle<
 
-### Fields:
+## Fields:
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
 - `mass`              -- mass of the given particle in [eV/c^2]
 - `mu`  							-- magnetic moment of particle in [eV/T]
 - `spin`              -- spin of the particle in [ħ]
 
-### Notes:
+## Notes:
 some parameters in this struct are likely named constants from PhysicalConstants.jl
 
-### Examples:
+## Examples:
 - `SubatomicSpecies("neutron", 0, m_neutron, anom_mag_moment_neutron, 0.5)`
 - `SubatomicSpecies("pion-", -1, m_pion_charged, 0.0, 0.0)`
 """
@@ -63,17 +63,17 @@ end;
 """
 Struct AtomicSpecies
 
-### Description:
+## Description:
 > mutable struct to store all (possibly degenerate) information about a particular element<
 
-### Fields:
+## Fields:
 - `Z`            -- Integer atomic number (i.e. protons in the nucleus)
 - `species_name` -- String periodic table symbol for element
 - `mass`   -- > Dict{Int, Float64}(isotope::Int, mass::Float64) isotope masses
 									 > key -1 refers to the average common atomic mass, other keys refer to 
 									 > the number of nucleons present in the isotope <
 
-### Examples:
+## Examples:
 - `AtomicSpeciesData(3, "Li", Dict(Int64, Float64)(-1 => 6.9675, 3 => 3.0308, 4 => 4.02719, 
 		5 => 5.012538, 6 => 6.0151228874, 7 => 7.0160034366, 8 => 8.022486246, 9 => 9.02679019, 
 		10 => 10.035483, 11 => 11.04372358, 12 => 12.052517, 13 => 13.06263))`

@@ -3,6 +3,14 @@
 
 module PreRelease
 using Dates
+
+
+"""
+    CODATA_releases()
+
+## Description:
+This function lists the available CODATA release years in the package.
+"""
 function CODATA_releases()
   println("The CODATA release years available in this package now are:")
   CODATAyrs = 2002:4:2023
@@ -13,7 +21,7 @@ function CODATA_releases()
 
   println("Note that access to a given CODATA release is often not available 
   until up to several years after the label date.")
-end;
+end
 export CODATA_releases
 
 end
