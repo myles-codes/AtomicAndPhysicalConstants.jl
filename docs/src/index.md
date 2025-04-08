@@ -1,6 +1,8 @@
 # AtomicAndPhysicalConstants.jl
 
-`AtomicAndPhysicalConstants.jl` provides a quick way to access information about different species and physical constants.
+
+
+`AtomicAndPhysicalConstants.jl` (APC) provides a quick way to access information about different species and physical constants optimized for faster compile time and simulations.
 
 It is designed to provide atomic and physical constants including things like the speed of light, subatomic particle properties, atomic isotope properties, etc. 
 
@@ -15,21 +17,25 @@ The package is compatible with Julia's `Unitful.jl` library for convenient unit 
 3. **Simple usage**: Users can access data of a wide range of particles and physic constants by simply defining a species with their name or call a variable in the namespace. 
 
 ## Setup
-## Basic Usage
 
-### Defining Physical Constants
+To use AtomicAndPhysicalConstants, like any Julia package, execute the commands:
+```julia
+julia> using Pkg; Pkg.add("AtomicAndPhysicalConstants.jl")
+julia> using AtomicAndPhysicalConstants
+```
 
-The macro `@APCdef` helps you define a set of useful physical constants in your namespace. 
+The macro `@APCdef` initializes the APC package.
+@APCdef sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data. Documentation is  [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/).
 
 ```julia
 julia> @APCdef
-julia> C_LIGHT
+julia> APC.C_LIGHT
 2.99792458e8
 ```
 
-Users have the options for choosing the type and unit of the constants, see [this page](units.md)
+Users have the options for choosing the return type (Float64, Unitful, or DynamicQuantities) and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/)
 
-### Defining Species
+## Defining Species
 
 The constructor `Species()` helps you create a structure with all the information of the species stored in it.
 
@@ -47,4 +53,4 @@ julia> hydrogen.spin
 1.0 h_bar
 ```
 
-See more about `Species()` constructors and getter functions [here](species.md)
+See more about `Species()` constructors and getter functions [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/species/)

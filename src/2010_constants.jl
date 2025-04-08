@@ -20,7 +20,7 @@ export showconst
 export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
-export setIsos
+export setisos
 
 
 using PyFormattedStrings
@@ -98,9 +98,9 @@ const __b_mu_triton = 1.5046095178e-26 * u"J/T"
 #####################################################################
 
 
-const __b_N_avogadro = 6.02214076e23;
+const __b_N_avogadro = 6.02214076e23
 # Avogadro's constant: Number / mole (exact)
-const __b_fine_structure = 0.0072973525643;
+const __b_fine_structure = 0.0072973525643
 # fine structure constant
 
 
@@ -113,11 +113,11 @@ const __b_fine_structure = 0.0072973525643;
 #####################################################################
 
 
-const __b_kg_per_amu = 1.66053906892e-27 * u"kg/amu";
+const __b_kg_per_amu = 1.66053906892e-27 * u"kg/amu"
 # kg per standard atomic mass unit (dalton)
-const __b_eV_per_amu = 9.3149410372e8 * u"(eV/c^2)/amu";
+const __b_eV_per_amu = 9.3149410372e8 * u"(eV/c^2)/amu"
 # eV per standard atomic mass unit (dalton)
-const __b_J_per_eV = 1.602176634e-19 * u"J/eV";
+const __b_J_per_eV = 1.602176634e-19 * u"J/eV"
 # Joules per eV
 
 
@@ -130,26 +130,26 @@ const __b_J_per_eV = 1.602176634e-19 * u"J/eV";
 #####################################################################
 
 
-const __b_e_charge = 1.602176634e-19 * u"C";
+const __b_e_charge = 1.602176634e-19 * u"C"
 # elementary charge [C]
-const __b_r_e = 2.8179403205e-15 * u"m";
+const __b_r_e = 2.8179403205e-15 * u"m"
 # classical electron radius [m]
-const __b_r_p = __b_r_e * __b_m_electron / __b_m_proton;
+const __b_r_p = __b_r_e * __b_m_electron / __b_m_proton
 # classical proton radius [m]
-const __b_c_light = 2.99792458e8 * u"m/s";
+const __b_c_light = 2.99792458e8 * u"m/s"
 # speed of light [m/s]
-const __b_h_planck = 4.135667696e-15 * u"eV*s";
+const __b_h_planck = 4.135667696e-15 * u"eV*s"
 # Planck's constant [eV*s]
-const __b_h_bar_planck = __b_h_planck / 2pi;
+const __b_h_bar_planck = __b_h_planck / 2pi
 # h_planck/twopi [eV*s]
-const __b_classical_radius_factor = __b_r_e * __b_m_electron;
+const __b_classical_radius_factor = __b_r_e * __b_m_electron
 # e^2 / (4 pi eps_0)::typeof() = classical_radius * mass * c^2.
 # Is same for all particles of charge +/- 1.
 
 
-const __b_eps_0_vac = 8.8541878188e-12 * u"F/m";
+const __b_eps_0_vac = 8.8541878188e-12 * u"F/m"
 # Permittivity of free space in [F/m]
-const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2";
+const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 # Vacuum permeability in [N/A^2] (newtons per ampere squared)
 
 

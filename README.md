@@ -31,19 +31,17 @@ To use AtomicAndPhysicalConstants, like any Julia package, execute the commands:
 julia> using Pkg; Pkg.add("AtomicAndPhysicalConstants.jl")
 julia> using AtomicAndPhysicalConstants
 ```
-The top level package, 'AtomicAndPhysicalConstants', gives access to one function, 'CODATA_releases()', and (presently) six submodules 'CODATAyyyy' where 'yyyy' stands in for a release year.
-'CODATA_releases' indicates which years are available (to replace 'yyyy' in the submodule name), and each of the submodules contains all functionality for the package imposed on a particular set of constants.
 
 The macro `@APCdef` initializes the APC package.
 @APCdef sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data. Documentation is  [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/).
 
 ```julia
 julia> @APCdef
-julia> C_LIGHT
+julia> APC.C_LIGHT
 2.99792458e8
 ```
 
-Users have the options for choosing the type and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/)
+Users have the options for choosing the return type (Float64, Unitful, or DynamicQuantities) and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/dev/units/)
 
 ## Defining Species
 
