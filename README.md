@@ -39,7 +39,7 @@ The macro `@APCdef` initializes the APC package.
 
 ```julia
 julia> @APCdef
-julia> C_LIGHT
+julia> APC.C_LIGHT
 2.99792458e8
 ```
 
