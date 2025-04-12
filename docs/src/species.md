@@ -1,8 +1,8 @@
 # Species
 
-# **Species**
+# Species
 
-## **Introduction**
+## Introduction
 
 `Species` is a type that stores information about a particle.
 
@@ -40,13 +40,13 @@ For convenience, use our getter functions `massof()` and `chargeof()` to obtain 
 
 [Constants](constants.md)
 
-## **Construct a Species**
+## Construct a Species
 
 Use the constructor `Species(name)` to create a species.
 
 **Note**: Species names follow the OpenPMD standard.
 
-### **Constructing a Null species**
+### Constructing a Null species
 
 The `Null` species is useful for bookkeeping purposes, such as a placeholder in a struct component to indicate an unset species. To instantiate:
 
@@ -55,7 +55,7 @@ julia> Species("Null")
 julia> Species() # Same as above
 ```
 
-### **Constructing Subatomic Species**
+### Constructing Subatomic Species
 
 To construct a subatomic species, provide the exact name of the particle in the `name` field. **Note that the name must be provided exactly.**
 
@@ -75,7 +75,7 @@ julia> Species("anti-proton")
 
 See the [list of all available subatomic species](#list-of-available-subatomic-species) at the end of this page.
 
-### **Constructing Atomic Species**
+### Constructing Atomic Species
 
 To construct an atomic species, include these components in `name`:
 
@@ -111,7 +111,7 @@ julia> Species("Al+3")#average Aluminum with 3 positive charge
 julia> Species("anti-H")#anti-hydrogen
 ```
 
-## **Species Functions**
+## Species Functions
 
 Species functions each take a `Species` as their parameter and return a specific property. Here are the available functions:
 
@@ -125,7 +125,7 @@ Species functions each take a `Species` as their parameter and return a specific
 
 **Note**: You must call `@APCdef` before using `massof()` or `chargeof()`.
 
-## **List of Available Subatomic Species**
+## List of Available Subatomic Species
 
 - `photon`
 - `pion0`
