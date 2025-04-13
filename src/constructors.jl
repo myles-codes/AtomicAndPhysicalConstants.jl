@@ -119,10 +119,7 @@ Note that the name must be provided exactly.
 """
 Species
 
-
-Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
-
-function Species(speciesname::String)
+function SpeciesN(speciesname::String)
   name::String = speciesname
   # if the name is "Null", return a null Species
   if name == "Null" || name == "null" || name == ""

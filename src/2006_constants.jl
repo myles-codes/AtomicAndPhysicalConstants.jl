@@ -27,12 +27,11 @@ using PyFormattedStrings
 using Dates
 using HTTP
 using JSON
-using EnumX
 using Reexport
 using AtomicAndPhysicalConstants.NewUnits
 @reexport using Unitful
 import DynamicQuantities
-
+import ..AtomicAndPhysicalConstants: Species, SubatomicSpecies, AtomicSpecies, Kind
 
 
 
@@ -157,7 +156,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 
 
 
-include("types.jl")
+
 include("constructors.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
