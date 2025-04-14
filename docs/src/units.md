@@ -1,8 +1,8 @@
 # Setting Units for Constants And Particle Functions, Basic Unitful Usage
 
-# **@APCdef**
+# @APCdef
 
-## **Description**
+## Description
 
 `@APCdef` must be called during package initialization. It sets units for physical constants, species mass, and charge. The macro defines physical constants and creates getter functions for species mass and charge with appropriate units and data. See this page for more details.
 
@@ -129,7 +129,7 @@ julia> APC.C_LIGHT
 
 **Note**: setting the unit type to DynamicQuantities will return units only in SI units.
 
-# **Package-specific Units**
+# Package-specific Units
 
 `AtomicAndPhysicalConstants` defines three custom units not found in the Unitful package. Users can access these units with the `@u_str` macro, just like standard units.
 

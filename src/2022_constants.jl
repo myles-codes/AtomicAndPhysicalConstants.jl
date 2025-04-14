@@ -26,17 +26,18 @@ export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
 export setisos
+export SpeciesN
 
 
 using PyFormattedStrings
 using Dates
 using HTTP
 using JSON
-using EnumX
 using Reexport
 using AtomicAndPhysicalConstants.NewUnits
 @reexport using Unitful
 import DynamicQuantities
+import ..AtomicAndPhysicalConstants: Species, SubatomicSpecies, AtomicSpecies, Kind
 
 
 
@@ -160,7 +161,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 
 
 
-include("types.jl")
+
 include("constructors.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
