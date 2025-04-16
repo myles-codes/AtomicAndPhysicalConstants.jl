@@ -1,7 +1,5 @@
 # Species
 
-# Species
-
 ## Introduction
 
 `Species` is a type that stores information about a particle.
@@ -20,7 +18,10 @@ struct Species
 end
 ```
 
-The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`. The `NULL` kind serves as a placeholder for a null species.
+The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`. 
+The `NULL` kind serves as a placeholder that can be used by Julia code. For example, if a `struct`
+has a `Species` component, a `NULL` species can be used as an initial value to indicate that the
+species component has not yet been set.
 
 Each field stores values with their corresponding units and returns a Unitful value when accessed directly. For example:
 
@@ -36,9 +37,8 @@ The default units are:
 - `spin`: ℏ
 - `moment`: J/T
 
-For convenience, use our getter functions `massof()` and `chargeof()` to obtain values in your preferred units. See this page for more information.
-
-[Constants](constants.md)
+For convenience, use our getter functions `massof()` and `chargeof()` to obtain values in your preferred units. 
+See the [Constants](constants.md) page for more information.
 
 ## Construct a Species
 
@@ -83,7 +83,7 @@ To construct an atomic species, include these components in `name`:
 - Mass number of the atom (optional), format:
     - Mass number before the atomic symbol (accepts unicode superscript)
     - Optional "#" symbol at the beginning
-    - If not specified, uses the most abundant isotope
+    - If not specified, uses the average of the mass in naturally occurring samples.
 - These formats all represent Hydrogen-1:
     
     ```julia
@@ -105,10 +105,10 @@ To construct an atomic species, include these components in `name`:
 Example:
 
 ```julia
-julia> Species("13C+")#Carbon-13 with a single positive charge
-julia> Species("¹⁵N³⁻")#Nitrogen-15 with a 3 negative charge
-julia> Species("Al+3")#average Aluminum with 3 positive charge
-julia> Species("anti-H")#anti-hydrogen
+julia> Species("13C+")   # Carbon-13 with a single positive charge
+julia> Species("¹⁵N³⁻")  # Nitrogen-15 with a 3 negative charge
+julia> Species("Al+3")   # Average Aluminum with 3 positive charge
+julia> Species("anti-H") # Anti-hydrogen
 ```
 
 ## Species Functions
@@ -127,17 +127,18 @@ Species functions each take a `Species` as their parameter and return a specific
 
 ## List of Available Subatomic Species
 
+- `anti-deuteron`
+- `anti-electron` same as `positron`
+- `anti-neutron`
+- `anti-proton`
+- `anti-muon`
+- `deuteron`
+- `electron`
+- `muon`
+- `neutron`
 - `photon`
 - `pion0`
 - `pion+`
 - `pion-`
-- `muon`
-- `anti-muon`
-- `electron`
-- `positron` or `anti-electron`
+- `positron`
 - `proton`
-- `anti-proton`
-- `neutron`
-- `anti-neutron`
-- `deuteron`
-- `anti-deuteron`

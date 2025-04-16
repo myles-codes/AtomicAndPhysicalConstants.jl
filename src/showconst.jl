@@ -46,11 +46,11 @@ function showconst(query::Symbol=:constants)
     # list all the subatomic species
     if (query == :subatomic)
         for (key, _) in SUBATOMIC_SPECIES
-            println("- $key")
-            println("\t- access by: Species(\"$key\")")
+            println("- Species(\"$key\")")
         end
         return
     end
+
     if (haskey(ATOMIC_SPECIES, string(query)))
         #the dictionary that stores all the isotopes
         dict = ATOMIC_SPECIES[string(query)].mass
@@ -58,11 +58,9 @@ function showconst(query::Symbol=:constants)
         sorted_dict = sort(collect(dict))
         for (key, value) in sorted_dict
             if key == -1
-                println("- Average mass: $value")
-                println("\t- access by: Species(\"$query\")")
+                println("- Species(\"$query\") : $value")
             else
-                println("- $query-$key : $value")
-                println("\t- access by: Species(\"$query#$key\")")
+                println("- Species(\"#$key$query\") : $value")
             end
         end
     else

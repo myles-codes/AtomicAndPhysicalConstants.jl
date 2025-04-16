@@ -1,18 +1,17 @@
 # Constants 
 
-# Constants
-
 ## Available Constants
 
 The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md). The following example is how to use the macro and the physical constants.
 
 ```julia
+julia> using AtomicAndPhysicalConstants
 julia> @APCdef
 julia> APC.C_LIGHT
 2.99792458e8
 ```
 
-### Constants Defined by @APCdef
+## Constants Defined by @APCdef
 
 - Speed of light: `C_LIGHT`
 - Planck's constant: `H_PLANCK`
@@ -26,7 +25,23 @@ julia> APC.C_LIGHT
 - Fine structure constant: `FINE_STRUCTURE`
 - Avogadro's constant: `N_AVOGADRO`
 
-### Species Mass and Charge
+## Listing Constants: `showconst()`
+
+The `showconst()` function displays all available constants in the package.
+
+There are three options:
+
+```julia
+julia> showconst() 
+#list all the physical constants created by @APCdef
+julia> showconst(:subatomic) 
+#list all possible subatomic particles
+julia> showconst(:Fe) 
+# ':Fe' can be replaced by any atomic symbols
+# list all the available isotopes of that element
+```
+
+## Species Mass and Charge
 
 To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to `@APCdef`. For Example:
 
@@ -56,6 +71,6 @@ julia> using AtomicAndPhysicalConstants #use CODATA2022 values
 - NIST provides the isotope data, which we extract from their database. Since NIST doesn't maintain old releases, the isotope data always reflects their latest release.
 - The pion0 and pion± data comes from PDG (Particle Data Group). We extract this data from the database at [pdgapi.lbl.gov](http://pdgapi.lbl.gov)
 
-### setisos()
+## CODATA_releases()
 
-The `setisos()` function downloads the latest isotope data from NIST and creates a Julia file containing a usable dictionary of each element with all of their isotopes
+The `CODATA_releases()` function lists all the available CODATA release years in the package.

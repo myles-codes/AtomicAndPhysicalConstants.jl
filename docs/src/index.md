@@ -1,7 +1,5 @@
 # AtomicAndPhysicalConstants.jl
 
-
-
 `AtomicAndPhysicalConstants.jl` (APC) provides a quick way to access information about different species and physical constants optimized for faster compile time and simulations.
 
 It is designed to provide atomic and physical constants including things like the speed of light, subatomic particle properties, atomic isotope properties, etc. 
