@@ -1,5 +1,6 @@
 # Declare specific systems of units
 
+#---------------------------------------------------------------------------------------------------
 #   for particle physics
 """
     ACCELERATOR
@@ -19,7 +20,9 @@ const ACCELERATOR = (
   u"eV",
   u"e")
 
+#---------------------------------------------------------------------------------------------------
 #   MKS
+
 """
     MKS
 ## MKS units:
@@ -37,7 +40,10 @@ const MKS = (
   u"s",
   u"J",
   u"C")
-#   quasi-CGS
+
+#---------------------------------------------------------------------------------------------------
+# CGS
+
 """
     CGS
 ## CGS units:
@@ -55,6 +61,9 @@ const CGS = (
   u"s",
   u"J",
   u"C")
+
+#---------------------------------------------------------------------------------------------------
+# @APCdef
 
 """
     @APCdef(unitsystem = ACCELERATOR, unittype = Float, name = :APC)
@@ -87,7 +96,7 @@ macro APCdef(kwargs...)
     return
   end
 
-  #defualt parameters
+  # Defualt parameters
   unittype::Symbol = :Float
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
@@ -290,7 +299,8 @@ macro APCdef(kwargs...)
   end
 end
 
-
+#---------------------------------------------------------------------------------------------------
+# massof
 
 """
     massof(
@@ -310,6 +320,8 @@ return mass of 'species' in current unit, or return the mass of the species with
 """
 massof
 
+#---------------------------------------------------------------------------------------------------
+# chargeof
 
 """
     chargeof(
