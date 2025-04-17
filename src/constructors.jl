@@ -104,7 +104,7 @@ Note that the name must be provided exactly.
       * "++" represents double positive charge
       * "+n" or "n+" represents n positive charge, where n can be unicode superscript
       * "-" represents single negative charge
-      * "–" represents double negative charge
+      * "–-" represents double negative charge
       * "-n" or "n-" represents n negative charge, where n can be unicode superscript
     e.g. 
     Species("C+") - Carbon with a single positive charge
