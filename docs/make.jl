@@ -7,7 +7,7 @@ makedocs(
   pages=
   [
     "Home" => "index.md",
-    "APCdef" => "units.md",
+    "Setting Units: APCdef" => "units.md",
     "Constants" => "constants.md",
     "Species" => "species.md",
     "Helper Functions" => "helper_functions.md"
