@@ -70,7 +70,3 @@ julia> using AtomicAndPhysicalConstants #use CODATA2022 values
 
 - NIST provides the isotope data, which we extract from their database. Since NIST doesn't maintain old releases, the isotope data always reflects their latest release.
 - The pion0 and pion± data comes from PDG (Particle Data Group). We extract this data from the database at [pdgapi.lbl.gov](http://pdgapi.lbl.gov)
-
-## CODATA_releases()
-
-The `CODATA_releases()` function lists all the available CODATA release years in the package.

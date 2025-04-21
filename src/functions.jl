@@ -29,7 +29,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 
 function g_spin(species::Species)
-  return 2 * species.mass * species.mu / (species.spin * species.charge)
+  return 2 * species.mass * species.moment / (species.spin * species.charge)
 end;
 
 
