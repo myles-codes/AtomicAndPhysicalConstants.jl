@@ -21,6 +21,6 @@ function CODATA_releases()
 
   println("Note that access to a given CODATA release is often not available 
   until up to several years after the label date.")
-end
+end; export CODATA_releases
 
 end
