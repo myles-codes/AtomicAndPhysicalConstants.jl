@@ -17,7 +17,7 @@ or `Dynamic Quantities` for easier unit calculations.
 All constants are stored in a named tuple, whose name can be customized (defaults to `APC`).
 For example, the default name for the speed of light is `APC.C_LIGHT`.
 
-## **@APCdef Syntax**
+## @APCdef Syntax
 
 ```julia
 @APCdef(name = APC, unitsystem = ACCELERATOR, unittype = Float)
@@ -53,8 +53,12 @@ for a discussion of the difference between how `Unitful` and `DynamicQuatities` 
     - `time`: s
     - `energy`: J
     - `charge`: C
+- Users can also define their own units by creating a tuple of Unitful units.
+    - The tuple must be using the types in `Unitful`
+    - The tuple must have 5 elements
+    - The elements must be ordered in “mass unit”, “length unit”, “time unit”, “energy unit”, and “charge unit”.
 
-## **Example**
+## Example
 
 ```julia
 julia> @APCdef  # Sets unit system to ACCELERATOR (default). define constants with type Float64.
@@ -63,12 +67,12 @@ julia> APC.C_LIGHT  # Access the constant within the named tuple `APC`.
 2.99792458e8        # Now the constant is defined with units m/s and type Float64.
 ```
 
-# **Unitful**
+# Unitful
 
 [Unitful.jl](https://github.com/PainterQubits/Unitful.jl) is a powerful package for managing physical units. 
 This package uses `Unitful` internally to store constants.
 
-## **Units**
+## Units
 
 Unitful uses the macro `@u_str` to create units.
 
@@ -86,7 +90,7 @@ julia> M = 1u"kg"
 
 Now `M` represents 1 kilogram.
 
-## **Conversion to Float**
+## Conversion to Float
 
 To convert a Unitful object to Float64, access the `.val` field.
 
@@ -96,7 +100,7 @@ julia> a.val
 1.5
 ```
 
-## **Unit Conversions**
+## Unit Conversions
 
 Unitful provides a convenient way to create new units with expressions. You can also add prefixes directly.
 
