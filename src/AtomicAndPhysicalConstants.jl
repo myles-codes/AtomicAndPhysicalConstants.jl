@@ -16,7 +16,7 @@ include("2018_constants.jl")
 include("2022_constants.jl")
 
 using Reexport
-@reexport using PreRelease
+@reexport using .PreRelease
 @reexport using .CODATA2022
 
 
