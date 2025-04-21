@@ -1,6 +1,6 @@
 module AtomicAndPhysicalConstants
 
-export CODATA_releases
+export PreRelease
 export CODATA2002, CODATA2006, CODATA2010, CODATA2014, CODATA2018, CODATA2022
 
 using EnumX
@@ -16,6 +16,7 @@ include("2018_constants.jl")
 include("2022_constants.jl")
 
 using Reexport
+@reexport using .PreRelease
 @reexport using .CODATA2022
 
 
