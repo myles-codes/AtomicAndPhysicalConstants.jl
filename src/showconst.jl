@@ -17,7 +17,10 @@ list available constants in the package
 """
 showconst
 
-function showconst(query::Symbol=:constants)
+function showconst(query::Union{Symbol,String}=:constants)
+    if query isa String
+        query = Symbol(query)
+    end
     # list all the physical constants and their values
     if (query == :constants)
 
