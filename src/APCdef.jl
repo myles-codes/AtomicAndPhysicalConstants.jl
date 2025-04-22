@@ -254,6 +254,7 @@ macro APCdef(kwargs...)
     end
   elseif unittype == :DynamicQuantities #if the user wants DynamicQuantities
 
+    @warn "DynamicQuantities will only return units in SI units"
     constantsdict_dynamicquantities::Dict{Symbol,Union{Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}} = Dict()
 
     for sym in constants

@@ -25,7 +25,6 @@ export showconst
 export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
-export setisos
 export SpeciesN
 
 
@@ -160,7 +159,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 # Vacuum permeability in [N/A^2] (newtons per ampere squared)
 
 
-
+const YEAR = 2022
 
 include("constructors.jl")
 include("isotopes.jl")
