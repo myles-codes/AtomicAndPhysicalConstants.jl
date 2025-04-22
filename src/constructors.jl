@@ -192,6 +192,8 @@ function SpeciesN(speciesname::String)
 
   #if the user choose to put isotope in the front 
   if left != ""
+    # Check if the left string is of the correct form
+    @assert occursin(r"^(#[0-9]+|[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$", left) "The isotope specification in $speciesname should either be a '#' followed by normal numbers or pure Unicode superscript numbers."
     #if the left string starts with #, delete the #
     if left[1] == '#'
       left = left[2:end]
