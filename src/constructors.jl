@@ -325,3 +325,9 @@ function create_atomic_species(name::String, charge::Int, iso::Int)
   end
 
 end
+
+
+#####################################################################
+# In the following code, standard base.getproperty functions are 
+# overridden
+#####################################################################
