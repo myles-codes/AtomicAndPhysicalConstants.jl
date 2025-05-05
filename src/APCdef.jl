@@ -189,23 +189,23 @@ macro APCdef(kwargs...)
       #massof and charge of
       function $(esc(:massof))(species::Species)::$masstype
         @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass)
+        return uconvert($mass_unit, getfield(species, :mass))
       end
       function $(esc(:chargeof))(species::Species)::$chargetype
         @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge)
+        return uconvert($charge_unit, getfield(species, :charge))
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::$masstype
         species = Species(speciesname)
         @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass)
+        return uconvert($mass_unit, getfield(species, :mass))
       end
       function $(esc(:chargeof))(speciesname::String)::$chargetype
         species = Species(speciesname)
         @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge)
+        return uconvert($charge_unit, getfield(species, :charge))
       end
 
       # define the named tuple that contains all the constants
