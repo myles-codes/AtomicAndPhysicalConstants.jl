@@ -9,10 +9,10 @@ Get the atomic number (positive nuclear charge) of a tracked particle.
 atomicnumber
 
 function atomicnumber(particle::Species)
-  if haskey(ATOMIC_SPECIES, particle.name)
-    return ATOMIC_SPECIES[particle.name].Z
+  if haskey(ATOMIC_SPECIES, getfield(particle, :name))
+    return ATOMIC_SPECIES[getfield(particle, :name)].Z
   else
-    print(f"{particle.name} is not an atom, and thus no atomic number.")
+    print("$(getfield(particle, :name)) is not an atom, and thus no atomic number.")
     return
   end
 end;
@@ -29,7 +29,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 
 function g_spin(species::Species)
-  return 2 * species.mass * species.moment / (species.spin * species.charge)
+  return 2 * getfield(species, :mass) * getfield(species, :moment) / (getfield(species, :spin) * getfield(species, :charge))
 end;
 
 
@@ -61,11 +61,12 @@ Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
 g_nucleon
 
 function g_nucleon(species::Species)
-  Z = species.charge
-  m = species.mass
+  Z = getfield(species, :charge).val
+  m = getfield(species, :mass).val
   gs = g_spin(species)
+  m_p = getfield(Species("proton"), :mass).val
 
-  return gs * Z * __b_m_proton.val / m
+  return gs * Z * m_p / m
 end;
 
 
@@ -83,23 +84,23 @@ full_name
 
 
 function full_name(species::Species)
-  if haskey(SUBATOMIC_SPECIES, species.name)
-    return species.name
+  if haskey(SUBATOMIC_SPECIES, getfield(species, :name))
+    return getfield(species, :name)
   else
     isostring = ""
     chargestring = ""
     if species.iso > 0
-      isostring = "#" * f"{convert(Int64, species.iso)}"
+      isostring = "#" * "$(convert(Int64, species.iso))"
     end
-    if species.charge.val != 0
-      if species.charge.val < 0
-        chargestring = f"-{convert(Int64, abs(species.charge.val))}"
-      elseif species.charge.val > 0
-        chargestring = f"+{convert(Int64, abs(species.charge.val))}"
+    if getfield(species, :charge).val != 0
+      if getfield(species, :charge).val < 0
+        chargestring = "-$(convert(Int64, abs(getfield(species, :charge).val)))"
+      elseif getfield(species, :charge).val > 0
+        chargestring = "+$(convert(Int64, abs(getfield(species, :charge).val)))"
 
       end
     end
-    return isostring * species.name * chargestring
+    return isostring * getfield(species, :name) * chargestring
   end
 end;
 

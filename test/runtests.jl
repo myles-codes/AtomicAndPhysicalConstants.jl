@@ -47,50 +47,50 @@ end
   @test chargeof(Species("He")) ≈ 0
 
   #test isotope numbers
-  @test Species("#1H").iso == 1
-  @test Species("H").iso == -1
-  @test Species("#13C").iso == 13
-  @test Species("C").iso == -1
-  @test Species("#16O").iso == 16
-  @test Species("O").iso == -1
-  @test Species("#56Fe").iso == 56
-  @test Species("Fe").iso == -1
-  @test Species("#7Li").iso == 7
-  @test Species("Li").iso == -1
-  @test Species("#14N").iso == 14
-  @test Species("N").iso == -1
-  @test Species("#27Al").iso == 27
-  @test Species("Al").iso == -1
-  @test Species("#24Mg").iso == 24
-  @test Species("Mg").iso == -1
-  @test Species("#235U").iso == 235
-  @test Species("#236U").iso == 236
-  @test Species("U").iso == -1
+  @test getfield(Species("#1H"), :iso) == 1
+  @test getfield(Species("H"), :iso) == -1
+  @test getfield(Species("#13C"), :iso) == 13
+  @test getfield(Species("C"), :iso) == -1
+  @test getfield(Species("#16O"), :iso) == 16
+  @test getfield(Species("O"), :iso) == -1
+  @test getfield(Species("#56Fe"), :iso) == 56
+  @test getfield(Species("Fe"), :iso) == -1
+  @test getfield(Species("#7Li"), :iso) == 7
+  @test getfield(Species("Li"), :iso) == -1
+  @test getfield(Species("#14N"), :iso) == 14
+  @test getfield(Species("N"), :iso) == -1
+  @test getfield(Species("#27Al"), :iso) == 27
+  @test getfield(Species("Al"), :iso) == -1
+  @test getfield(Species("#24Mg"), :iso) == 24
+  @test getfield(Species("Mg"), :iso) == -1
+  @test getfield(Species("#235U"), :iso) == 235
+  @test getfield(Species("#236U"), :iso) == 236
+  @test getfield(Species("U"), :iso) == -1
 
   #test isotope number with superscript
-  @test Species("¹H").iso == 1
-  @test Species("²H").iso == 2
-  @test Species("³H").iso == 3
-  @test Species("⁴He").iso == 4
-  @test Species("⁵He").iso == 5
-  @test Species("⁶Li").iso == 6
-  @test Species("⁷Li").iso == 7
-  @test Species("⁸Be").iso == 8
-  @test Species("⁹Be").iso == 9
-  @test Species("¹⁴N").iso == 14
-  @test Species("¹⁵N").iso == 15
-  @test Species("¹⁶O").iso == 16
-  @test Species("¹⁷O").iso == 17
-  @test Species("¹⁸O").iso == 18
-  @test Species("²³Na").iso == 23
-  @test Species("²⁴Mg").iso == 24
-  @test Species("²⁵Mg").iso == 25
-  @test Species("²⁶Mg").iso == 26
-  @test Species("²⁷Al").iso == 27
-  @test Species("²³⁵U").iso == 235
-  @test Species("²³⁶U").iso == 236
-  @test Species("²³⁸U").iso == 238
-  @test Species("U").iso == -1
+  @test getfield(Species("¹H"), :iso) == 1
+  @test getfield(Species("²H"), :iso) == 2
+  @test getfield(Species("³H"), :iso) == 3
+  @test getfield(Species("⁴He"), :iso) == 4
+  @test getfield(Species("⁵He"), :iso) == 5
+  @test getfield(Species("⁶Li"), :iso) == 6
+  @test getfield(Species("⁷Li"), :iso) == 7
+  @test getfield(Species("⁸Be"), :iso) == 8
+  @test getfield(Species("⁹Be"), :iso) == 9
+  @test getfield(Species("¹⁴N"), :iso) == 14
+  @test getfield(Species("¹⁵N"), :iso) == 15
+  @test getfield(Species("¹⁶O"), :iso) == 16
+  @test getfield(Species("¹⁷O"), :iso) == 17
+  @test getfield(Species("¹⁸O"), :iso) == 18
+  @test getfield(Species("²³Na"), :iso) == 23
+  @test getfield(Species("²⁴Mg"), :iso) == 24
+  @test getfield(Species("²⁵Mg"), :iso) == 25
+  @test getfield(Species("²⁶Mg"), :iso) == 26
+  @test getfield(Species("²⁷Al"), :iso) == 27
+  @test getfield(Species("²³⁵U"), :iso) == 235
+  @test getfield(Species("²³⁶U"), :iso) == 236
+  @test getfield(Species("²³⁸U"), :iso) == 238
+  @test getfield(Species("U"), :iso) == -1
 end
 
 @testset "test Species parsing" begin

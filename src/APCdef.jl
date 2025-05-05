@@ -188,24 +188,24 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::$masstype
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return uconvert($mass_unit, getfield(species, :mass))
       end
       function $(esc(:chargeof))(species::Species)::$chargetype
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return uconvert($charge_unit, getfield(species, :charge))
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::$masstype
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return uconvert($mass_unit, getfield(species, :mass))
       end
       function $(esc(:chargeof))(speciesname::String)::$chargetype
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return uconvert($charge_unit, getfield(species, :charge))
       end
 
       # define the named tuple that contains all the constants
@@ -230,24 +230,24 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::Float64
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass).val
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return uconvert($mass_unit, getfield(species, :mass)).val
       end
       function $(esc(:chargeof))(species::Species)::Float64
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge).val
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return uconvert($charge_unit, getfield(species, :charge)).val
       end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::Float64
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, species.mass).val
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return uconvert($mass_unit, getfield(species, :mass)).val
       end
       function $(esc(:chargeof))(speciesname::String)::Float64
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, species.charge).val
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return uconvert($charge_unit, getfield(species, :charge)).val
       end
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
@@ -272,23 +272,23 @@ macro APCdef(kwargs...)
     return quote
       #massof and charge of
       function $(esc(:massof))(species::Species)::DynamicQuantities.Quantity
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, species.mass))
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, getfield(species, :mass)))
       end
       function $(esc(:chargeof))(species::Species)::DynamicQuantities.Quantity
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, species.charge))
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
       end
       #added options for string input
       function $(esc(:massof))(speciesname::String)::DynamicQuantities.Quantity
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call massof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, species.mass))
+        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, getfield(species, :mass)))
       end
       function $(esc(:chargeof))(speciesname::String)::DynamicQuantities.Quantity
         species = Species(speciesname)
-        @assert species.kind != Kind.NULL "Can't call chargeof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, species.charge))
+        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
+        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
       end
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
