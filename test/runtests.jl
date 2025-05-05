@@ -84,7 +84,7 @@ end
   @test getfield(Species("¹⁸O"), :iso) == 18
   @test getfield(Species("²³Na"), :iso) == 23
   @test getfield(Species("²⁴Mg"), :iso) == 24
-  @test getfield(pecies("²⁵Mg"), :iso) == 25
+  @test getfield(Species("²⁵Mg"), :iso) == 25
   @test getfield(Species("²⁶Mg"), :iso) == 26
   @test getfield(Species("²⁷Al"), :iso) == 27
   @test getfield(Species("²³⁵U"), :iso) == 235

@@ -94,9 +94,9 @@ function full_name(species::Species)
     end
     if getfield(species, :charge).val != 0
       if getfield(species, :charge).val < 0
-        chargestring = "-$(convert(Int64, abs(species.charge.val)))"
+        chargestring = "-$(convert(Int64, abs(getfield(species, :charge).val)))"
       elseif getfield(species, :charge).val > 0
-        chargestring = "+$(convert(Int64, abs(species.charge.val)))"
+        chargestring = "+$(convert(Int64, abs(getfield(species, :charge).val)))"
 
       end
     end
