@@ -28,7 +28,6 @@ export ATOM, HADRON, LEPTON, PHOTON, NULL
 export SpeciesN
 
 
-using PyFormattedStrings
 using Dates
 using HTTP
 using JSON
@@ -162,6 +161,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 const YEAR = 2022
 
 include("constructors.jl")
+include("overrides.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
 include("functions.jl")

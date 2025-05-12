@@ -22,7 +22,6 @@ export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
 export SpeciesN
 
-using PyFormattedStrings
 using Dates
 using HTTP
 using JSON
@@ -159,6 +158,7 @@ const YEAR = 2010
 
 
 include("constructors.jl")
+include("overrides.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
 include("functions.jl")
