@@ -25,19 +25,19 @@ function subatomic_particle(name::String)
     return Species(name, SUBATOMIC_SPECIES[name].charge,
       SUBATOMIC_SPECIES[name].mass,
       SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].mu,
+      SUBATOMIC_SPECIES[name].moment,
       0.0, Kind.PHOTON)
   elseif lowercase(name) in leptons
     return Species(name, SUBATOMIC_SPECIES[name].charge,
       SUBATOMIC_SPECIES[name].mass,
       SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].mu,
+      SUBATOMIC_SPECIES[name].moment,
       0.0, Kind.LEPTON)
   else
     return Species(name, SUBATOMIC_SPECIES[name].charge,
       SUBATOMIC_SPECIES[name].mass,
       SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].mu,
+      SUBATOMIC_SPECIES[name].moment,
       0.0, Kind.HADRON)
   end
 end
@@ -327,21 +327,3 @@ function create_atomic_species(name::String, charge::Int, iso::Int)
 end
 
 
-#####################################################################
-# In the following code, standard base.getproperty functions are 
-# overridden
-#####################################################################
-"""
-This definition overrides Base.getproperty to disallow access to 
-the Species fields :mass and :charge via the dot syntax, i.e. 
-Species.mass or Species.charge"
-"""
-Base.getproperty
-
-function Base.getproperty(obj::Species, field::Symbol)
-  if field == :mass || field == :charge
-    error("Do not use the 'base.getproperty' syntax to access fields 
-    of Species objects: instead use the provided functions; massof,
-    and chargeof.")
-  end
-end

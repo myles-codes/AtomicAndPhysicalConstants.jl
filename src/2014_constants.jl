@@ -26,7 +26,6 @@ export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
 export SpeciesN
 
-using PyFormattedStrings
 using Dates
 using HTTP
 using JSON

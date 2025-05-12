@@ -26,6 +26,23 @@ end
 
 kindof(species::Species) = species.kind
 
+import Base: getproperty
+
+"""
+This definition overrides Base.getproperty to disallow access to 
+the Species fields :mass and :charge via the dot syntax, i.e. 
+Species.mass or Species.charge"
+"""
+getproperty
+
+function getproperty(obj::Species, field::Symbol)
+  if field == :mass || field == :charge
+    error("Do not use the 'base.getproperty' syntax to access fields 
+    of Species objects: instead use the provided functions; massof,
+    and chargeof.")
+  end
+end; export getproperty
+
 
 #####################################################################
 #####################################################################
@@ -40,7 +57,7 @@ SubatomicSpecies
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
 - `mass`              -- mass of the given particle in [eV/c^2]
-- `mu`  							-- magnetic moment of particle in [eV/T]
+- `moment`  							-- magnetic moment of particle in [eV/T]
 - `spin`              -- spin of the particle in [ħ]
 
 ## Notes:
@@ -56,7 +73,7 @@ struct SubatomicSpecies
   species_name::String              # common species_name of the particle
   charge::typeof(1.0u"e")                     # charge on the particle in units of e+
   mass::typeof(1.0u"MeV/c^2")                    # mass of the particle in [eV/c^2]
-  mu::typeof(1.0u"J/T")       # magnetic moment 
+  moment::typeof(1.0u"J/T")       # magnetic moment 
   spin::typeof(1.0u"h_bar")                    # spin magnetic moment in [ħ]
 end;
 
