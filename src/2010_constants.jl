@@ -158,7 +158,6 @@ const YEAR = 2010
 
 
 include("constructors.jl")
-include("overrides.jl")
 include("isotopes.jl")
 include("subatomic_species.jl")
 include("functions.jl")

@@ -57,7 +57,7 @@ SubatomicSpecies
 - `species_name`      -- String common name for (anti) baryon
 - `charge`            -- electric charge on the given particle in units of [e+]
 - `mass`              -- mass of the given particle in [eV/c^2]
-- `mu`  							-- magnetic moment of particle in [eV/T]
+- `moment`  							-- magnetic moment of particle in [eV/T]
 - `spin`              -- spin of the particle in [ħ]
 
 ## Notes:

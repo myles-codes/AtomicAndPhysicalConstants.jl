@@ -21,7 +21,6 @@ EnumX = "1"
 HTTP = "1"
 JSON = "0.21"
 Reexport = "1"
-Revise = "3.7.6"
 Unitful = "1"
 julia = "1.9"
 
