@@ -184,6 +184,7 @@ macro APCdef(kwargs...)
     # massof() and chargeof() return type
     masstype = typeof(1.0 * mass_unit)
     chargetype = typeof(1.0 * charge_unit)
+    spintype = typeof(1.0 * energy_unit * time_unit)
 
     return quote
       #massof and charge of
@@ -194,6 +195,11 @@ macro APCdef(kwargs...)
       function $(esc(:chargeof))(species::Species)::$chargetype
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, getfield(species, :charge))
+      end
+      function $(esc(:spinof))(species::Species)::$spintype
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return uconvert($energy_unit * $time_unit, getfield(species, :spin))
       end
 
       #added options for string input
@@ -206,6 +212,12 @@ macro APCdef(kwargs...)
         species = Species(speciesname)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, getfield(species, :charge))
+      end
+      function $(esc(:spinof))(species::Species)::$spintype
+        species = Species(speciesname)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return uconvert($energy_unit * $time_unit, getfield(species, :spin))
       end
 
       # define the named tuple that contains all the constants
@@ -237,6 +249,11 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, getfield(species, :charge)).val
       end
+      function $(esc(:spinof))(species::Species)::Float64
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
+      end
 
       #added options for string input
       function $(esc(:massof))(speciesname::String)::Float64
@@ -248,6 +265,12 @@ macro APCdef(kwargs...)
         species = Species(speciesname)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, getfield(species, :charge)).val
+      end
+      function $(esc(:spinof))(species::Species)::Float64
+        species = Species(speciesname)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
       end
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
@@ -279,6 +302,11 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
       end
+      function $(esc(:spinof))(species::Species)::DynamicQuantities.Quantity
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
+      end
       #added options for string input
       function $(esc(:massof))(speciesname::String)::DynamicQuantities.Quantity
         species = Species(speciesname)
@@ -289,6 +317,12 @@ macro APCdef(kwargs...)
         species = Species(speciesname)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
+      end
+      function $(esc(:spinof))(speciesname::String)::DynamicQuantities.Quantity
+        species = Species(speciesname)
+        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
+        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+        return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
       end
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
