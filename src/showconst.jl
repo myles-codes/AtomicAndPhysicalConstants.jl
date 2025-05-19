@@ -26,7 +26,7 @@ function showconst(query::Union{Symbol,String}=:constants)
 
         # this vector contains the names of the constants in symbols
         constants::Vector{Symbol} = filter(x ->
-                startswith(string(x), "__b_"), names(AtomicAndPhysicalConstants, all=true))
+                startswith(string(x), "__b_"), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
 
         for sym in constants
             value = eval(sym) # the value of the constant
@@ -54,7 +54,18 @@ function showconst(query::Union{Symbol,String}=:constants)
         return
     end
 
-    if (haskey(ATOMIC_SPECIES, string(query)))
+    if (haskey(SUBATOMIC_SPECIES, string(query)))
+      fields = fieldnames(SubatomicSpecies)
+      particle = SUBATOMIC_SPECIES[string(query)]
+      println("Particle: ",getfield(particle, fields[1]))
+      println("charge = ", getfield(particle, fields[2]),", ")
+      println("mass = ", getfield(particle, fields[3]),", ")
+      println("magnetic moment = ", getfield(particle, fields[4]),", ")
+      println("spin = ", getfield(particle, fields[5]))
+      
+
+
+    elseif (haskey(ATOMIC_SPECIES, string(query)))
         #the dictionary that stores all the isotopes
         dict = ATOMIC_SPECIES[string(query)].mass
         #sort the dictionary with isotopes mass number 

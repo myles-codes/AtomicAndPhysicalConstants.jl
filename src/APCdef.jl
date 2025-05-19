@@ -375,3 +375,24 @@ return charge of 'species' in current unit, or return the charge of the species 
 
 """
 chargeof
+
+#---------------------------------------------------------------------------------------------------
+# spinof
+
+"""
+    spinof(
+      species::Species,
+    )
+    spinof(
+      speciesname::String,
+    )
+
+## Description:
+return spin of 'species' in current unit, or return the charspinge of the species with 'speciesname' in current unit.
+
+## parameters:
+- `species`     -- type:`Species`, the species whose spin you want to know
+- `speciesname` -- type:`String`, the name of the species whose spin you want to know
+
+"""
+spinof
