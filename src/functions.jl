@@ -29,7 +29,20 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 
 function g_spin(species::Species)
-  return 2 * getfield(species, :mass) * getfield(species, :moment) / (getfield(species, :spin) * getfield(species, :charge))
+  if isdefined(Main, :UNITS)
+    
+    vtypes = [Kind.LEPTON, Kind.HADRON]
+    if getfield(species, :kind) ∉ vtypes
+      error("Only massive subatomic particles have available gyromagnetic factors in this package.")
+    end
+    m_s = uconvert(Main.UNITS.mass, getfield(species, :mass))
+    mu_s = uconvert(Main.UNITS.length^2 * Main.UNITS.charge / Main.UNITS.time, getfield(species, :moment))
+    spin_s = uconvert(Main.UNITS.action, getfield(species, :spin))
+    charge_s = uconvert(Main.UNITS.charge, getfield(species, :charge))
+    return 2 * m_s * mu_s / (spin_s * charge_s)
+  else
+    error("Please run @APCdef before you make a call to g_spin")
+  end
 end;
 
 
@@ -45,6 +58,10 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species)
+  vtypes = [Kind.LEPTON, Kind.HADRON]
+  if getfield(species, :kind) ∉ vtypes
+    error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+  end
   gs = g_spin(species)
   return (gs - 2) / 2
 end;
@@ -61,6 +78,7 @@ Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
 g_nucleon
 
 function g_nucleon(species::Species)
+
   Z = getfield(species, :charge).val
   m = getfield(species, :mass).val
   gs = g_spin(species)
