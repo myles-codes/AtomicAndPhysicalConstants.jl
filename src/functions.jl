@@ -109,7 +109,7 @@ function full_name(species::Species)
   else
     isostring = ""
     chargestring = ""
-    if species.iso > 0
+    if getfield(species, :iso) > 0
       isostring = "#" * "$(convert(Int64, species.iso))"
     end
     if getfield(species, :charge).val != 0
