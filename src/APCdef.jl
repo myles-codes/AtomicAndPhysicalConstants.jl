@@ -92,7 +92,7 @@ macro APCdef(kwargs...)
 
   # check whether @APCdef has been called by checking whether massof is in the namespace
   if names(Main, all=true) |> x -> :massof in x
-    @error "You can only call @APCdef once"
+    @error "You may only call @APCdef once"
     return
   end
 
@@ -100,6 +100,7 @@ macro APCdef(kwargs...)
   unittype::Symbol = :Float
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
+
 
   # a dictionary that maps the name of the key word variables to their value
   kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
@@ -159,7 +160,15 @@ macro APCdef(kwargs...)
     dimension(u"m") => length_unit,
     dimension(u"C") => charge_unit,
   )
-
+  unit_names::Dict{Symbol, Unitful.FreeUnits} = Dict(
+    :mass => mass_unit,
+    :length => length_unit,
+    :time => time_unit,
+    :energy => energy_unit,
+    :charge => charge_unit,
+    :velocity => length_unit / time_unit,
+    :action => energy_unit * time_unit
+  )
   # this vector contains the names of the all the constants in the module in symbols
   constants::Vector{Symbol} = filter(x -> (
       startswith(string(x), "__b_") && # the name starts with __b_
@@ -180,6 +189,7 @@ macro APCdef(kwargs...)
         constantsdict_unitful[constantname] = value
       end
     end
+
 
     # massof() and chargeof() return type
     masstype = typeof(1.0 * mass_unit)
@@ -220,8 +230,10 @@ macro APCdef(kwargs...)
         return uconvert($energy_unit * $time_unit, getfield(species, :spin))
       end
 
+      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_unitful))}(values($constantsdict_unitful))
+
     end
 
   elseif unittype == :Float #if the user wants Float quantity
@@ -238,6 +250,8 @@ macro APCdef(kwargs...)
         constantsdict_float[constantname] = value.val
       end
     end
+
+
 
     return quote
       #massof and charge of
@@ -272,8 +286,12 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
         return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
       end
+
+      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
+      
+
     end
   elseif unittype == :DynamicQuantities #if the user wants DynamicQuantities
 
@@ -291,6 +309,8 @@ macro APCdef(kwargs...)
         constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, value) # directly convert to DynamicQuantities
       end
     end
+
+    # constantsdict_dynamicquantities[:UNITS] = unitsystem
 
     return quote
       #massof and charge of
@@ -324,8 +344,11 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
         return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
       end
+
+      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
+      
 
     end
 
@@ -375,3 +398,24 @@ return charge of 'species' in current unit, or return the charge of the species 
 
 """
 chargeof
+
+#---------------------------------------------------------------------------------------------------
+# spinof
+
+"""
+    spinof(
+      species::Species,
+    )
+    spinof(
+      speciesname::String,
+    )
+
+## Description:
+return spin of 'species' in current unit, or return the charspinge of the species with 'speciesname' in current unit.
+
+## parameters:
+- `species`     -- type:`Species`, the species whose spin you want to know
+- `speciesname` -- type:`String`, the name of the species whose spin you want to know
+
+"""
+spinof
