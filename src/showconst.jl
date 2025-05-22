@@ -58,10 +58,10 @@ function showconst(query::Union{Symbol,String}=:constants)
       fields = fieldnames(SubatomicSpecies)
       particle = SUBATOMIC_SPECIES[string(query)]
       println("Particle: ",getfield(particle, fields[1]))
-      println("charge = ", getfield(particle, fields[2]),", ")
-      println("mass = ", getfield(particle, fields[3]),", ")
-      println("magnetic moment = ", getfield(particle, fields[4]),", ")
-      println("spin = ", getfield(particle, fields[5]))
+      println("charge = ", uconvert(Main.UNITS.charge, getfield(particle, fields[2])),", ")
+      println("mass = ", uconvert(Main.UNITS.mass, getfield(particle, fields[3])),", ")
+      println("magnetic moment = ", uconvert(Main.UNITS.length^2 * Main.UNITS.charge / Main.UNITS.time,getfield(particle, fields[4])),", ")
+      println("spin = ", uconvert(Main.UNITS.action, getfield(particle, fields[5])))
       
 
 
