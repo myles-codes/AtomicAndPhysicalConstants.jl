@@ -72,10 +72,11 @@ function showconst(query::Union{Symbol,String}=:constants)
       #sort the dictionary with isotopes mass number 
       sorted_dict = sort(collect(dict))
       for (key, value) in sorted_dict
-        newv = uconvert(Main.UNITS.mass, $value)
         if key == -1
+          newv = uconvert(Main.UNITS.mass, value)
           println("- Species(\"$query\") : $newv")
         else
+          newv = uconvert(Main.UNITS.mass, value)
           println("- Species(\"#$key$query\") : $newv")
         end
       end
