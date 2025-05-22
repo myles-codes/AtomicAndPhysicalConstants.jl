@@ -24,7 +24,7 @@ function Species(speciesname::String)
   return SpeciesN(speciesname)
 end
 
-kindof(species::Species) = species.kind
+kindof(species::Species) = getfield(species, :kind)
 
 import Base: getproperty
 
