@@ -112,27 +112,6 @@ full_name
 
 
 
-function full_name(species::Species)
-  if haskey(SUBATOMIC_SPECIES, getfield(species, :name))
-    return getfield(species, :name)
-  else
-    isostring = ""
-    chargestring = ""
-    if getfield(species, :iso) > 0
-      isostring = "#" * "$(convert(Int64, species.iso))"
-    end
-    if getfield(species, :charge).val != 0
-      if getfield(species, :charge).val < 0
-        chargestring = "-$(convert(Int64, abs(getfield(species, :charge).val)))"
-      elseif getfield(species, :charge).val > 0
-        chargestring = "+$(convert(Int64, abs(getfield(species, :charge).val)))"
-
-      end
-    end
-    return isostring * getfield(species, :name) * chargestring
-  end
-end;
-
 
 
 
