@@ -59,16 +59,21 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 """ gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species)
-  vtypes = [Kind.LEPTON, Kind.HADRON]
-  if getfield(species, :name) == "electron" 
-    return parentmodule(@__MODULE__).__MODULE__.__b_electron_gyro_anom
-  elseif getfield(species, :name) == "muon"
-    return parentmodule(@__MODULE__).__MODULE.__b_muon_gyro_anom
-  elseif getfield(species, :kind) ∉ vtypes
-    error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+
+if isdefined(Main, :wrapper)
+    vtypes = [Kind.LEPTON, Kind.HADRON]
+    if getfield(species, :name) == "electron" 
+      return getfield(Main, Symbol(Main.wrapper)).ELECTRON_GYRO_ANOM
+    elseif getfield(species, :name) == "muon"
+      return getfield(Main, Symbol(Main.wrapper)).MUON_GYRO_ANOM
+    elseif getfield(species, :kind) ∉ vtypes
+      error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+    else
+      gs = abs(g_spin(species))
+    return (gs - 2) / 2
+    end
   else
-    gs = abs(g_spin(species))
-   return (gs - 2) / 2
+    error("Please run @APCdef before you make a call to gyromagnetic_anomaly")
   end
 end;
 
