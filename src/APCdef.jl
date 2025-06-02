@@ -507,3 +507,27 @@ return spin of 'species' in current unit, or return the charspinge of the specie
 
 """
 spinof
+
+#--------------------------------------------------------------------
+# nameof
+
+"""
+    nameof(
+      species::Species;
+      basename::Bool = false
+    )
+
+
+## Description:
+yields the name of the species as a string; in the case of a 
+subatomic particle you get the exact name; in the case of an atom 
+the default behavior is to return the full name, eg "#235U" for 
+Uranium 235, but if the kwarg 'basename' is set to 'true' nameof 
+would return just "U"
+
+## parameters:
+- `species`     --  type:`Species`, the species whose name you want to know
+- `basename` -- type:`Bool`, whether to include the isotope number and charge state of an atom.
+
+"""
+nameof
