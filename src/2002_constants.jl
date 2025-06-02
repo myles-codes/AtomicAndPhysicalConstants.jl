@@ -102,7 +102,10 @@ const __b_fine_structure = 0.0072973525643
 # fine structure constant
 
 
-
+const __b_electron_gyro_anom = 1.1596521859e-3
+# electron magnetic moment anomaly
+const __b_muon_gyro_anom = 1.16591981e-3
+# muon magnetic moment anomaly
 
 
 
