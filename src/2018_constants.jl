@@ -100,7 +100,10 @@ const __b_N_avogadro::Float64 = 6.02214076e23
 const __b_fine_structure::Float64 = 0.0072973525643
 # fine structure constant
 
-
+const __b_electron_gyro_anom = 1.15965218128e-3
+# electron magnetic moment anomaly
+const __b_muon_gyro_anom = 1.16592089e-3
+# muon magnetic moment anomaly
 
 
 

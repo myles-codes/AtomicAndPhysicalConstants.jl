@@ -34,7 +34,11 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "elementary charge" => Dict("__b_e_charge" => __b_e_charge),
     "atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
     "atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
-    "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV)
+    "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV),
+    "electron mag. mom. anomaly" => Dict("__b_electron_gyro_anom"),
+    "electron magnetic moment anomaly" => Dict("__b_electron_gyro_anom"),
+    "muon mag. mom. anomaly" => Dict("__b_muon_gyro_anom"),
+    "muon magnetic moment anomaly" => Dict("__b_muon_gyro_anom")
 )
 
 

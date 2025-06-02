@@ -100,7 +100,8 @@ macro APCdef(kwargs...)
   unittype::Symbol = :Float
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
-
+  wrapper::String = String(name)
+  
 
   # a dictionary that maps the name of the key word variables to their value
   kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
@@ -117,6 +118,7 @@ macro APCdef(kwargs...)
       else
         name = kwargdict[:name]
       end
+      wrapper = String(name)
     else
       @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
       return
@@ -230,6 +232,8 @@ macro APCdef(kwargs...)
         return uconvert($energy_unit * $time_unit, getfield(species, :spin))
       end
 
+      $(esc(:APCconsts)) = $wrapper
+
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_unitful))}(values($constantsdict_unitful))
@@ -287,9 +291,12 @@ macro APCdef(kwargs...)
         return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
       end
 
+      $(esc(:APCconsts)) = $wrapper
+
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
+
       
 
     end
@@ -345,9 +352,12 @@ macro APCdef(kwargs...)
         return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
       end
 
+      $(esc(:APCconsts)) = $wrapper
+
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
       $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
+
       
 
     end
