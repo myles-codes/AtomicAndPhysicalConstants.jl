@@ -225,11 +225,37 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
         return uconvert($charge_unit, getfield(species, :charge))
       end
-      function $(esc(:spinof))(species::Species)::$spintype
+      function $(esc(:spinof))(speciesname::String)::$spintype
         species = Species(speciesname)
         @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
         @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
         return uconvert($energy_unit * $time_unit, getfield(species, :spin))
+      end
+      function $(esc(:nameof))(species::Species; basename::Bool = false)
+        bname = getfield(species, :name)
+        isostr = ""
+        iso = Int(getfield(species, :iso))
+        chstr = ""
+        ch = Int(getfield(species, :charge).val)
+        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+        if getfield(species, :kind) ∈ ptypes
+          return bname
+        elseif getfield(species, :kind) == Kind.ATOM
+          if basename == true
+            return bname
+          else
+            if iso != -1
+              isostr = "#"*string(iso)
+            end
+            if ch > 0
+              chstr = "+"*string(ch)
+            elseif ch < 0
+              chstr = string(ch)
+            end
+            return isostr*bname*chstr
+          end
+        end
       end
 
       $(esc(:APCconsts)) = $wrapper
@@ -289,6 +315,32 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
         @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
         return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
+      end
+      function $(esc(:nameof))(species::Species; basename::Bool = false)
+        bname = getfield(species, :name)
+        isostr = ""
+        iso = Int(getfield(species, :iso))
+        chstr = ""
+        ch = Int(getfield(species, :charge).val)
+        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+        if getfield(species, :kind) ∈ ptypes
+          return bname
+        elseif getfield(species, :kind) == Kind.ATOM
+          if basename == true
+            return bname
+          else
+            if iso != -1
+              isostr = "#"*string(iso)
+            end
+            if ch > 0
+              chstr = "+"*string(ch)
+            elseif ch < 0
+              chstr = string(ch)
+            end
+            return isostr*bname*chstr
+          end
+        end
       end
 
       $(esc(:APCconsts)) = $wrapper
@@ -350,6 +402,32 @@ macro APCdef(kwargs...)
         @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
         @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
         return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
+      end
+      function $(esc(:nameof))(species::Species; basename::Bool = false)
+        bname = getfield(species, :name)
+        isostr = ""
+        iso = Int(getfield(species, :iso))
+        chstr = ""
+        ch = Int(getfield(species, :charge).val)
+        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+        if getfield(species, :kind) ∈ ptypes
+          return bname
+        elseif getfield(species, :kind) == Kind.ATOM
+          if basename == true
+            return bname
+          else
+            if iso != -1
+              isostr = "#"*string(iso)
+            end
+            if ch > 0
+              chstr = "+"*string(ch)
+            elseif ch < 0
+              chstr = string(ch)
+            end
+            return isostr*bname*chstr
+          end
+        end
       end
 
       $(esc(:APCconsts)) = $wrapper
@@ -429,3 +507,27 @@ return spin of 'species' in current unit, or return the charspinge of the specie
 
 """
 spinof
+
+#--------------------------------------------------------------------
+# nameof
+
+"""
+    nameof(
+      species::Species;
+      basename::Bool = false
+    )
+
+
+## Description:
+yields the name of the species as a string; in the case of a 
+subatomic particle you get the exact name; in the case of an atom 
+the default behavior is to return the full name, eg "#235U" for 
+Uranium 235, but if the kwarg 'basename' is set to 'true' nameof 
+would return just "U"
+
+## parameters:
+- `species`     --  type:`Species`, the species whose name you want to know
+- `basename` -- type:`Bool`, whether to include the isotope number and charge state of an atom.
+
+"""
+nameof
