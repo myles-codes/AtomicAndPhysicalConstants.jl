@@ -232,7 +232,7 @@ macro APCdef(kwargs...)
         return uconvert($energy_unit * $time_unit, getfield(species, :spin))
       end
 
-      $(esc(:wrapper)) = $wrapper
+      $(esc(:APCconsts)) = $wrapper
 
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
@@ -291,7 +291,7 @@ macro APCdef(kwargs...)
         return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
       end
 
-      $(esc(:wrapper)) = $wrapper
+      $(esc(:APCconsts)) = $wrapper
 
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
@@ -352,7 +352,7 @@ macro APCdef(kwargs...)
         return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
       end
 
-      $(esc(:wrapper)) = $wrapper
+      $(esc(:APCconsts)) = $wrapper
 
       $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
       # define the named tuple that contains all the constants
