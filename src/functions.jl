@@ -26,7 +26,7 @@ end;
 
 Compute and return the value of g_s for a particle in [1/(T*s)] == [C/kg]
 For atomic particles, will currently return 0. Will be updated in a future patch
-"""
+""" g_spin
 
 function g_spin(species::Species)
   if isdefined(Main, :UNITS)
@@ -56,16 +56,20 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 
 # Arguments:
 1. `gs::Float64': the g_factor for the particle
-"""
-gyromagnetic_anomaly
+""" gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species)
   vtypes = [Kind.LEPTON, Kind.HADRON]
-  if getfield(species, :kind) ∉ vtypes
+  if getfield(species, :name) == "electron" 
+    return parentmodule(@__MODULE__).__MODULE__.__b_electron_gyro_anom
+  elseif getfield(species, :name) == "muon"
+    return parentmodule(@__MODULE__).__MODULE.__b_muon_gyro_anom
+  elseif getfield(species, :kind) ∉ vtypes
     error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+  else
+    gs = abs(g_spin(species))
+   return (gs - 2) / 2
   end
-  gs = abs(g_spin(species))
-  return (gs - 2) / 2
 end;
 
 
