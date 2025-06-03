@@ -97,7 +97,7 @@ To construct an atomic species, include these components in `name`:
     - "++" for double positive charge
     - "+n" or "n+" for n positive charges
     - "-" for single negative charge
-    - "--" for double negative charge
+    - "-\-" for double negative charge
     - "-n" or "n-" for n negative charges
     - Defaults to 0 if not specified
 - Add "anti-" prefix to construct an anti-atom
@@ -111,39 +111,10 @@ julia> Species("Al+3")   # Average Aluminum with 3 positive charge
 julia> Species("anti-H") # Anti-hydrogen
 ```
 
-## Species Functions
-
-Species functions each take a `Species` as their parameter and return a specific property. Here are the available functions:
-
-- `massof()`
-- `chargeof()`
-- `atomicnumber()`
-- `fullname()`
-- `g_spin()`
-    - ``g = \frac{2m\mu }{Sq}``
-    - ``g`` is gyromagnetic ratio
-    - ``m`` is species mass
-    - ``\mu`` is the species magnetic moment
-    - ``S`` is the species spin
-    - ``q`` is the species charge
-- `gyromagnetic_anomaly()`
-    - ``g_a = \frac{g-2}{2}``
-    - ``g_a`` is the gyromagnetic anomaly for a lepton
-    - ``g`` is the gyromagnetic ratio
-- `g_nucleon()`
-    - ``g_n = \frac{g Zm_p}{m}``
-    - ``g_n`` is the gyromagnetic anomaly for a baryon
-    - ``g`` is the gyromagnetic ratio
-    - ``Z`` is the species charge
-    - ``m_p`` is the mass of a proton
-    - ``m`` is species mass
-
-**Note**: You must call `@APCdef` before using `massof()` or `chargeof()`.
-
 ## List of Available Subatomic Species
 
 - `anti-deuteron`
-- `anti-electron` same as `positron`
+- `anti-electron` or `positron`
 - `anti-neutron`
 - `anti-proton`
 - `anti-muon`

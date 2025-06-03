@@ -10,6 +10,7 @@ makedocs(
     "Setting Units: APCdef" => "units.md",
     "Constants" => "constants.md",
     "Species" => "species.md",
+    "Species Functions" => "species_functions.md",
     "Helper Functions" => "helper_functions.md"
   ]
 )
