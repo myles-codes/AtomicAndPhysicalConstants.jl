@@ -7,19 +7,16 @@ Species functions each take a `Species` as their parameter and return a specific
 - `atomicnumber(::Species)`
 - `fullname(::Species)`
 - `g_spin(::Species)`
-    - ``g = \frac{2m\mu }{Sq}``
-    - ``g`` is gyromagnetic ratio
+    - ``g_spin = 2 m mu / S q`` is gyromagnetic ratio with:
     - ``m`` is species mass
-    - ``\mu`` is the species magnetic moment
+    - ``mu`` is the species magnetic moment
     - ``S`` is the species spin
     - ``q`` is the species charge
 - `gyromagnetic_anomaly(::Species)`
-    - ``g_a = \frac{g-2}{2}``
-    - ``g_a`` is the gyromagnetic anomaly for a lepton
+    - ``gyromagnetic_anomaly = (g-2)/2`` is the gyromagnetic anomaly with:
     - ``g`` is the gyromagnetic ratio
 - `g_nucleon(::Species)`
-    - ``g_n = \frac{g Zm_p}{m}``
-    - ``g_n`` is the gyromagnetic anomaly for a baryon
+    - ``g_nucleon = g Z m_p / m`` is the gyromagnetic anomaly for a baryon with:
     - ``g`` is the gyromagnetic ratio
     - ``Z`` is the species charge
     - ``m_p`` is the mass of a proton
