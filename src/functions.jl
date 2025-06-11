@@ -29,7 +29,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 g_spin
 
-function g_spin(species::Species)
+function g_spin(species::Species; signed::Bool=true)
   if isdefined(Main, :UNITS)
 
     vtypes = [Kind.LEPTON, Kind.HADRON]
@@ -39,8 +39,11 @@ function g_spin(species::Species)
     m_s = uconvert(u"MeV/c^2", getfield(species, :mass))
     mu_s = uconvert(u"m^2 * C / s", getfield(species, :moment))
     spin_s = getfield(species, :spin).val # since we store spin in units [ħ], we just want the half/integer
-    charge_s = abs(uconvert(u"C", getfield(species, :charge)))
-
+    if signed == true
+      charge_s = uconvert(u"C", getfield(species, :charge))
+    else
+      charge_s = abs(uconvert(u"C", getfield(species, :charge)))
+    end
     gs = uconvert(u"h_bar", 2 * m_s * mu_s / (spin_s * charge_s)).val
     return gs
   else
@@ -60,7 +63,7 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 """
 gyromagnetic_anomaly
 
-function gyromagnetic_anomaly(species::Species)
+function gyromagnetic_anomaly(species::Species; signed::Bool=true)
 
   if isdefined(Main, :APCconsts)
     vtypes = [Kind.LEPTON, Kind.HADRON]
@@ -71,7 +74,11 @@ function gyromagnetic_anomaly(species::Species)
     elseif getfield(species, :kind) ∉ vtypes
       error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
     else
-      gs = abs(g_spin(species))
+      if signed == true
+        gs = g_spin(species)
+      else
+        gs = abs(g_spin(species))
+      end
       return (gs - 2) / 2
     end
   else
@@ -92,12 +99,12 @@ g_nucleon
 
 function g_nucleon(species::Species)
 
-  Z = getfield(species, :charge).val
+  e = 1u"h_bar"
   m = getfield(species, :mass).val
   gs = g_spin(species)
   m_p = getfield(Species("proton"), :mass).val
 
-  return gs * Z * m_p / m
+  return gs * e * m_p / m
 end;
 
 
