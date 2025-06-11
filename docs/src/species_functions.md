@@ -7,9 +7,9 @@ Species functions each take a `Species` as their parameter and return a specific
 - `atomicnumber(::Species)`
 - `fullname(::Species)`
 - `g_spin(::Species)`
-    - ``g_spin = 2 m mu / S q`` is gyromagnetic ratio with:
+    - ``g\_spin = 2 m \mu / S q`` is gyromagnetic ratio with:
     - ``m`` is species mass
-    - ``mu`` is the species magnetic moment
+    - ``\mu`` is the species magnetic moment
     - ``S`` is the species spin
     - ``q`` is the species charge
 - `gyromagnetic_anomaly(::Species)`
