@@ -26,11 +26,12 @@ end;
 
 Compute and return the value of g_s for a particle in [1/(T*s)] == [C/kg]
 For atomic particles, will currently return 0. Will be updated in a future patch
-""" g_spin
+"""
+g_spin
 
 function g_spin(species::Species)
   if isdefined(Main, :UNITS)
-    
+
     vtypes = [Kind.LEPTON, Kind.HADRON]
     if getfield(species, :kind) ∉ vtypes
       error("Only massive subatomic particles have available gyromagnetic factors in this package.")
@@ -56,13 +57,14 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 
 # Arguments:
 1. `gs::Float64': the g_factor for the particle
-""" gyromagnetic_anomaly
+"""
+gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species)
 
-if isdefined(Main, :APCconsts)
+  if isdefined(Main, :APCconsts)
     vtypes = [Kind.LEPTON, Kind.HADRON]
-    if getfield(species, :name) == "electron" 
+    if getfield(species, :name) == "electron"
       return getfield(Main, Symbol(Main.APCconsts)).ELECTRON_GYRO_ANOM
     elseif getfield(species, :name) == "muon"
       return getfield(Main, Symbol(Main.APCconsts)).MUON_GYRO_ANOM
@@ -70,7 +72,7 @@ if isdefined(Main, :APCconsts)
       error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
     else
       gs = abs(g_spin(species))
-    return (gs - 2) / 2
+      return (gs - 2) / 2
     end
   else
     error("Please run @APCdef before you make a call to gyromagnetic_anomaly")
@@ -145,5 +147,30 @@ function find_superscript(num::Int64)
   return sup
 end
 
-
+"""
+    to_openPMD(val::Unitful.Quantity)
+## Description:
+Convert a Unitful.Quantity to a format suitable for openPMD.
+Returns a tuple where the first element is the value in SI units
+and the second element is a 7-tuple of  powers of the 7 base measures
+characterizing the record's unit in SI 
+(length L, mass M, time T, electric current I, thermodynamic temperature theta, amount of substance N, luminous intensity J)
+"""
+function to_openPMD(val::Unitful.Quantity)
+  # convert the type to DynamicQuantities, which automatically converts to SI units
+  # multiplying by 1.0 ensures that the value is converted to a float
+  v = convert(DynamicQuantities.Quantity, val * 1.0)
+  return (
+    DynamicQuantities.ustrip(v),
+    (
+      DynamicQuantities.ulength(v),
+      DynamicQuantities.umass(v),
+      DynamicQuantities.utime(v),
+      DynamicQuantities.ucurrent(v),
+      DynamicQuantities.utemperature(v),
+      DynamicQuantities.uamount(v),
+      DynamicQuantities.uluminosity(v)
+    )
+  )
+end
 
