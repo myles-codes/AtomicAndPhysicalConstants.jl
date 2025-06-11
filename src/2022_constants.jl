@@ -9,7 +9,7 @@ module CODATA2022
 
 
 
-
+import Base: nameof
 
 
 export @APCdef
@@ -22,7 +22,7 @@ export ATOMIC_SPECIES
 export useCODATA
 export NewUnits
 export showconst
-export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon
+export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon, to_openPMD
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
 export SpeciesN

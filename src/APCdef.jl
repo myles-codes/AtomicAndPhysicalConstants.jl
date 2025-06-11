@@ -100,11 +100,15 @@ macro APCdef(kwargs...)
   unittype::Symbol = :Float
   unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
+  tupleflag::Bool = true # whether return the constants in a tuple or not
+
+
+  # initialize wrapper
   wrapper::String = String(name)
-  
+
 
   # a dictionary that maps the name of the key word variables to their value
-  kwargdict::Dict{Symbol,Symbol} = Dict(map(t -> Pair(t.args...), kwargs))
+  kwargdict::Dict{Symbol,Union{Symbol,Bool}} = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
   for k in keys(kwargdict)
@@ -119,6 +123,13 @@ macro APCdef(kwargs...)
         name = kwargdict[:name]
       end
       wrapper = String(name)
+    elseif k == :tupleflag
+      if kwargdict[:tupleflag] isa Bool
+        tupleflag = kwargdict[:tupleflag]
+      else
+        @error "tupleflag should be a boolean value"
+        return
+      end
     else
       @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
       return
@@ -149,6 +160,8 @@ macro APCdef(kwargs...)
     error("unit for charge does not have proper dimension")
   end
 
+  spin_unit::Unitful.FreeUnits = energy_unit * time_unit # spin unit is energy * time, which is the same as h_bar
+
   # this dictionary maps the dimension of the unit to the target unit that it should convert to
   conversion = Dict(
     dimension(u"kg") => mass_unit,
@@ -162,7 +175,7 @@ macro APCdef(kwargs...)
     dimension(u"m") => length_unit,
     dimension(u"C") => charge_unit,
   )
-  unit_names::Dict{Symbol, Unitful.FreeUnits} = Dict(
+  unit_names::Dict{Symbol,Unitful.FreeUnits} = Dict(
     :mass => mass_unit,
     :length => length_unit,
     :time => time_unit,
@@ -178,270 +191,153 @@ macro APCdef(kwargs...)
       (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
     ), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
 
+  constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
+
+  # create a dictionary that contains all the constants in the module
+  # convert the constants to the proper unit
+  constantsdict::constantdict_type = Dict()
+  for sym in constants
+    value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
+    constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
+    if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
+      constantsdict[constantname] = uconvert(conversion[dimension(value)], value) # convert them to proper unit
+    else
+      constantsdict[constantname] = value
+    end
+  end
+
+  # convert the constantsdict to the proper type based on the unittype
+
   if unittype == :Unitful #suppose the user demand unitful quantity
 
-    constantsdict_unitful::Dict{Symbol,Union{Unitful.Quantity,Float64}} = Dict()
-
-    for sym in constants
-      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
-      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
-      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-        constantsdict_unitful[constantname] = uconvert(conversion[dimension(value)], value) # convert them to proper unit
-      else
-        constantsdict_unitful[constantname] = value
-      end
-    end
-
-
-    # massof() and chargeof() return type
-    masstype = typeof(1.0 * mass_unit)
-    chargetype = typeof(1.0 * charge_unit)
-    spintype = typeof(1.0 * energy_unit * time_unit)
-
-    return quote
-      #massof and charge of
-      function $(esc(:massof))(species::Species)::$masstype
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, getfield(species, :mass))
-      end
-      function $(esc(:chargeof))(species::Species)::$chargetype
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, getfield(species, :charge))
-      end
-      function $(esc(:spinof))(species::Species)::$spintype
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return uconvert($energy_unit * $time_unit, getfield(species, :spin))
-      end
-
-      #added options for string input
-      function $(esc(:massof))(speciesname::String)::$masstype
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, getfield(species, :mass))
-      end
-      function $(esc(:chargeof))(speciesname::String)::$chargetype
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, getfield(species, :charge))
-      end
-      function $(esc(:spinof))(speciesname::String)::$spintype
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return uconvert($energy_unit * $time_unit, getfield(species, :spin))
-      end
-      function $(esc(:nameof))(species::Species; basename::Bool = false)
-        bname = getfield(species, :name)
-        isostr = ""
-        iso = Int(getfield(species, :iso))
-        chstr = ""
-        ch = Int(getfield(species, :charge).val)
-        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
-        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
-        if getfield(species, :kind) ∈ ptypes
-          return bname
-        elseif getfield(species, :kind) == Kind.ATOM
-          if basename == true
-            return bname
-          else
-            if iso != -1
-              isostr = "#"*string(iso)
-            end
-            if ch > 0
-              chstr = "+"*string(ch)
-            elseif ch < 0
-              chstr = string(ch)
-            end
-            return isostr*bname*chstr
-          end
-        end
-      end
-
-      $(esc(:APCconsts)) = $wrapper
-
-      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
-      # define the named tuple that contains all the constants
-      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_unitful))}(values($constantsdict_unitful))
-
-    end
+  # no need to convert the constantsdict_unitful, since it is already in Unitful.Quantity type
 
   elseif unittype == :Float #if the user wants Float quantity
-    constantsdict_float::Dict{Symbol,Float64} = Dict()
+    constantsdict_float::constantdict_type = Dict()
 
-    for sym in constants
-      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
-      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
-      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-        constantsdict_float[constantname] = uconvert(conversion[dimension(value)], value).val
-      elseif value isa Float64
+    for (constantname, value) in constantsdict
+      if value isa Float64
         constantsdict_float[constantname] = value # If the value does not have unit, such as Avogadro's number
       else
         constantsdict_float[constantname] = value.val
       end
     end
+    constantsdict = constantsdict_float
 
-
-
-    return quote
-      #massof and charge of
-      function $(esc(:massof))(species::Species)::Float64
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, getfield(species, :mass)).val
-      end
-      function $(esc(:chargeof))(species::Species)::Float64
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, getfield(species, :charge)).val
-      end
-      function $(esc(:spinof))(species::Species)::Float64
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
-      end
-
-      #added options for string input
-      function $(esc(:massof))(speciesname::String)::Float64
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return uconvert($mass_unit, getfield(species, :mass)).val
-      end
-      function $(esc(:chargeof))(speciesname::String)::Float64
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return uconvert($charge_unit, getfield(species, :charge)).val
-      end
-      function $(esc(:spinof))(species::Species)::Float64
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object"
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return uconvert($energy_unit * $time_unit, getfield(species, :spin)).val
-      end
-      function $(esc(:nameof))(species::Species; basename::Bool = false)
-        bname = getfield(species, :name)
-        isostr = ""
-        iso = Int(getfield(species, :iso))
-        chstr = ""
-        ch = Int(getfield(species, :charge).val)
-        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
-        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
-        if getfield(species, :kind) ∈ ptypes
-          return bname
-        elseif getfield(species, :kind) == Kind.ATOM
-          if basename == true
-            return bname
-          else
-            if iso != -1
-              isostr = "#"*string(iso)
-            end
-            if ch > 0
-              chstr = "+"*string(ch)
-            elseif ch < 0
-              chstr = string(ch)
-            end
-            return isostr*bname*chstr
-          end
-        end
-      end
-
-      $(esc(:APCconsts)) = $wrapper
-
-      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
-      # define the named tuple that contains all the constants
-      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_float))}(values($constantsdict_float))
-
-      
-
-    end
   elseif unittype == :DynamicQuantities #if the user wants DynamicQuantities
 
     @warn "DynamicQuantities will only return units in SI units"
-    constantsdict_dynamicquantities::Dict{Symbol,Union{Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}} = Dict()
 
-    for sym in constants
-      value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
-      constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
-      if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
-        constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, uconvert(conversion[dimension(value)], value))
-      elseif value isa Float64
+    constantsdict_dynamicquantities::constantdict_type = Dict()
+
+    for (constantname, value) in constantsdict
+      if value isa Float64
         constantsdict_dynamicquantities[constantname] = value # If the value does not have unit, such as Avogadro's number
       else
         constantsdict_dynamicquantities[constantname] = convert(DynamicQuantities.Quantity, value) # directly convert to DynamicQuantities
       end
     end
-
-    # constantsdict_dynamicquantities[:UNITS] = unitsystem
-
-    return quote
-      #massof and charge of
-      function $(esc(:massof))(species::Species)::DynamicQuantities.Quantity
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, getfield(species, :mass)))
-      end
-      function $(esc(:chargeof))(species::Species)::DynamicQuantities.Quantity
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
-      end
-      function $(esc(:spinof))(species::Species)::DynamicQuantities.Quantity
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
-      end
-      #added options for string input
-      function $(esc(:massof))(speciesname::String)::DynamicQuantities.Quantity
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($mass_unit, getfield(species, :mass)))
-      end
-      function $(esc(:chargeof))(speciesname::String)::DynamicQuantities.Quantity
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object"
-        return convert(DynamicQuantities.Quantity, uconvert($charge_unit, getfield(species, :charge)))
-      end
-      function $(esc(:spinof))(speciesname::String)::DynamicQuantities.Quantity
-        species = Species(speciesname)
-        @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
-        @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
-        return convert(DynamicQuantities.Quantity, uconvert($spin_unit * $time_unit, getfield(species, spin)))
-      end
-      function $(esc(:nameof))(species::Species; basename::Bool = false)
-        bname = getfield(species, :name)
-        isostr = ""
-        iso = Int(getfield(species, :iso))
-        chstr = ""
-        ch = Int(getfield(species, :charge).val)
-        ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
-        @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
-        if getfield(species, :kind) ∈ ptypes
-          return bname
-        elseif getfield(species, :kind) == Kind.ATOM
-          if basename == true
-            return bname
-          else
-            if iso != -1
-              isostr = "#"*string(iso)
-            end
-            if ch > 0
-              chstr = "+"*string(ch)
-            elseif ch < 0
-              chstr = string(ch)
-            end
-            return isostr*bname*chstr
-          end
-        end
-      end
-
-      $(esc(:APCconsts)) = $wrapper
-
-      $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
-      # define the named tuple that contains all the constants
-      $(esc(name)) = NamedTuple{Tuple(keys($constantsdict_dynamicquantities))}(values($constantsdict_dynamicquantities))
-
-      
-
-    end
-
+    constantsdict = constantsdict_dynamicquantities
   else
     error("`unittype` should be one of Float, Unitful, DynamicQuantities")
+  end
+
+  # whether to return the constants in a tuple or not
+  tuple_statement = begin
+    if tupleflag
+      quote
+        $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
+      end
+    else
+      Expr(:block, [:($(esc(key)) = $(value)) for (key, value) in constantsdict]...)
+    end
+  end
+
+  return quote
+
+    $(esc(:APCconsts)) = $wrapper
+
+    $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
+
+    $(tuple_statement)
+
+    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
+  end
+
+end
+
+
+function generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit)
+  # assert that the unittype is one of Float, Unitful, DynamicQuantities
+  @assert unittype in [:Float, :Unitful, :DynamicQuantities] "unittype should be one of Float, Unitful, DynamicQuantities"
+  # assert that the mass_unit, charge_unit, spin_unit are of proper dimension
+  if dimension(mass_unit) != dimension(u"kg")
+    error("unit for mass does not have proper dimension")
+  end
+  if dimension(charge_unit) != dimension(u"C")
+    error("unit for charge does not have proper dimension")
+  end
+  if dimension(spin_unit) != dimension(u"h_bar")
+    error("unit for charge does not have proper dimension")
+  end
+
+  # name of the return type
+  typename = begin
+    if unittype == :Float
+      :Float64
+    elseif unittype == :Unitful
+      :Unitful.Quantity
+    elseif unittype == :DynamicQuantities
+      :DynamicQuantities.Quantity
+    end
+  end
+
+  # return statement of the function
+  return_statement = (unit, field) -> begin
+    if unittype == :Float
+      return quote
+        return uconvert($unit, getfield(species, Symbol($field))).val
+      end
+    elseif unittype == :Unitful
+      return quote
+        return uconvert($unit, getfield(species, Symbol($field)))
+      end
+    elseif unittype == :DynamicQuantities
+      return quote
+        return convert(DynamicQuantities.Quantity, uconvert($unit, getfield(species, Symbol($field))))
+      end
+    end
+  end
+  return quote
+    function $(esc(:spinof))(species::Species)::$(typename)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
+      @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+      $(return_statement(spin_unit, "spin"))
+    end
+    function $(esc(:spinof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
+      @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+      $(return_statement(spin_unit, "spin"))
+    end
+    function $(esc(:massof))(species::Species)::$(typename)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object."
+      $(return_statement(mass_unit, "mass"))
+    end
+    function $(esc(:massof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object."
+      $(return_statement(mass_unit, "mass"))
+    end
+    function $(esc(:chargeof))(species::Species)::$(typename)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
+      $(return_statement(charge_unit, "charge"))
+    end
+    function $(esc(:chargeof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
+      $(return_statement(charge_unit, "charge"))
+    end
   end
 end
 
@@ -511,11 +407,13 @@ spinof
 #--------------------------------------------------------------------
 # nameof
 
+import Base: nameof
+
 """
-    nameof(
-      species::Species;
-      basename::Bool = false
-    )
+  nameof(
+    species::Species;
+    basename::Bool = false
+  )
 
 
 ## Description:
@@ -531,3 +429,32 @@ would return just "U"
 
 """
 nameof
+
+
+
+function nameof(species::Species; basename::Bool=false)
+  bname = getfield(species, :name)
+  isostr = ""
+  iso = Int(getfield(species, :iso))
+  chstr = ""
+  ch = Int(getfield(species, :charge).val)
+  ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+  @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+  if getfield(species, :kind) ∈ ptypes
+    return bname
+  elseif getfield(species, :kind) == Kind.ATOM
+    if basename == true
+      return bname
+    else
+      if iso != -1
+        isostr = "#" * string(iso)
+      end
+      if ch > 0
+        chstr = "+" * string(ch)
+      elseif ch < 0
+        chstr = string(ch)
+      end
+      return isostr * bname * chstr
+    end
+  end
+end
