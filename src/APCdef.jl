@@ -338,6 +338,32 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
       @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
       $(return_statement(charge_unit, "charge"))
     end
+    function $(esc(:nameof))(species::Species; basename::Bool=false)::String
+      @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+      bname = getfield(species, :name)
+      isostr = ""
+      iso = Int(getfield(species, :iso))
+      chstr = ""
+      ch = Int(getfield(species, :charge).val)
+      ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+      if getfield(species, :kind) ∈ ptypes
+        return bname
+      elseif getfield(species, :kind) == Kind.ATOM
+        if basename == true
+          return bname
+        else
+          if iso != -1
+            isostr = "#" * string(iso)
+          end
+          if ch > 0
+            chstr = "+" * string(ch)
+          elseif ch < 0
+            chstr = string(ch)
+          end
+          return isostr * bname * chstr
+        end
+      end
+    end
   end
 end
 
@@ -403,58 +429,3 @@ return spin of 'species' in current unit, or return the charspinge of the specie
 
 """
 spinof
-
-#--------------------------------------------------------------------
-# nameof
-
-import Base: nameof
-
-"""
-  nameof(
-    species::Species;
-    basename::Bool = false
-  )
-
-
-## Description:
-yields the name of the species as a string; in the case of a 
-subatomic particle you get the exact name; in the case of an atom 
-the default behavior is to return the full name, eg "#235U" for 
-Uranium 235, but if the kwarg 'basename' is set to 'true' nameof 
-would return just "U"
-
-## parameters:
-- `species`     --  type:`Species`, the species whose name you want to know
-- `basename` -- type:`Bool`, whether to include the isotope number and charge state of an atom.
-
-"""
-nameof
-
-
-
-function nameof(species::Species; basename::Bool=false)
-  bname = getfield(species, :name)
-  isostr = ""
-  iso = Int(getfield(species, :iso))
-  chstr = ""
-  ch = Int(getfield(species, :charge).val)
-  ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
-  @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
-  if getfield(species, :kind) ∈ ptypes
-    return bname
-  elseif getfield(species, :kind) == Kind.ATOM
-    if basename == true
-      return bname
-    else
-      if iso != -1
-        isostr = "#" * string(iso)
-      end
-      if ch > 0
-        chstr = "+" * string(ch)
-      elseif ch < 0
-        chstr = string(ch)
-      end
-      return isostr * bname * chstr
-    end
-  end
-end

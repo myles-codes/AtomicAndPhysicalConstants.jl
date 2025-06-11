@@ -173,4 +173,3 @@ function to_openPMD(val::Unitful.Quantity)
     )
   )
 end
-

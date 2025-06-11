@@ -8,6 +8,9 @@
 #####################################################################
 #####################################################################
 
+# precompile regEx
+
+const anti_regEx = r"Anti\-|anti\-|Anti|anti"
 
 """
 		subatomic_particle(name::String)
@@ -21,13 +24,13 @@ subatomic_particle
 function subatomic_particle(name::String)
   # write the particle out directly
   leptons = ["electron", "positron", "muon", "anti-muon"]
-  if lowercase(name) == "photon"
+  if name == "photon"
     return Species(name, SUBATOMIC_SPECIES[name].charge,
       SUBATOMIC_SPECIES[name].mass,
       SUBATOMIC_SPECIES[name].spin,
       SUBATOMIC_SPECIES[name].moment,
       0.0, Kind.PHOTON)
-  elseif lowercase(name) in leptons
+  elseif name in leptons
     return Species(name, SUBATOMIC_SPECIES[name].charge,
       SUBATOMIC_SPECIES[name].mass,
       SUBATOMIC_SPECIES[name].spin,
@@ -128,19 +131,19 @@ function SpeciesN(speciesname::String)
 
   # by checking for the anti- prefix, we can determine if the particle is an anti-particle
   # anti is true for anti-particles
-  anti::Bool = occursin(r"Anti\-|anti\-|Anti|anti", name)
+  anti::Bool = occursin(anti_regEx, name)
   # if the particle is an anti-particle, remove the prefix for easier lookup
-  name = replace(name, r"Anti\-|anti\-|Anti|anti" => "")
+  name = replace(name, anti_regEx => "")
 
   for (k, _) in SUBATOMIC_SPECIES
     # whether the particle is in the subatomic species dictionary
-    if occursin(k, lowercase(name))
+    if occursin(k, name)
       # whether the particle name only contains characters in the subatomic species dictionary
       # delete all the names and spaces, there should be nothing left
-      @assert isempty(replace(replace(name, k => ""), " " => ""))
+      @assert length(k) == length(name)
       "$speciesname should contain only the name of the subatomic particle"
       if anti
-        if lowercase(k) == "electron"
+        if k == "electron"
           return subatomic_particle("positron")
         end
         return subatomic_particle("anti-" * k)
@@ -155,8 +158,27 @@ function SpeciesN(speciesname::String)
   # the first index of the atomic symbol
   index::Int64 = 0
 
+  function normalize_superscripts(str::String)
+    buf = IOBuffer()
+    for c in str
+      if haskey(SUPERSCRIPT_MAP, c)
+        print(buf, SUPERSCRIPT_MAP[c])  # write digit
+      elseif c == '⁺' # superscript +
+        print(buf, '+')  # write ASCII +
+      elseif c == '⁻' # superscript -
+        print(buf, '-')  # write ASCII -
+      elseif c == ' ' # remove spaces
+        continue
+      else
+        print(buf, c)  # preserve original char
+      end
+    end
+    return String(take!(buf))
+  end
+  name = normalize_superscripts(name)
+
   # if the particle is not in the subatomic species dictionary, check the atomic species dictionary
-  for k in sort(collect(keys(ATOMIC_SPECIES)), by=length, rev=true) #  sort by length to find the longest match first
+  for k in sorted_list_of_atomic_symbols #  sort by length to find the longest match first
     # whether the particle is in the atomic species dictionary
     if occursin(k, name)
       atom = k
@@ -171,43 +193,19 @@ function SpeciesN(speciesname::String)
   #check for the isotope 
 
   #the substring before the symbol
-  left::String = ""
-  try
-    left = name[1:index-1]
-  catch
-    try
-      left = name[1:index-2] #if unicode takes 2 bytes
-    catch
-      try
-        left = name[1:index-3] #if unicode takes 3 bytes
-      catch
-        left = name[1:index-4] #if unicode takes 3 bytes
-      end
-    end
-  end
-  #the substring after the symbol
-  right::String = name[index+length(atom):end]
+  left::String = name[1:index-1]
 
   iso::Int64 = 0
 
   #if the user choose to put isotope in the front 
   if left != ""
-    # Check if the left string is of the correct form
-    @assert occursin(r"^(#[0-9]+|[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$", left) "The isotope specification in $speciesname should either be a '#' followed by normal numbers or pure Unicode superscript numbers."
     #if the left string starts with #, delete the #
     if left[1] == '#'
       left = left[2:end]
     end
-    # the substring should include only digits or unicode superscript
-    @assert occursin(r"^[0-9⁰¹²³⁴⁵⁶⁷⁸⁹]+$", left) "To specify isotope, you should only include 
-    numbers or superscript numbers before the atomic symbol in $speciesname"
     # convert the isotope to an integer
     for c in left
-      if haskey(SUPERSCRIPT_MAP, c)
-        iso = iso * 10 + SUPERSCRIPT_MAP[c]
-      else
-        iso = iso * 10 + parse(Int64, c)
-      end
+      iso = iso * 10 + parse(Int64, c)
     end
     @assert haskey(ATOMIC_SPECIES[atom].mass, iso) "$iso is not a valid isotope of $atom"
   end
@@ -218,20 +216,14 @@ function SpeciesN(speciesname::String)
   end
 
   #now try to parse the charge
-  right = replace(right, " " => "") # remove all the spaces
-  right = replace(right, "⁺" => "+") # change superscript + to ASCII
-  right = replace(right, "⁻" => "-") # change superscript - to ASCII
+  right::String = name[index+length(atom):end]
   charge::Int64 = 0
   chargenum::Int64 = 0
   @assert !(occursin("+", right) && occursin("-", right)) "You cannot have opposite charge in $speciesname"
 
-  #replace all the superscript with number 
-  for (k, _) in SUPERSCRIPT_MAP
-    right = replace(right, k => string(SUPERSCRIPT_MAP[k]))
-  end
   #if the charge is positive
   if occursin("+", right)
-    charge = count(r"\+", right)
+    charge = count(==('+'), right)
     #either put the charge symbol in the front or the back
     @assert right[1] == '+' || right[end] == '+' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
@@ -244,7 +236,7 @@ function SpeciesN(speciesname::String)
     end
     charge *= chargenum
   elseif occursin("-", right) #if the charge is negative
-    charge = -count(r"\-", right)
+    charge = -count(==('-'), right)
     #either put the charge symbol in the front or the back
     @assert right[1] == '-' || right[end] == '-' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
     # remove the charge symbol
@@ -260,9 +252,6 @@ function SpeciesN(speciesname::String)
   # when the charge symbol is removed, the rest of the string should be a number
   @assert all(isdigit, right) "The charge specification should only include '+', '-' and number"
 
-  if anti
-    charge = -charge
-  end
   if anti
     return create_atomic_species("anti-" * atom, charge, iso)
   else
@@ -284,9 +273,9 @@ Create a species struct for an atomic species with name=name, charge=charge and 
 """
 function create_atomic_species(name::String, charge::Int, iso::Int)
   # whether the atom is anti-atom
-  anti_atom::Bool = occursin(r"Anti\-|anti\-|Anti|anti", name)
+  anti_atom::Bool = occursin(anti_regEx, name)
   # if the particle is an anti-particle, remove the prefix for easier lookup
-  AS::String = replace(name, r"Anti\-|anti\-|Anti|anti" => "")
+  AS::String = replace(name, anti_regEx => "")
 
   @assert haskey(ATOMIC_SPECIES, AS) "$AS is not a valid atomic species"
 
