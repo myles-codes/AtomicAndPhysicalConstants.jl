@@ -21,7 +21,7 @@ export ATOMIC_SPECIES
 export useCODATA
 export NewUnits
 export showconst
-export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon, to_openPMD
+export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon, to_openPMD, nameof
 export Kind
 export ATOM, HADRON, LEPTON, PHOTON, NULL
 export SpeciesN
