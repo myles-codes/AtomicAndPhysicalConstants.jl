@@ -14,13 +14,15 @@ using predefined unit systems: `ACCELERATOR` (default), `MKS`, or `CGS`.
 Users can also specify whether constants should be of type `Float64` (default), `Unitful`, 
 or `Dynamic Quantities` for easier unit calculations. 
 
-All constants are stored in a named tuple, whose name can be customized (defaults to `APC`).
+All constants are stored in a named tuple by default, whose name can be customized (defaults to `APC`).
 For example, the default name for the speed of light is `APC.C_LIGHT`.
+
+Alternatively, users can set `tupleflag` to `false` to define constants as global variables in the namespace. This allows direct access to the constants without using the named tuple prefix.
 
 ## @APCdef Syntax
 
 ```julia
-@APCdef(name = APC, unitsystem = ACCELERATOR, unittype = Float)
+@APCdef(name = APC, unitsystem = ACCELERATOR, unittype = Float, tupleflag = true)
 ```
 
 ## Keyword Parameters
@@ -32,6 +34,7 @@ This also determines the return type of both the named tuple and the `massof()` 
 See the [`DynamicQuantities.jl`](https://github.com/SymbolicML/DynamicQuantities.jl) documentation
 for a discussion of the difference between how `Unitful` and `DynamicQuatities` handle units.
 **Note**: setting the unit type to `DynamicQuantities` will return quantities only in SI units.
+- `tupleflag` determines whether to store constants in a named tuple (default: `true`).
 
 ## Unit Systems
 
@@ -61,10 +64,25 @@ for a discussion of the difference between how `Unitful` and `DynamicQuatities` 
 ## Example
 
 ```julia
-julia> @APCdef  # Sets unit system to ACCELERATOR (default). define constants with type Float64.
+julia> @APCdef  
+# Sets unit system to ACCELERATOR (default). define constants with type Float64.
 
-julia> APC.C_LIGHT  # Access the constant within the named tuple `APC`.
-2.99792458e8        # Now the constant is defined with units m/s and type Float64.
+julia> APC.C_LIGHT  
+# Access the constant within the named tuple `APC`.
+2.99792458e8        
+# Now the constant is defined with units m/s and type Float64.
+julia> APC.E_CHARGE  
+1.0         
+# The default unit for charge is elementary charge.
+```
+```julia
+julia> @APCdef unittype = Unitful unitsystem = MKS tupleflag = false 
+# Define constants with type Unitful. Sets unit system to MKS. Do not wrap constants in a named tuple.
+
+julia> E_CHARGE  
+# Access the constant directly
+1.602176634e-19 C        
+# Now the constant is defined with units C and type Unitful.
 ```
 
 # Unitful

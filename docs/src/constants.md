@@ -2,7 +2,7 @@
 
 ## Available Constants
 
-The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md). The following example is how to use the macro and the physical constants.
+The macro `@APCdef` defines a set of physical constants with the provided set of units (For more details, see [this page](units.md)). The following example is how to use the macro and the physical constants.
 
 ```julia
 julia> using AtomicAndPhysicalConstants
@@ -11,7 +11,7 @@ julia> APC.C_LIGHT
 2.99792458e8
 ```
 
-## Constants Defined by @APCdef
+### Constants Defined by @APCdef
 
 - Speed of light: `C_LIGHT`
 - Planck's constant: `H_PLANCK`
@@ -25,25 +25,9 @@ julia> APC.C_LIGHT
 - Fine structure constant: `FINE_STRUCTURE`
 - Avogadro's constant: `N_AVOGADRO`
 
-## Listing Constants: `showconst()`
+### Species Mass and Charge
 
-The `showconst()` function displays all available constants in the package.
-
-There are three options:
-
-```julia
-julia> showconst() 
-#list all the physical constants created by @APCdef
-julia> showconst(:subatomic) 
-#list all possible subatomic particles
-julia> showconst(:Fe) 
-# ':Fe' can be replaced by any atomic symbols
-# list all the available isotopes of that element
-```
-
-## Species Mass and Charge
-
-To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to `@APCdef`. For Example:
+To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to [`@APCdef`](units.md). For Example:
 
 ```julia
 julia> e = Species("electron")
@@ -65,6 +49,22 @@ Unfortunately, Atomic and Isotopic masses do not scale perfectly to reality; we 
 As a result, the mass of any given isotope in any charge state is taken to be the mass of the neutrally charged isotope (from NIST) plus or minus the requisite number of 
 electron masses.
 
+## Listing Constants: `showconst()`
+
+The `showconst()` function displays all available constants in the package.
+
+There are three options:
+
+```julia
+julia> showconst() 
+#list all the physical constants created by @APCdef
+julia> showconst(:subatomic) 
+#list all possible subatomic particles
+julia> showconst(:Fe) 
+# ':Fe' can be replaced by any atomic symbols
+# list all the available isotopes of that element
+```
+
 ## Constants Sources and Updates
 
 - The constants data comes from CODATA. You can choose which year of CODATA values to use through different submodules. If not specified, it defaults to CODATA2022. For example:
@@ -76,3 +76,11 @@ julia> using AtomicAndPhysicalConstants #use CODATA2022 values
 
 - NIST provides the isotope data, which we extract from their database. Since NIST doesn't maintain old releases, the isotope data always reflects their latest release.
 - The pion0 and pion± data comes from PDG (Particle Data Group). We extract this data from the database at [pdgapi.lbl.gov](http://pdgapi.lbl.gov)
+
+### setisos()
+
+The `setisos()` function downloads the latest isotope data from NIST and creates a Julia file containing a usable dictionary of each element with all of their isotopes
+
+### CODATA_releases()
+
+The `CODATA_releases()` function lists all the available CODATA release years in the package.

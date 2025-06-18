@@ -76,6 +76,7 @@ It defines the physical constants and getter functions for species mass and char
                                         The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
 - `unittype`     -- Sets the return type of the constants and the getter functions. It can be `Float`, `Unitful`, or `DynamicQuantities`. Default to `Float`.
 - `name`         -- Sets the name of the module that contains the constants and getter functions. Default to `APC`.
+- `tupleflag`    -- type: `Bool`, whether to return the constants in a tuple or not. Default to `true`. If set to `false`, it will return the constants as individual variables.
     
 ## Note
 - @APCdef can be called only once in a module.
@@ -108,7 +109,7 @@ macro APCdef(kwargs...)
 
 
   # a dictionary that maps the name of the key word variables to their value
-  kwargdict::Dict{Symbol,Union{Symbol,Bool}} = Dict(map(t -> Pair(t.args...), kwargs))
+  kwargdict = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
   for k in keys(kwargdict)
@@ -259,9 +260,9 @@ macro APCdef(kwargs...)
 
     $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
 
-    $(tuple_statement)
-
     $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
+
+    $(tuple_statement)
   end
 
 end
@@ -286,9 +287,9 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
     if unittype == :Float
       :Float64
     elseif unittype == :Unitful
-      :Unitful.Quantity
+      :(Unitful.Quantity)
     elseif unittype == :DynamicQuantities
-      :DynamicQuantities.Quantity
+      :(DynamicQuantities.Quantity)
     end
   end
 
@@ -429,3 +430,28 @@ return spin of 'species' in current unit, or return the charspinge of the specie
 
 """
 spinof
+
+#---------------------------------------------------------------------------------------------------
+# nameof
+
+"""
+  nameof(
+    species::Species;
+    basename::Bool = false
+  )
+
+
+## Description:
+yields the name of the species as a string; in the case of a 
+subatomic particle you get the exact name; in the case of an atom 
+the default behavior is to return the full name, eg "#235U" for 
+Uranium 235, but if the kwarg 'basename' is set to 'true' nameof 
+would return just "U"
+
+## parameters:
+- `species`     --  type:`Species`, the species whose name you want to know
+- `basename` -- type:`Bool`, whether to include the isotope number and charge state of an atom.
+
+"""
+nameof
+
