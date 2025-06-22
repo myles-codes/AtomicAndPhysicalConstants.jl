@@ -24,6 +24,8 @@ To access mass or charge of a species, use `massof()` getter function for mass
 
 Use the function `nameof()` to access the species name.
 
+`kindof()` returns the kind of the Species.
+
 ## Construct a Species
 
 Use the constructor `Species(::String)` to create a species.

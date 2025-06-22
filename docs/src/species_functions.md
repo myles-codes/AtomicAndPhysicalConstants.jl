@@ -6,6 +6,7 @@ Species functions each take a `Species` as their parameter and return a specific
 - `chargeof(::Species)`
 - `atomicnumber(::Species)`
 - `nameof(::Species)`
+- `kindof(::Species)`
 - `g_spin(::Species)`
     - ``g spin = 2 m mu / S q`` is gyromagnetic ratio with:
     - ``m`` is species mass

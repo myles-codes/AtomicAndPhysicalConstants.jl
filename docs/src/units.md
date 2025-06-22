@@ -133,7 +133,7 @@ julia> uconvert(u"kg",m)
 9.109402419518556e-31 kg
 ```
 
-## @APCdef returning `Unitful` type
+## @APCdef Returning `Unitful` Type
 
 To use `Unitful`-typed constants, set `unittype` to `Unitful`.
 
@@ -153,7 +153,7 @@ Users can access these units with the `@u_str` macro, just like standard `Unitfu
 - `e`: It represents the elementary charge.
 - `h_bar`: It represents the reduced Planck's constant. It is used as the unit for spin.
 
-## @APCdef returning DynamicQuantities.jl type
+## @APCdef Returning `DynamicQuantities.jl` Type
 
 [DynamicQuantities.jl](https://github.com/SymbolicML/DynamicQuantities.jl) is another popular package for managing units. We also support returning constants in DynamicQuantities type.
 

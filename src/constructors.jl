@@ -24,23 +24,24 @@ subatomic_particle
 function subatomic_particle(name::String)
   # write the particle out directly
   leptons = ["electron", "positron", "muon", "anti-muon"]
+  particle = SUBATOMIC_SPECIES[name]
   if name == "photon"
-    return Species(name, SUBATOMIC_SPECIES[name].charge,
-      SUBATOMIC_SPECIES[name].mass,
-      SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].moment,
+    return Species(name, particle.charge,
+      particle.mass,
+      particle.spin,
+      particle.moment,
       0.0, Kind.PHOTON)
   elseif name in leptons
-    return Species(name, SUBATOMIC_SPECIES[name].charge,
-      SUBATOMIC_SPECIES[name].mass,
-      SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].moment,
+    return Species(name, particle.charge,
+      particle.mass,
+      particle.spin,
+      particle.moment,
       0.0, Kind.LEPTON)
   else
-    return Species(name, SUBATOMIC_SPECIES[name].charge,
-      SUBATOMIC_SPECIES[name].mass,
-      SUBATOMIC_SPECIES[name].spin,
-      SUBATOMIC_SPECIES[name].moment,
+    return Species(name, particle.charge,
+      particle.mass,
+      particle.spin,
+      particle.moment,
       0.0, Kind.HADRON)
   end
 end

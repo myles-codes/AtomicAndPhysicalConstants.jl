@@ -43,7 +43,7 @@ julia> chargeof(e)
 
 ```
 
-### Atomic mass and Electron binding energies
+### Atomic m=Mass and Electron Binding Energies
 
 Unfortunately, Atomic and Isotopic masses do not scale perfectly to reality; we haven't been able to account for binding energies of electrons in varying shells in this code.
 As a result, the mass of any given isotope in any charge state is taken to be the mass of the neutrally charged isotope (from NIST) plus or minus the requisite number of 
