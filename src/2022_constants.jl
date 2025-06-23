@@ -8,10 +8,6 @@
 module CODATA2022
 
 
-
-import Base: nameof
-
-
 export @APCdef
 export ACCELERATOR, MKS, CGS
 export Species

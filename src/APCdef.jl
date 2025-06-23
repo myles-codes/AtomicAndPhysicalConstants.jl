@@ -76,6 +76,7 @@ It defines the physical constants and getter functions for species mass and char
                                         The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
 - `unittype`     -- Sets the return type of the constants and the getter functions. It can be `Float`, `Unitful`, or `DynamicQuantities`. Default to `Float`.
 - `name`         -- Sets the name of the module that contains the constants and getter functions. Default to `APC`.
+- `tupleflag`    -- type: `Bool`, whether to return the constants in a tuple or not. Default to `true`. If set to `false`, it will return the constants as individual variables.
     
 ## Note
 - @APCdef can be called only once in a module.
@@ -108,7 +109,7 @@ macro APCdef(kwargs...)
 
 
   # a dictionary that maps the name of the key word variables to their value
-  kwargdict::Dict{Symbol,Union{Symbol,Bool}} = Dict(map(t -> Pair(t.args...), kwargs))
+  kwargdict = Dict(map(t -> Pair(t.args...), kwargs))
 
   # obtain the keyword arguments
   for k in keys(kwargdict)
@@ -259,9 +260,9 @@ macro APCdef(kwargs...)
 
     $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
 
-    $(tuple_statement)
-
     $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
+
+    $(tuple_statement)
   end
 
 end
@@ -286,9 +287,9 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
     if unittype == :Float
       :Float64
     elseif unittype == :Unitful
-      :Unitful.Quantity
+      :(Unitful.Quantity)
     elseif unittype == :DynamicQuantities
-      :DynamicQuantities.Quantity
+      :(DynamicQuantities.Quantity)
     end
   end
 
@@ -337,6 +338,32 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
       species = Species(speciesname)
       @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
       $(return_statement(charge_unit, "charge"))
+    end
+    function $(esc(:nameof))(species::Species; basename::Bool=false)::String
+      @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+      bname = getfield(species, :name)
+      isostr = ""
+      iso = Int(getfield(species, :iso))
+      chstr = ""
+      ch = Int(getfield(species, :charge).val)
+      ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
+      if getfield(species, :kind) ∈ ptypes
+        return bname
+      elseif getfield(species, :kind) == Kind.ATOM
+        if basename == true
+          return bname
+        else
+          if iso != -1
+            isostr = "#" * string(iso)
+          end
+          if ch > 0
+            chstr = "+" * string(ch)
+          elseif ch < 0
+            chstr = string(ch)
+          end
+          return isostr * bname * chstr
+        end
+      end
     end
   end
 end
@@ -404,10 +431,8 @@ return spin of 'species' in current unit, or return the charspinge of the specie
 """
 spinof
 
-#--------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
 # nameof
-
-import Base: nameof
 
 """
   nameof(
@@ -430,31 +455,3 @@ would return just "U"
 """
 nameof
 
-
-
-function nameof(species::Species; basename::Bool=false)
-  bname = getfield(species, :name)
-  isostr = ""
-  iso = Int(getfield(species, :iso))
-  chstr = ""
-  ch = Int(getfield(species, :charge).val)
-  ptypes = [Kind.HADRON, Kind.LEPTON, Kind.PHOTON]
-  @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
-  if getfield(species, :kind) ∈ ptypes
-    return bname
-  elseif getfield(species, :kind) == Kind.ATOM
-    if basename == true
-      return bname
-    else
-      if iso != -1
-        isostr = "#" * string(iso)
-      end
-      if ch > 0
-        chstr = "+" * string(ch)
-      elseif ch < 0
-        chstr = string(ch)
-      end
-      return isostr * bname * chstr
-    end
-  end
-end

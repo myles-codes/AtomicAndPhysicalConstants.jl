@@ -4,49 +4,35 @@
 
 `Species` is a type that stores information about a particle.
 
-A species is defined by the following fields:
+A `Species` stores the following information:
 
-```julia
-struct Species
-    name   # name of the particle to track
-    charge # charge of the particle
-    mass   # mass of the particle
-    spin   # spin of the particle
-    moment # magnetic moment of the particle
-    iso    # mass number of atomic isotope
-    kind   # the kind of particle
-end
-```
+- `name`: name of the particle to track
+- `charge`: charge of the particle
+- `mass`: mass of the particle
+- `spin`: spin of the particle
+- `moment`: magnetic moment of the particle
+- `iso`: mass number of atomic isotope
+- `kind`: The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`.
 
-The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`. 
-The `NULL` kind serves as a placeholder that can be used by Julia code. For example, if a `struct`
+**Note**: The `NULL` kind serves as a placeholder that can be used by Julia code. For example, if a `struct`
 has a `Species` component, a `NULL` species can be used as an initial value to indicate that the
 species component has not yet been set.
 
-Each field stores values with their corresponding units and returns a Unitful value when accessed directly. For example:
 
-```julia
-julia> Species("electron").mass
-0.51099895069 MeV c^-2
-```
+## Getter Functions
+To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to [`@APCdef`](units.md). See this [page](constants.md) for more information.
 
-The default units are:
+Use the function `nameof()` to access the species name.
 
-- `mass`: MeV/c²
-- `charge`: elementary charge
-- `spin`: ℏ
-- `moment`: J/T
-
-For convenience, use our getter functions `massof()` and `chargeof()` to obtain values in your preferred units. 
-See the [Constants](constants.md) page for more information.
+`kindof()` returns the kind of the Species.
 
 ## Construct a Species
 
-Use the constructor `Species(name)` to create a species.
+Use the constructor `Species(::String)` to create a species.
 
 **Note**: Species names follow the OpenPMD standard.
 
-### Constructing a Null species
+### Constructing a Null Species
 
 The `Null` species is useful for bookkeeping purposes, such as a placeholder in a struct component to indicate an unset species. To instantiate:
 
@@ -86,11 +72,11 @@ To construct an atomic species, include these components in `name`:
     - If not specified, uses the average of the mass in naturally occurring samples.
 - These formats all represent Hydrogen-1:
     
-    ```julia
-    julia> Species("1H")
-    julia> Species("¹H")
-    julia> Species("#1H")
-    ```
+```julia
+julia> Species("1H")
+julia> Species("¹H")
+julia> Species("#1H")
+```
     
 - Charge (optional), format (all accept unicode superscript):
     - "+" for single positive charge
