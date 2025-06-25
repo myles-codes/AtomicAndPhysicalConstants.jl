@@ -29,7 +29,7 @@ For atomic particles, will currently return 0. Will be updated in a future patch
 """
 g_spin
 
-function g_spin(species::Species; signed::Bool=true)
+function g_spin(species::Species; signed::Bool=false)
   if isdefined(Main, :UNITS)
 
     vtypes = [Kind.LEPTON, Kind.HADRON]
@@ -63,7 +63,7 @@ Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 """
 gyromagnetic_anomaly
 
-function gyromagnetic_anomaly(species::Species; signed::Bool=true)
+function gyromagnetic_anomaly(species::Species; signed::Bool=false)
 
   if isdefined(Main, :APCconsts)
     vtypes = [Kind.LEPTON, Kind.HADRON]
