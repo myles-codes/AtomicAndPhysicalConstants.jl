@@ -105,7 +105,7 @@ macro APCdef(kwargs...)
 
   # Defualt parameters
   unittype::Symbol = :Float
-  unitsystem::NTuple{5,Unitful.FreeUnits} = ACCELERATOR
+  unitsystem::NTuple{6,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
   tupleflag::Bool = true # whether return the constants in a tuple or not
 
