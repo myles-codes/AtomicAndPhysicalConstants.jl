@@ -73,7 +73,7 @@ It defines the physical constants and getter functions for species mass and char
 
 ## keyword parameters:
 - `unitsystem`   -- type: 5-Tuple of `Unitful` units. Specify the unit system, default to `ACCELERATOR`, which sets units to 'Default units' (see below).
-                                        The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
+                          The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
 - `unittype`     -- Sets the return type of the constants and the getter functions. It can be `Float`, `Unitful`, or `DynamicQuantities`. Default to `Float`.
 - `name`         -- Sets the name of the module that contains the constants and getter functions. Default to `APC`.
 - `tupleflag`    -- type: `Bool`, whether to return the constants in a tuple or not. Default to `true`. If set to `false`, it will return the constants as individual variables.
