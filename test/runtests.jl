@@ -7,8 +7,8 @@ using Test
 @testset "test @APCdef" begin
   #constants should be of type float in the right unit
   @test APC.C_LIGHT ≈ 2.99792458e8
-  @test APC.H_PLANCK ≈ 4.135667696e-15
-  @test APC.H_BAR_PLANCK ≈ 6.582119568038699e-16
+  @test APC.H_PLANCK ≈ 2.0*pi # 4.135667696e-15
+  @test APC.H_BAR_PLANCK ≈ 1.0 # 6.582119568038699e-16
   @test APC.R_E ≈ 2.8179403205e-15
   @test APC.R_P ≈ 1.5346982640795807e-18
   @test APC.E_CHARGE ≈ 1
