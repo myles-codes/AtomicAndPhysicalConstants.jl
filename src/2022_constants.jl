@@ -142,9 +142,9 @@ const __b_r_p = __b_r_e * __b_m_electron / __b_m_proton
 # classical proton radius [m]
 const __b_c_light = 2.99792458e8 * u"m/s"
 # speed of light [m/s]
-const __b_h_planck = 4.135667696e-15 * u"eV*s"
-# Planck's constant [eV*s]
-const __b_h_bar_planck = __b_h_planck / 2pi
+const __b_h_planck = 6.62607015e-34*u"J*s" 
+# Planck's constant [J*s]
+const __b_h_bar_planck = __b_h_planck / 2 / pi
 # h_planck/twopi [eV*s]
 const __b_classical_radius_factor = __b_r_e * __b_m_electron
 # e^2 / (4 pi eps_0) = classical_radius * mass * c^2.
