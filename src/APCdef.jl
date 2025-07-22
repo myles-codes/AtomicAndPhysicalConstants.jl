@@ -2,7 +2,8 @@
 
 #---------------------------------------------------------------------------------------------------
 #   for particle physics
-"""
+
+@doc """
     ACCELERATOR
 ## ACCELERATOR units:
 - `mass`: eV/c^2
@@ -12,8 +13,6 @@
 - `charge`: elementary charge
 - `spin`: h_bar (ħ)
 """
-ACCELERATOR
-
 const ACCELERATOR = (
   u"eV/c^2",
   u"m",
@@ -25,7 +24,7 @@ const ACCELERATOR = (
 #---------------------------------------------------------------------------------------------------
 #   MKS
 
-"""
+@doc """
     MKS
 ## MKS units:
 - `mass`: kg
@@ -35,8 +34,6 @@ const ACCELERATOR = (
 - `charge`: C
 - `spin`: h_bar (ħ)
 """
-MKS
-
 const MKS = (
   u"kg",
   u"m",
@@ -48,7 +45,7 @@ const MKS = (
 #---------------------------------------------------------------------------------------------------
 # CGS
 
-"""
+@doc """
     CGS
 ## CGS units:
 - `mass`: g
@@ -58,8 +55,6 @@ const MKS = (
 - `charge`: C
 - `spin`: h_bar (ħ)
 """
-CGS
-
 const CGS = (
   u"g",
   u"cm",

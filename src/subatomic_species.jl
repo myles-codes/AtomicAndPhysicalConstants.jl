@@ -8,7 +8,6 @@ this contatins key=>value pairs of  subatomic-name => SubatomicSpecies
 =#
 
 
-
 """
     SUBATOMIC_SPECIES 
 a dictionary of all the available subatomic species; 
@@ -17,6 +16,7 @@ and the value is the relevant SubatomicSpecies struct, _eg_
 
 SUBATOMIC_SPECIES["some-particle"] = SubatomicSpecies("some-particle", ...)
 """
+SUBATOMIC_SPECIES
 
 const SUBATOMIC_SPECIES::Dict{String,SubatomicSpecies} = Dict(
   "pion0" => SubatomicSpecies("pion0", 0 * u"e", __b_m_pion_0, 0.0 * u"J/T", 0.0 * u"h_bar"),
