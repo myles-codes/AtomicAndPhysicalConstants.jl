@@ -35,13 +35,13 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
     "atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
     "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV),
-    "deuteron g factor" => Dict("__b_deuteron_gspin" => __b_deuteron_gspin),
-    "electron g factor" => Dict("__b_electron_gspin" => __b_electron_gspin),
-    "helion g factor" => Dict("__b_helion_gspin" => __b_helion_gspin),
-    "muon g factor" => Dict("__b_muon_gspin" => __b_muon_gspin),
-    "neutron g factor" => Dict("__b_neutron_gspin" => __b_neutron_gspin),
-    "proton g factor" => Dict("__b_proton_gspin" => __b_proton_gspin),
-    "triton g factor" => Dict("__b_triton_gspin" => __b_triton_gspin)
+    "deuteron g factor" => Dict("__b_gspin_deuteron" => __b_gspin_deuteron),
+    "electron g factor" => Dict("__b_gspin_electron" => __b_gspin_electron),
+    "helion g factor" => Dict("__b_gspin_helion" => __b_gspin_helion),
+    "muon g factor" => Dict("__b_gspin_muon" => __b_gspin_muon),
+    "neutron g factor" => Dict("__b_gspin_neutron" => __b_gspin_neutron),
+    "proton g factor" => Dict("__b_gspin_proton" => __b_gspin_proton),
+    "triton g factor" => Dict("__b_gspin_triton" => __b_gspin_triton)
 )
 
 
