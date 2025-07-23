@@ -26,7 +26,7 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "triton mag. mom." => Dict("__b_mu_triton" => __b_mu_triton),
     "classical electron radius" => Dict("__b_r_e" => __b_r_e),
     "speed of light in vacuum" => Dict("__b_c_light" => __b_c_light),
-    "Planck constant in eV/Hz" => Dict("__b_h_planck" => __b_h_planck),
+    "Planck constant" => Dict("__b_h_planck" => __b_h_planck),
     "Avogadro constant" => Dict("__b_N_avogadro" => __b_N_avogadro),
     "vacuum electric permittivity" => Dict("__b_eps_0_vac" => __b_eps_0_vac),
     "vacuum mag. permeability" => Dict("__b_mu_0_vac" => __b_mu_0_vac),
@@ -35,10 +35,13 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
     "atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
     "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV),
-    "electron mag. mom. anomaly" => Dict("__b_electron_gyro_anom"),
-    "electron magnetic moment anomaly" => Dict("__b_electron_gyro_anom"),
-    "muon mag. mom. anomaly" => Dict("__b_muon_gyro_anom"),
-    "muon magnetic moment anomaly" => Dict("__b_muon_gyro_anom")
+    "deuteron g factor" => Dict("__b_deuteron_gspin" => __b_deuteron_gspin),
+    "electron g factor" => Dict("__b_electron_gspin" => __b_electron_gspin),
+    "helion g factor" => Dict("__b_helion_gspin" => __b_helion_gspin),
+    "muon g factor" => Dict("__b_muon_gspin" => __b_muon_gspin),
+    "neutron g factor" => Dict("__b_neutron_gspin" => __b_neutron_gspin),
+    "proton g factor" => Dict("__b_proton_gspin" => __b_proton_gspin),
+    "triton g factor" => Dict("__b_triton_gspin" => __b_triton_gspin)
 )
 
 
@@ -119,7 +122,7 @@ function getCODATA(path::String, CODATA_Consts::Dict)
 									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m/s"
 								
 								elseif occursin("Planck", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"eV/Hz"
+									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/Hz"
 								
 								elseif occursin("permittivity", line[1])
 									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"F/m"
