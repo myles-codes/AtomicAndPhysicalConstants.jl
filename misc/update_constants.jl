@@ -35,6 +35,8 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
     "atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
     "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV),
+    "electron mag. mom. anomaly" => Dict("__b_gyro_anom_electron" =>__b_gyro_anom_electron),
+    "muon mag. mom. anomaly" => Dict("__b_gyro_anom_muon" =>__b_gyro_anom_muon),
     "deuteron g factor" => Dict("__b_gspin_deuteron" => __b_gspin_deuteron),
     "electron g factor" => Dict("__b_gspin_electron" => __b_gspin_electron),
     "helion g factor" => Dict("__b_gspin_helion" => __b_gspin_helion),
@@ -100,7 +102,7 @@ function getCODATA(path::String, CODATA_Consts::Dict)
                 end
 
 
-                if occursin("mag. mom.", line[1]) == true
+                if occursin("mag. mom.", line[1]) == true && occursin("anomaly", line[1]) == false
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/T"
 
                 elseif occursin("MeV", line[1])
@@ -158,7 +160,7 @@ writeCODATA
 
 function writeCODATA(year::Int, new_consts)
     yearregex = r"[1-2][0-9][0-9][-0-9]"
-    f = open(pwd() * "/src/constants.jl", "r")
+    f = open(pwd() * "/src/2022_constants.jl", "r")
     everyline = readlines(f)
     newf = open(pwd() * f"/src/{year}_constants.jl", "a+")
     newlines = []

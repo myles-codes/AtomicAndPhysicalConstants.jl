@@ -108,11 +108,26 @@ const __b_N_avogadro = 6.02214076e23
 const __b_fine_structure = 0.0072973525643
 # fine structure constant
 
-const __b_electron_gyro_anom = 1.15965218091e-3
+const __b_gyro_anom_electron = 1.15965218091e-3
 # electron magnetic moment anomaly
-const __b_muon_gyro_anom = 1.16592089e-3
+const __b_gyro_anom_muon = 1.16592089e-3
 # muon magnetic moment anomaly
 
+
+const __b_gspin_deuteron = 0.8574382311
+# deuteron g factor 
+const __b_gspin_electron = -2.00231930436182 
+# electron g factor 
+const __b_gspin_helion = -4.255250616 
+# helion g factor 
+const __b_gspin_muon = -2.0023318418 
+# muon g factor 
+const __b_gspin_neutron = -3.82608545 
+# neutron g factor 
+const __b_gspin_proton = 5.585694702 
+# proton g factor 
+const __b_gspin_triton = 5.957924920 
+# triton g factor
 
 
 
