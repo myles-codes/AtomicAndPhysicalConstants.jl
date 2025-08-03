@@ -4,22 +4,13 @@
 
 `Species` is a type that stores information about a particle.
 
-A `Species` stores the following information:
-
-- `name`: name of the particle to track
-- `charge`: charge of the particle
-- `mass`: mass of the particle
-- `spin`: spin of the particle
-- `moment`: magnetic moment of the particle
-- `iso`: mass number of atomic isotope
-- `kind`: The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`.
-
-**Note**: The `NULL` kind serves as a placeholder that can be used by Julia code. For example, if a `struct`
-has a `Species` component, a `NULL` species can be used as an initial value to indicate that the
-species component has not yet been set.
-
-
 ## Getter Functions
+
+- `massof()`
+- `chargeof()`
+- `nameof()`
+- `kindof()`
+
 To access mass or charge of a species, use `massof()` getter function for mass, and `chargeof()` getter function for charge. The function will return unit given to [`@APCdef`](units.md). See this [page](constants.md) for more information.
 
 Use the function `nameof()` to access the species name.

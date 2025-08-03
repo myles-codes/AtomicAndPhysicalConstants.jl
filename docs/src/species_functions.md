@@ -14,10 +14,10 @@ Species functions each take a `Species` as their parameter and return a specific
     - ``S`` is the species spin
     - ``q`` is the species charge
 - `gyromagnetic_anomaly(::Species)`
-    - ``gyromagnetic anomaly = (g-2)/2`` is the gyromagnetic anomaly with:
+    - ``gyromagnetic\_ anomaly = (g-2)/2`` is the gyromagnetic anomaly with:
     - ``g`` is the gyromagnetic ratio
 - `g_nucleon(::Species)`
-    - ``g nucleon = g Z m_p / m`` is the gyromagnetic anomaly for a baryon with:
+    - ``g\_ nucleon = g Z m_p / m`` is the gyromagnetic anomaly for a baryon with:
     - ``g`` is the gyromagnetic ratio
     - ``Z`` is the species charge
     - ``m_p`` is the mass of a proton

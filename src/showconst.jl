@@ -20,14 +20,14 @@ showconst
 function showconst(query::Union{Symbol,String}=:constants)
   if isdefined(Main, :UNITS)
     if query isa String
-        query = Symbol(query)
+      query = Symbol(query)
     end
     # list all the physical constants and their values
     if (query == :constants)
 
       # this vector contains the names of the constants in symbols
       constants::Vector{Symbol} = filter(x ->
-              startswith(string(x), "__b_"), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
+          startswith(string(x), "__b_"), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
 
       for sym in constants
         value = eval(sym) # the value of the constant
@@ -58,12 +58,16 @@ function showconst(query::Union{Symbol,String}=:constants)
     if (haskey(SUBATOMIC_SPECIES, string(query)))
       fields = fieldnames(SubatomicSpecies)
       particle = SUBATOMIC_SPECIES[string(query)]
-      println("Particle: ",getfield(particle, fields[1]))
-      println("charge = ", uconvert(Main.UNITS.charge, getfield(particle, fields[2])),", ")
-      println("mass = ", uconvert(Main.UNITS.mass, getfield(particle, fields[3])),", ")
-      println("magnetic moment = ", uconvert(Main.UNITS.length^2 * Main.UNITS.charge / Main.UNITS.time,getfield(particle, fields[4])),", ")
-      println("spin = ", uconvert(Main.UNITS.action,getfield(particle, fields[5])))
-      
+      species = Species(getfield(particle, fields[1]))
+      println("Particle: ", getfield(particle, fields[1]), ", ")
+      println("charge = ", uconvert(Main.UNITS.charge, getfield(particle, fields[2])), ", ")
+      println("mass = ", uconvert(Main.UNITS.mass, getfield(particle, fields[3])), ", ")
+      println("magnetic moment = ", uconvert(Main.UNITS.length^2 * Main.UNITS.charge / Main.UNITS.time, getfield(particle, fields[4])), ", ")
+      println("spin = ", uconvert(Main.UNITS.action, getfield(particle, fields[5])))
+      println("g_spin = ", g_spin(species))
+      println("gyromagnetic_anomaly = ", gyromagnetic_anomaly(species))
+      println("g_nucleon = ", g_nucleon(species))
+
 
 
     elseif (haskey(ATOMIC_SPECIES, string(query)))
@@ -81,7 +85,7 @@ function showconst(query::Union{Symbol,String}=:constants)
         end
       end
     else
-        error("$query is not an available option")
+      error("$query is not an available option")
     end
     return
   else

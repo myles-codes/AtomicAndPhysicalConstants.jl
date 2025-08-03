@@ -20,6 +20,8 @@ end
 
 Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
+# Species is defined in the main module, but since the constructor needs constants from the submodule
+# we need to it to call a construct named `SpeciesN` which is defined in the submodule
 function Species(speciesname::String)
   return SpeciesN(speciesname)
 end
