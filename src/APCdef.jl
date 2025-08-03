@@ -256,22 +256,22 @@ macro APCdef(kwargs...)
   tuple_statement = begin
     if tupleflag
       quote
-        $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
+        const $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict));
       end
     else
-      Expr(:block, [:($(esc(key)) = $(value)) for (key, value) in constantsdict]...)
+      Expr(:block, [:(const $(esc(key)) = $(value);) for (key, value) in constantsdict]...)
     end
   end
 
   return quote
 
-    $(esc(:APCconsts)) = $wrapper
+    const APCconsts = $wrapper;
 
-    $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
+    const UNITS = NamedTuple{Tuple(keys($unit_names))}(values($unit_names));
 
-    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
+    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit));
 
-    $(tuple_statement)
+    $(tuple_statement);
   end
 
 end
