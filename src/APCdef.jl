@@ -278,9 +278,9 @@ end
 
 
 function generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit)
-  # assert that the unittype is one of Float, Unitful, DynamicQuantities
-  @assert unittype in [:Float, :Unitful, :DynamicQuantities] "unittype should be one of Float, Unitful, DynamicQuantities"
-  # assert that the mass_unit, charge_unit, spin_unit are of proper dimension
+  # require that the unittype is one of Float, Unitful, DynamicQuantities
+  unittype in [:Float, :Unitful, :DynamicQuantities] || error("unittype should be one of Float, Unitful, DynamicQuantities")
+  # require that the mass_unit, charge_unit, spin_unit are of proper dimension
   if dimension(mass_unit) != dimension(u"kg")
     error("unit for mass does not have proper dimension")
   end
@@ -320,36 +320,36 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
   end
   return quote
     function $(esc(:spinof))(species::Species)::$(typename)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
-      @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
+      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
       $(return_statement(spin_unit, "spin"))
     end
     function $(esc(:spinof))(speciesname::String)::$(typename)
       species = Species(speciesname)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call spinof() on a null Species object."
-      @assert getfield(species, :kind) != Kind.ATOM "The spin projection of a whole atom is ambiguous."
+      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
+      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
       $(return_statement(spin_unit, "spin"))
     end
     function $(esc(:massof))(species::Species)::$(typename)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object."
+      getfield(species, :kind) != Kind.NULL || error("Can't call massof() on a null Species object.")
       $(return_statement(mass_unit, "mass"))
     end
     function $(esc(:massof))(speciesname::String)::$(typename)
       species = Species(speciesname)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call massof() on a null Species object."
+      getfield(species, :kind) != Kind.NULL || error("Can't call massof() on a null Species object.")
       $(return_statement(mass_unit, "mass"))
     end
     function $(esc(:chargeof))(species::Species)::$(typename)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
+      getfield(species, :kind) != Kind.NULL || error("Can't call chargeof() on a null Species object.")
       $(return_statement(charge_unit, "charge"))
     end
     function $(esc(:chargeof))(speciesname::String)::$(typename)
       species = Species(speciesname)
-      @assert getfield(species, :kind) != Kind.NULL "Can't call chargeof() on a null Species object."
+      getfield(species, :kind) != Kind.NULL || error("Can't call chargeof() on a null Species object.")
       $(return_statement(charge_unit, "charge"))
     end
     function $(esc(:nameof))(species::Species; basename::Bool=false)::String
-      @assert getfield(species, :kind) != Kind.NULL "Can't call nameof() on a null Species object"
+      getfield(species, :kind) != Kind.NULL || error("Can't call nameof() on a null Species object")
       bname = getfield(species, :name)
       isostr = ""
       iso = Int(getfield(species, :iso))
