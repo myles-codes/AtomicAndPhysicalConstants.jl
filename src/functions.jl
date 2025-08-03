@@ -1,10 +1,9 @@
 # ------------------------------------------------------------------------------------------------------------
 
-
-"""
+@doc """
 		atomicnumber(particle::Species)
 
-Get the atomic number (positive nuclear charge) of a tracked particle.
+Get the atomic number (positive nuclear charge) of a tracked atom.
 """
 atomicnumber
 
@@ -12,7 +11,7 @@ function atomicnumber(particle::Species)
   if haskey(ATOMIC_SPECIES, getfield(particle, :name))
     return ATOMIC_SPECIES[getfield(particle, :name)].Z
   else
-    print("$(getfield(particle, :name)) is not an atom, and thus no atomic number.")
+    error("$(getfield(particle, :name)) is not an atom, and thus no atomic number.")
     return
   end
 end;
@@ -115,7 +114,7 @@ end;
 
 
 
-"""
+@doc """
     SUPERSCRIPT_MAP
     A dictionary mapping superscript characters to their corresponding integer values.
     This is used to convert superscript numbers in species names to their integer values.
@@ -133,7 +132,7 @@ const SUPERSCRIPT_MAP = Dict{Char,Int64}(
   '⁹' => 9,
 )
 
-"""
+@doc """
     find_superscript(num::Int64)
 
 ## Description:
@@ -141,6 +140,8 @@ Convert an integer to its superscript representation.
 This function takes an integer and returns a string containing the corresponding
 superscript characters for each digit in the integer.
 """
+find_superscript
+
 function find_superscript(num::Int64)
   digs = reverse(digits(num))
   sup::String = ""
@@ -154,7 +155,7 @@ function find_superscript(num::Int64)
   return sup
 end
 
-"""
+@doc """
     to_openPMD(val::Unitful.Quantity)
 ## Description:
 Convert a Unitful.Quantity to a format suitable for openPMD.
@@ -163,6 +164,8 @@ and the second element is a 7-tuple of  powers of the 7 base measures
 characterizing the record's unit in SI 
 (length L, mass M, time T, electric current I, thermodynamic temperature theta, amount of substance N, luminous intensity J)
 """
+to_openPMD
+
 function to_openPMD(val::Unitful.Quantity)
   # convert the type to DynamicQuantities, which automatically converts to SI units
   # multiplying by 1.0 ensures that the value is converted to a float

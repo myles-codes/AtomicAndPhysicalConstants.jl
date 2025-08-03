@@ -14,6 +14,7 @@ include("2010_constants.jl")
 include("2014_constants.jl")
 include("2018_constants.jl")
 include("2022_constants.jl")
+include("docstrings.jl")
 
 using Reexport
 @reexport using .PreRelease

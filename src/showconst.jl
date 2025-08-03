@@ -1,4 +1,4 @@
-"""
+@doc """
     showconst(
         query::Symbol = :constants
     )
