@@ -65,6 +65,8 @@ julia> showconst(:Fe)
 # list all the available isotopes of that element
 ```
 
+**Note**: You must run `@APCdef` before using `showconst()`.
+
 ## Constants Sources and Updates
 
 - The constants data comes from CODATA. You can choose which year of CODATA values to use through different submodules. If not specified, it defaults to CODATA2022. For example:

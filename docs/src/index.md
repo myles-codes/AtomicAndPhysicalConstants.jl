@@ -1,8 +1,32 @@
 # AtomicAndPhysicalConstants.jl
 
+## Setup
+
+To use AtomicAndPhysicalConstants, like any Julia package, execute the commands:
+```julia
+julia> using Pkg; Pkg.add("AtomicAndPhysicalConstants.jl")
+julia> using AtomicAndPhysicalConstants
+```
+
+The macro `@APCdef` initializes the APC package.
+@APCdef sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data. Documentation is  [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/stable/units/).
+
+```julia
+julia> @APCdef
+julia> APC.C_LIGHT
+2.99792458e8
+julia> e = Species("electron")
+julia> massof(e)
+510998.95069
+```
+
+Users have the options for choosing the return type (Float64, Unitful, or DynamicQuantities) and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/stable/units/)
+
+## Introduction
+
 `AtomicAndPhysicalConstants.jl` (APC) provides a quick way to access information about different species and physical constants optimized for faster compile time and simulations.
 
-It is designed to provide atomic and physical constants, such as the speed of light, subatomic particle properties, atomic isotope properties, etc. 
+It is designed to provide atomic and physical constants including things like the speed of light, subatomic particle properties, atomic isotope properties, etc. 
 
 Values are obtained from CODATA (Committee on Data of the International Science Council), NIST (National Institute of Standards and Technology), and PDG (Particle Data Group). This package enables users to access and customize units for the constants. 
 
@@ -19,24 +43,6 @@ The package is compatible with Julia's `Unitful.jl` and `DynamicQuantities.jl`
 Documentation is at 
 [https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl)
 
-## Setup
-
-To use AtomicAndPhysicalConstants, like any Julia package, execute the commands:
-```julia
-julia> using Pkg; Pkg.add("AtomicAndPhysicalConstants.jl")
-julia> using AtomicAndPhysicalConstants
-```
-
-The macro `@APCdef` initializes the APC package.
-@APCdef sets the units for physical constants, species mass and charge. It defines the physical constants and getter functions for species mass and charge with the proper unit and data. Documentation is  [here](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/stable/units/).
-
-```julia
-julia> @APCdef
-julia> APC.C_LIGHT
-2.99792458e8
-```
-
-Users have the options for choosing the return type (Float64, Unitful, or DynamicQuantities) and unit of the constants, see [this page](https://bmad-sim.github.io/AtomicAndPhysicalConstants.jl/stable/units/)
 
 ## Defining Species
 

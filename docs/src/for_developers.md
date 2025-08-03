@@ -21,6 +21,21 @@ julia> chargeof(e) # get the electron charge
 
 The `Species` type contains the following fields, defined in [types.jl](https://github.com/bmad-sim/AtomicAndPhysicalConstants.jl/blob/main/src/types.jl)
 
+
+A `Species` stores the following information:
+
+- `name`: name of the particle to track
+- `charge`: charge of the particle
+- `mass`: mass of the particle
+- `spin`: spin of the particle
+- `moment`: magnetic moment of the particle
+- `iso`: mass number of atomic isotope
+- `kind`: The `kind` field classifies species into five types: `ATOM`, `HADRON`, `LEPTON`, `PHOTON`, and `NULL`.
+
+**Note**: The `NULL` kind serves as a placeholder that can be used by Julia code. For example, if a `struct`
+has a `Species` component, a `NULL` species can be used as an initial value to indicate that the
+species component has not yet been set.
+
 ```julia
 struct Species
   name::String # name of the particle to track
