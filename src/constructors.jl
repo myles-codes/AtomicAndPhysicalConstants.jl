@@ -71,8 +71,7 @@ function SpeciesN(speciesname::String)
     if occursin(k, name)
       # whether the particle name only contains characters in the subatomic species dictionary
       # delete all the names and spaces, there should be nothing left
-      @assert length(k) == length(name)
-      "$speciesname should contain only the name of the subatomic particle"
+      length(k) == length(name) || "$speciesname should contain only the name of the subatomic particle"
       if anti
         if k == "electron"
           return subatomic_particle("positron")
@@ -118,7 +117,7 @@ function SpeciesN(speciesname::String)
     end
   end
   # atom should not be empty
-  @assert atom != "" "you did not specify an atomic species or subatomic species in $speciesname"
+  atom != "" || error("you did not specify an atomic species or subatomic species in $speciesname")
 
 
   #check for the isotope 
@@ -138,7 +137,7 @@ function SpeciesN(speciesname::String)
     for c in left
       iso = iso * 10 + parse(Int64, c)
     end
-    @assert haskey(ATOMIC_SPECIES[atom].mass, iso) "$iso is not a valid isotope of $atom"
+    haskey(ATOMIC_SPECIES[atom].mass, iso) || error("$iso is not a valid isotope of $atom")
   end
 
   # if iso is not specified, use the most abundant isotope
@@ -150,13 +149,13 @@ function SpeciesN(speciesname::String)
   right::String = name[index+length(atom):end]
   charge::Int64 = 0
   chargenum::Int64 = 0
-  @assert !(occursin("+", right) && occursin("-", right)) "You cannot have opposite charge in $speciesname"
+  !(occursin("+", right) && occursin("-", right)) || error("You cannot have opposite charge in $speciesname")
 
   #if the charge is positive
   if occursin("+", right)
     charge = count(==('+'), right)
     #either put the charge symbol in the front or the back
-    @assert right[1] == '+' || right[end] == '+' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
+    right[1] == '+' || right[end] == '+' || error("You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname")
     # remove the charge symbol
     right = replace(right, "+" => "")
     for c in right
@@ -169,7 +168,7 @@ function SpeciesN(speciesname::String)
   elseif occursin("-", right) #if the charge is negative
     charge = -count(==('-'), right)
     #either put the charge symbol in the front or the back
-    @assert right[1] == '-' || right[end] == '-' "You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname"
+    right[1] == '-' || right[end] == '-' || error("You should only put the charge symbol in the front or the back of the atomic symbol in $speciesname")
     # remove the charge symbol
     right = replace(right, "-" => "")
     for c in right
@@ -181,7 +180,7 @@ function SpeciesN(speciesname::String)
     charge *= chargenum
   end
   # when the charge symbol is removed, the rest of the string should be a number
-  @assert all(isdigit, right) "The charge specification should only include '+', '-' and number"
+  all(isdigit, right) || error("The charge specification should only include '+', '-' and number")
 
   if anti
     return create_atomic_species("anti-" * atom, charge, iso)
@@ -212,7 +211,7 @@ function create_atomic_species(name::String, charge::Int, iso::Int)
   # if the particle is an anti-particle, remove the prefix for easier lookup
   AS::String = replace(name, anti_regEx => "")
 
-  @assert haskey(ATOMIC_SPECIES, AS) "$AS is not a valid atomic species"
+  haskey(ATOMIC_SPECIES, AS) || error("$AS is not a valid atomic species")
 
   atom::AtomicSpecies = ATOMIC_SPECIES[AS]
   nmass::Float64 = uconvert(u"MeV/c^2", atom.mass[iso]).val
