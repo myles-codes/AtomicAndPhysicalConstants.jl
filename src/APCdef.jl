@@ -196,10 +196,10 @@ macro APCdef(kwargs...)
   )
   # this vector contains the names of the all the constants in the module in symbols
   constants::Vector{Symbol} = filter(x -> (
-    startswith(string(x), "__b_") && # the name starts with __b_
-    !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
-    (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
-  ), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
+      startswith(string(x), "__b_") && # the name starts with __b_
+      !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
+      (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
+    ), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
 
   constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
 
@@ -256,22 +256,22 @@ macro APCdef(kwargs...)
   tuple_statement = begin
     if tupleflag
       quote
-        const $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict));
+        const $(esc(name)) = NamedTuple{Tuple(keys($constantsdict))}(values($constantsdict))
       end
     else
-      Expr(:block, [:(const $(esc(key)) = $(value);) for (key, value) in constantsdict]...)
+      Expr(:block, [:(const $(esc(key)) = $(value)) for (key, value) in constantsdict]...)
     end
   end
 
   return quote
 
-    const APCconsts = $wrapper;
+    const $(esc(:APCconsts)) = $wrapper
 
-    const UNITS = NamedTuple{Tuple(keys($unit_names))}(values($unit_names));
+    const $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
 
-    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit));
+    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
 
-    $(tuple_statement);
+    $(tuple_statement)
   end
 
 end
