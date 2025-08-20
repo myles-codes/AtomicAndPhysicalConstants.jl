@@ -70,12 +70,28 @@ gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species; signed::Bool=false)
 
-  if isdefined(Main, :APCconsts)
+  if isdefined(Main, :APCconsts) && isdefined(Main, :GYRO_ANOM_ELECTRON) == false
     vtypes = [Kind.LEPTON, Kind.HADRON]
     if getfield(species, :name) == "electron"
       return getfield(Main, Symbol(Main.APCconsts)).GYRO_ANOM_ELECTRON
     elseif getfield(species, :name) == "muon"
       return getfield(Main, Symbol(Main.APCconsts)).GYRO_ANOM_MUON
+    elseif getfield(species, :kind) ∉ vtypes
+      error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+    else
+      if signed == true
+        gs = g_spin(species)
+      else
+        gs = abs(g_spin(species))
+      end
+      return (gs - 2) / 2
+    end
+  elseif isdefined(Main, :GYRO_ANOM_ELECTRON)
+    vtypes = [Kind.LEPTON, Kind.HADRON]
+    if getfield(species, :name) == "electron"
+      return Main.GYRO_ANOM_ELECTRON
+    elseif getfield(species, :name) == "muon"
+      return Main.GYRO_ANOM_MUON
     elseif getfield(species, :kind) ∉ vtypes
       error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
     else
