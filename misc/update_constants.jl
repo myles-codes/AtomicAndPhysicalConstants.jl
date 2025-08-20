@@ -26,7 +26,7 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "triton mag. mom." => Dict("__b_mu_triton" => __b_mu_triton),
     "classical electron radius" => Dict("__b_r_e" => __b_r_e),
     "speed of light in vacuum" => Dict("__b_c_light" => __b_c_light),
-    "Planck constant in eV/Hz" => Dict("__b_h_planck" => __b_h_planck),
+    "Planck constant" => Dict("__b_h_planck" => __b_h_planck),
     "Avogadro constant" => Dict("__b_N_avogadro" => __b_N_avogadro),
     "vacuum electric permittivity" => Dict("__b_eps_0_vac" => __b_eps_0_vac),
     "vacuum mag. permeability" => Dict("__b_mu_0_vac" => __b_mu_0_vac),
@@ -35,10 +35,15 @@ CODATA_Consts = Dict{AbstractString,Dict}(
     "atomic mass unit-kilogram relationship" => Dict("__b_kg_per_amu" => __b_kg_per_amu),
     "atomic mass unit-electron volt relationship" => Dict("__b_eV_per_amu" => __b_eV_per_amu),
     "electron volt-joule relationship" => Dict("__b_J_per_eV" => __b_J_per_eV),
-    "electron mag. mom. anomaly" => Dict("__b_electron_gyro_anom"),
-    "electron magnetic moment anomaly" => Dict("__b_electron_gyro_anom"),
-    "muon mag. mom. anomaly" => Dict("__b_muon_gyro_anom"),
-    "muon magnetic moment anomaly" => Dict("__b_muon_gyro_anom")
+    "electron mag. mom. anomaly" => Dict("__b_gyro_anom_electron" =>__b_gyro_anom_electron),
+    "muon mag. mom. anomaly" => Dict("__b_gyro_anom_muon" =>__b_gyro_anom_muon),
+    "deuteron g factor" => Dict("__b_gspin_deuteron" => __b_gspin_deuteron),
+    "electron g factor" => Dict("__b_gspin_electron" => __b_gspin_electron),
+    "helion g factor" => Dict("__b_gspin_helion" => __b_gspin_helion),
+    "muon g factor" => Dict("__b_gspin_muon" => __b_gspin_muon),
+    "neutron g factor" => Dict("__b_gspin_neutron" => __b_gspin_neutron),
+    "proton g factor" => Dict("__b_gspin_proton" => __b_gspin_proton),
+    "triton g factor" => Dict("__b_gspin_triton" => __b_gspin_triton)
 )
 
 
@@ -97,7 +102,7 @@ function getCODATA(path::String, CODATA_Consts::Dict)
                 end
 
 
-                if occursin("mag. mom.", line[1]) == true
+                if occursin("mag. mom.", line[1]) == true && occursin("anomaly", line[1]) == false
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/T"
 
                 elseif occursin("MeV", line[1])
@@ -119,7 +124,7 @@ function getCODATA(path::String, CODATA_Consts::Dict)
 									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m/s"
 								
 								elseif occursin("Planck", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"eV/Hz"
+									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/Hz"
 								
 								elseif occursin("permittivity", line[1])
 									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"F/m"
@@ -155,7 +160,7 @@ writeCODATA
 
 function writeCODATA(year::Int, new_consts)
     yearregex = r"[1-2][0-9][0-9][-0-9]"
-    f = open(pwd() * "/src/constants.jl", "r")
+    f = open(pwd() * "/src/2022_constants.jl", "r")
     everyline = readlines(f)
     newf = open(pwd() * f"/src/{year}_constants.jl", "a+")
     newlines = []

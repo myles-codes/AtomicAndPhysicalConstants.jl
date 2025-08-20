@@ -19,6 +19,7 @@ end;
 
 
 
+
 # ------------------------------------------------------------------------------------------------------------
 """
 		g_spin(species::Species)
@@ -32,19 +33,24 @@ function g_spin(species::Species; signed::Bool=false)
   if isdefined(Main, :UNITS)
 
     vtypes = [Kind.LEPTON, Kind.HADRON]
+    known = ["deuteron", "electron", "helion", "muon", "neutron", "proton", "triton"]
     if getfield(species, :kind) ∉ vtypes
       error("Only massive subatomic particles have available gyromagnetic factors in this package.")
     end
-    m_s = uconvert(u"MeV/c^2", getfield(species, :mass))
-    mu_s = uconvert(u"m^2 * C / s", getfield(species, :moment))
-    spin_s = getfield(species, :spin).val # since we store spin in units [ħ], we just want the half/integer
-    if signed == true
-      charge_s = uconvert(u"C", getfield(species, :charge))
+    if lowercase(getfield(species, :name)) ∈ known
+      valname = "__b_gspin_"*getfield(species, :name)
     else
-      charge_s = abs(uconvert(u"C", getfield(species, :charge)))
+      m_s = uconvert(u"MeV/c^2", getfield(species, :mass))
+      mu_s = uconvert(u"m^2 * C / s", getfield(species, :moment))
+      spin_s = getfield(species, :spin).val # since we store spin in units [ħ], we just want the half/integer
+      if signed == true
+        charge_s = uconvert(u"C", getfield(species, :charge))
+      else
+        charge_s = abs(uconvert(u"C", getfield(species, :charge)))
+      end
+      gs = uconvert(u"h_bar", 2 * m_s * mu_s / (spin_s * charge_s)).val
+      return gs
     end
-    gs = uconvert(u"h_bar", 2 * m_s * mu_s / (spin_s * charge_s)).val
-    return gs
   else
     error("Please run @APCdef before you make a call to g_spin")
   end
@@ -64,12 +70,28 @@ gyromagnetic_anomaly
 
 function gyromagnetic_anomaly(species::Species; signed::Bool=false)
 
-  if isdefined(Main, :APCconsts)
+  if isdefined(Main, :APCconsts) && isdefined(Main, :GYRO_ANOM_ELECTRON) == false
     vtypes = [Kind.LEPTON, Kind.HADRON]
     if getfield(species, :name) == "electron"
-      return getfield(Main, Symbol(Main.APCconsts)).ELECTRON_GYRO_ANOM
+      return getfield(Main, Symbol(Main.APCconsts)).GYRO_ANOM_ELECTRON
     elseif getfield(species, :name) == "muon"
-      return getfield(Main, Symbol(Main.APCconsts)).MUON_GYRO_ANOM
+      return getfield(Main, Symbol(Main.APCconsts)).GYRO_ANOM_MUON
+    elseif getfield(species, :kind) ∉ vtypes
+      error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
+    else
+      if signed == true
+        gs = g_spin(species)
+      else
+        gs = abs(g_spin(species))
+      end
+      return (gs - 2) / 2
+    end
+  elseif isdefined(Main, :GYRO_ANOM_ELECTRON)
+    vtypes = [Kind.LEPTON, Kind.HADRON]
+    if getfield(species, :name) == "electron"
+      return Main.GYRO_ANOM_ELECTRON
+    elseif getfield(species, :name) == "muon"
+      return Main.GYRO_ANOM_MUON
     elseif getfield(species, :kind) ∉ vtypes
       error("Only subatomic particles have computable gyromagnetic anomalies in this package.")
     else
