@@ -63,7 +63,7 @@ struct SubatomicSpecies
   species_name::String              # common species_name of the particle
   charge::typeof(1.0u"e")           # charge on the particle, in units of [e]
   mass::typeof(1.0u"MeV/c^2")       # mass of the particle, in units of [eV/c^2]
-	moment::typeof(1.0u"J/T")         # magnetic moment, in units of [J/T]
+  moment::typeof(1.0u"J/T")         # magnetic moment, in units of [J/T]
   spin::typeof(1.0u"h_bar")         # spin magnetic moment, in units of [ħ]
 end;
 ```

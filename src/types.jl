@@ -68,6 +68,6 @@ struct AtomicSpecies
   #=
   keyvalue -1 => average mass of common isotopes [amu],
   keyvalue n ∈ {0} ∪ N is the mass number of the isotope
-  	=> mass of that isotope [amu]
+    => mass of that isotope [amu]
   =#
 end
