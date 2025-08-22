@@ -19,6 +19,7 @@ For example, the default name for the speed of light is `APC.C_LIGHT`.
 
 Alternatively, users can set `tupleflag` to `false` to define constants as global variables in the namespace. This allows direct access to the constants without using the named tuple prefix.
 
+
 ## @APCdef Syntax
 
 ```julia
@@ -35,6 +36,17 @@ See the [`DynamicQuantities.jl`](https://github.com/SymbolicML/DynamicQuantities
 for a discussion of the difference between how `Unitful` and `DynamicQuatities` handle units.
 **Note**: setting the unit type to `DynamicQuantities` will return quantities only in SI units.
 - `tupleflag` determines whether to store constants in a named tuple (default: `true`).
+
+## Output:
+It creates four getter functions:
+- `massof()`
+- `chargeof()`
+- `spinof()`
+- `nameof()`
+
+If `tupleflag = true` then it creates a name tuple with all the physical constants.
+
+If `tupleflag = false` then it creates the constants as individual variables.
 
 ## Unit Systems
 

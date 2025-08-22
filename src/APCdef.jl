@@ -72,6 +72,17 @@ const CGS = (
 ## Description:
 It defines the physical constants and getter functions for species mass and charge with the proper unit and data.
 
+## Output:
+It creates four getter functions:
+- `massof()`
+- `chargeof()`
+- `spinof()`
+- `nameof()`
+
+If `tupleflag = true` then it creates a name tuple with all the physical constants.
+
+If `tupleflag = false` then it creates the constants as individual variables.
+  
 ## keyword parameters:
 - `unitsystem`   -- type: 5-Tuple of `Unitful` units. Specify the unit system, default to `ACCELERATOR`, which sets units to 'Default units' (see below).
                                         The other options are `MKS`, and `CGS`. It provides a convient way to set all the units.
@@ -119,11 +130,7 @@ macro APCdef(kwargs...)
     elseif k == :unitsystem
       unitsystem = eval(kwargdict[:unitsystem])
     elseif k == :name
-      if kwargdict[:name] isa String
-        name = Symbol(kwargdict[:name])
-      else
-        name = kwargdict[:name]
-      end
+      name = kwargdict[:name]
       wrapper = String(name)
     elseif k == :tupleflag
       if kwargdict[:tupleflag] isa Bool
