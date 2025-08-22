@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------------------------------------
 
 @doc """
-		atomicnumber(particle::Species)
+    atomicnumber(particle::Species)
 
 Get the atomic number (positive nuclear charge) of a tracked atom.
 """
@@ -22,7 +22,7 @@ end;
 
 # ------------------------------------------------------------------------------------------------------------
 """
-		g_spin(species::Species)
+    g_spin(species::Species)
 
 Compute and return the value of g_s for a particle in [1/(T*s)] == [C/kg]
 For atomic particles, will currently return 0. Will be updated in a future patch
@@ -59,7 +59,7 @@ end;
 
 
 """
-		gyromagnetic_anomaly(species::Species)
+    gyromagnetic_anomaly(species::Species)
 
 Compute and deliver the gyromagnetic anomaly for a lepton given its g factor
 
@@ -110,7 +110,7 @@ end;
 
 
 """
-		g_nucleon(gs::Float64, Z::Int, mass::Float64)
+    g_nucleon(gs::Float64, Z::Int, mass::Float64)
 
 Compute and deliver the gyromagnetic anomaly for a baryon given its g factor
 

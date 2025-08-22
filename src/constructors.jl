@@ -13,7 +13,7 @@
 const anti_regEx = r"Anti\-|anti\-|Anti|anti"
 
 @doc """
-		subatomic_particle(name::String)
+    subatomic_particle(name::String)
 
 ## Description:
 Dependence of Particle(name, charge=0, iso=-1)
@@ -199,9 +199,9 @@ end
 ## Description:
 Create a species struct for an atomic species with name=name, charge=charge and iso=iso
 ## fields:
-- `name::String': 				the atomic symbol, must be exact. anti-prefix specifies whether it is an anti-atom
-- `charge::Int': 				  the net charge of the particle in units of [e]
-- `iso::Int': 					  the mass number of the isotope, -1 for the most abundant isotope
+- `name::String':         the atomic symbol, must be exact. anti-prefix specifies whether it is an anti-atom
+- `charge::Int':           the net charge of the particle in units of [e]
+- `iso::Int':             the mass number of the isotope, -1 for the most abundant isotope
 """
 create_atomic_species
 

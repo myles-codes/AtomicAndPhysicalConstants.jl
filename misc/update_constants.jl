@@ -109,32 +109,32 @@ function getCODATA(path::String, CODATA_Consts::Dict)
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"MeV/c^2"
 
                 elseif occursin("relationship", line[1])
-									if occursin("joule") == true
+                  if occursin("joule") == true
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/eV"
-									elseif occursin("kilogram") == true
+                  elseif occursin("kilogram") == true
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"kg/amu"
-									else
+                  else
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"(eV/c^2)/amu"
-									end
+                  end
 
-								elseif occursin("radius", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m"
-								
-								elseif occursin("light", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m/s"
-								
-								elseif occursin("Planck", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/Hz"
-								
-								elseif occursin("permittivity", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"F/m"
-								
-								elseif occursin("permeability", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"N/A^2"
-								
-								elseif occursin("elementary", line[1])
-									CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"C"
-							
+                elseif occursin("radius", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m"
+                
+                elseif occursin("light", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"m/s"
+                
+                elseif occursin("Planck", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"J/Hz"
+                
+                elseif occursin("permittivity", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"F/m"
+                
+                elseif occursin("permeability", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"N/A^2"
+                
+                elseif occursin("elementary", line[1])
+                  CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2]) * u"C"
+              
                 else
                     CODATA_Consts[line[1]][first(keys(CODATA_Consts[line[1]]))] = parse(Float64, line[2])
                 end
@@ -207,7 +207,7 @@ function writeCODATA(year::Int, new_consts)
             if line == "\n"
                 println(newf, "\n")
             elseif line[1] == "#"
-							line = join(line, " ")
+              line = join(line, " ")
                 println(newf, line)
             else
                 newl = join(line, " ")
