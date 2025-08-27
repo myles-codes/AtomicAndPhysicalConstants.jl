@@ -11,6 +11,7 @@
 - `time`: s
 - `energy`: eV
 - `charge`: elementary charge
+- `magnetic field`: T
 - `spin`: h_bar (ħ)
 """
 const ACCELERATOR = (
@@ -19,6 +20,7 @@ const ACCELERATOR = (
   u"s",
   u"eV",
   u"e",
+  u"T",
   u"h_bar")
 
 #---------------------------------------------------------------------------------------------------
@@ -32,6 +34,7 @@ const ACCELERATOR = (
 - `time`: s
 - `energy`: J
 - `charge`: C
+- `magnetic field`: T
 - `spin`: h_bar (ħ)
 """
 const MKS = (
@@ -40,6 +43,7 @@ const MKS = (
   u"s",
   u"J",
   u"C",
+  u"T",
   u"h_bar")
 
 #---------------------------------------------------------------------------------------------------
@@ -53,6 +57,7 @@ const MKS = (
 - `time`: s
 - `energy`: J
 - `charge`: C
+- `magnetic field`: Gauss
 - `spin`: h_bar (ħ)
 """
 const CGS = (
@@ -61,6 +66,7 @@ const CGS = (
   u"s",
   u"J",
   u"C",
+  u"Gauss",
   u"h_bar")
 
 #---------------------------------------------------------------------------------------------------
@@ -99,6 +105,7 @@ If `tupleflag = false` then it creates the constants as individual variables.
 - `time`: s
 - `energy`: eV
 - `charge`: elementary charge
+- `magnetic field`: T
 - `spin`: h_bar (ħ)
 """
 macro APCdef(kwargs...)
@@ -111,7 +118,7 @@ macro APCdef(kwargs...)
 
   # Defualt parameters
   unittype::Symbol = :Float
-  unitsystem::NTuple{6,Unitful.FreeUnits} = ACCELERATOR
+  unitsystem::NTuple{7,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
   tupleflag::Bool = true # whether return the constants in a tuple or not
 
@@ -151,7 +158,8 @@ macro APCdef(kwargs...)
   time_unit::Unitful.FreeUnits = unitsystem[3]
   energy_unit::Unitful.FreeUnits = unitsystem[4]
   charge_unit::Unitful.FreeUnits = unitsystem[5]
-  spin_unit::Unitful.FreeUnits = unitsystem[6]
+  field_unit::Unitful.FreeUnits = unitsystem[6]
+  spin_unit::Unitful.FreeUnits = unitsystem[7]
 
   # check dimensions of units?
   if dimension(mass_unit) != dimension(u"kg")
@@ -168,6 +176,9 @@ macro APCdef(kwargs...)
   end
   if dimension(charge_unit) != dimension(u"C")
     error("unit for charge does not have proper dimension")
+  end
+  if dimension(field_unit) != dimension(u"T")
+    error("unit for magnetic field does not have proper dimension")
   end
   if dimension(spin_unit) != dimension(u"h_bar")
     error("unit for spin does not have proper dimension")
@@ -190,6 +201,7 @@ macro APCdef(kwargs...)
     dimension(u"m") => length_unit,
     dimension(u"C") => charge_unit,
     dimension(u"h_bar") => spin_unit,
+    dimension(u"J/T") => energy_unit / field_unit
   )
   unit_names::Dict{Symbol,Unitful.FreeUnits} = Dict(
     :mass => mass_unit,
@@ -199,6 +211,7 @@ macro APCdef(kwargs...)
     :charge => charge_unit,
     :velocity => length_unit / time_unit,
     :action => energy_unit * time_unit,
+    :mag_mom => energy_unit / field_unit,
     :spin => spin_unit
   )
   # this vector contains the names of the all the constants in the module in symbols
@@ -276,7 +289,7 @@ macro APCdef(kwargs...)
 
     const $(esc(:UNITS)) = NamedTuple{Tuple(keys($unit_names))}(values($unit_names))
 
-    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit))
+    $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit, energy_unit, field_unit))
 
     $(tuple_statement)
   end
@@ -284,7 +297,7 @@ macro APCdef(kwargs...)
 end
 
 
-function generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit)
+function generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit, energy_unit, field_unit)
   # require that the unittype is one of Float, Unitful, DynamicQuantities
   unittype in [:Float, :Unitful, :DynamicQuantities] || error("unittype should be one of Float, Unitful, DynamicQuantities")
   # require that the mass_unit, charge_unit, spin_unit are of proper dimension
@@ -296,6 +309,9 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
   end
   if dimension(spin_unit) != dimension(u"h_bar")
     error("unit for charge does not have proper dimension")
+  end
+  if dimension(energy_unit / field_unit) != dimension(u"J/T")
+    error("unit for magnetic moment does not have proper dimension")
   end
 
   # name of the return type
@@ -326,17 +342,6 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
     end
   end
   return quote
-    function $(esc(:spinof))(species::Species)::$(typename)
-      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
-      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
-      $(return_statement(spin_unit, "spin"))
-    end
-    function $(esc(:spinof))(speciesname::String)::$(typename)
-      species = Species(speciesname)
-      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
-      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
-      $(return_statement(spin_unit, "spin"))
-    end
     function $(esc(:massof))(species::Species)::$(typename)
       getfield(species, :kind) != Kind.NULL || error("Can't call massof() on a null Species object.")
       $(return_statement(mass_unit, "mass"))
@@ -354,6 +359,44 @@ function generate_particle_property_functions(unittype, mass_unit, charge_unit, 
       species = Species(speciesname)
       getfield(species, :kind) != Kind.NULL || error("Can't call chargeof() on a null Species object.")
       $(return_statement(charge_unit, "charge"))
+    end
+    function $(esc(:spinof))(species::Species)::$(typename)
+      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
+      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
+      $(return_statement(spin_unit, "spin"))
+    end
+    function $(esc(:spinof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      getfield(species, :kind) != Kind.NULL || error("Can't call spinof() on a null Species object.")
+      getfield(species, :kind) != Kind.ATOM || error("The spin projection of a whole atom is ambiguous.")
+      $(return_statement(spin_unit, "spin"))
+    end
+    function $(esc(:momentof))(species::Species)::$(typename)
+      getfield(species, :kind) != Kind.NULL || error("Can't call momentof() on a null Species object.")
+      $(return_statement(energy_unit/field_unit, "magnetic moment"))
+    end
+    function $(esc(:momentof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      getfield(species, :kind) != Kind.NULL || error("Can't call momentof() on a null Species object.")
+      $(return_statement(energy_unit/field_unit, "magnetic moment"))
+    end
+    function $(esc(:isotopeof))(species::Species)::$(typename)
+      getfield(species, :kind) != Kind.NULL || error("Can't call isotopeof() on a null Species object.")
+      getfield(species, :kind) == Kind.ATOM || error("This function only returns atomic isotope numbers.")
+      $getfield(species, :iso)
+    end
+    function $(esc(:isotopeof))(speciesname::String)::$(typename)
+      species = Species(speciesname)
+      getfield(species, :kind) != Kind.NULL || error("Can't call isotopeof() on a null Species object.")
+      getfield(species, :kind) == Kind.ATOM || error("This function only returns atomic isotope numbers.")
+      $getfield(species, :iso)
+    end
+    function $(esc(:kindof))(species::Species)::$(Enum{Int32})
+      return getfield(species, :kind)
+    end
+    function $(esc(:kindof))(speciesname::String)::$(Enum{Int32})
+      species = Species(speciesname)
+      return getfield(species, :kind)
     end
     function $(esc(:nameof))(species::Species; basename::Bool=false)::String
       getfield(species, :kind) != Kind.NULL || error("Can't call nameof() on a null Species object")

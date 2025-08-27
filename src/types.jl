@@ -20,24 +20,22 @@ end
 
 Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
-# Species is defined in the main module, but since the constructor needs constants from the submodule
-# we need to it to call a construct named `SpeciesN` which is defined in the submodule
 function Species(speciesname::String)
   return SpeciesN(speciesname)
 end
 
-kindof(species::Species) = getfield(species, :kind)
+
 
 import Base: getproperty
 
 
 
 function getproperty(obj::Species, field::Symbol)
-  if field == :mass || field == :charge
-    error("Do not use the 'base.getproperty' syntax to access fields 
-    of Species objects: instead use the provided functions; massof,
-    and chargeof.")
-  end
+  
+  error("Do not use the 'base.getproperty' syntax to access fields 
+  of Species objects: instead use the provided functions; 
+  massof, chargeof, spinof, momentof, isotopeof, kindof, or nameof.")
+
 end; export getproperty
 
 
@@ -68,6 +66,6 @@ struct AtomicSpecies
   #=
   keyvalue -1 => average mass of common isotopes [amu],
   keyvalue n ∈ {0} ∪ N is the mass number of the isotope
-    => mass of that isotope [amu]
+  	=> mass of that isotope [amu]
   =#
 end
