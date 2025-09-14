@@ -134,6 +134,8 @@ const __b_eV_per_amu = 9.3149410372e8 * u"(eV/c^2)/amu"
 # eV per standard atomic mass unit (dalton)
 const __b_J_per_eV = 1.602176634e-19 * u"J/eV"
 # Joules per eV
+const __b_e_coulomb = 1.602176634e-19 * u"C/e"
+# elementary charge in coulombs per elementary charge
 
 
 
