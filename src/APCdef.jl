@@ -95,6 +95,7 @@ If `tupleflag = false` then it creates the constants as individual variables.
 - `unittype`     -- Sets the return type of the constants and the getter functions. It can be `Float`, `Unitful`, or `DynamicQuantities`. Default to `Float`.
 - `name`         -- Sets the name of the module that contains the constants and getter functions. Default to `APC`.
 - `tupleflag`    -- type: `Bool`, whether to return the constants in a tuple or not. Default to `true`. If set to `false`, it will return the constants as individual variables.
+- `year`         -- chooses which CODATA release year to set constants from. Options are 2002, 2006, 2010, 2014, 2018, and 2022. Default is 2022.
     
 ## Note
 - @APCdef can be called only once in a module.
@@ -121,6 +122,10 @@ macro APCdef(kwargs...)
   unitsystem::NTuple{7,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
   tupleflag::Bool = true # whether return the constants in a tuple or not
+  year::Int64 = 2022 # default release year
+
+  # list of available release years: update as more come out
+  years::Vector{Int64} = [2002, 2006, 2010, 2014, 2018, 2022]
 
 
   # initialize wrapper
@@ -146,11 +151,22 @@ macro APCdef(kwargs...)
         @error "tupleflag should be a boolean value"
         return
       end
+    elseif k == :year
+      if kwargdict[:year] ∈ years
+        year = kwargdict[:year]
+      else
+        @error "$(kwargdict[:year]) isn't an available CODATA release: please choose from $years"
+      end
     else
       @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
       return
     end
   end
+
+  include("$year"*"_constants.jl")
+
+
+
 
   # extract the units from the unit system
   mass_unit::Unitful.FreeUnits = unitsystem[1]
@@ -216,10 +232,11 @@ macro APCdef(kwargs...)
   )
   # this vector contains the names of the all the constants in the module in symbols
   constants::Vector{Symbol} = filter(x -> (
-      startswith(string(x), "__b_") && # the name starts with __b_
-      !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
-      (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x)))  # the name does not contain _mu_, so that it is not a magnetic moment
-    ), names(parentmodule(@__MODULE__).@__MODULE__, all=true))
+    startswith(string(x), "__b_") && # the name starts with __b_
+    !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
+    (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x))) && # the name does not contain _mu_, so that it is not a magnetic moment
+    !occursin("_gspin_", string(x)) # make sure the name doesn't include _gspin_, so constants generated from spin functions aren't included
+  ), names(@__MODULE__, all=true))
 
   constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
 
@@ -227,7 +244,7 @@ macro APCdef(kwargs...)
   # convert the constants to the proper unit
   constantsdict::constantdict_type = Dict()
   for sym in constants
-    value = getfield(parentmodule(@__MODULE__).@__MODULE__, sym) # the value of the constant
+    value = getfield(@__MODULE__, sym) # the value of the constant
     constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
     if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
       constantsdict[constantname] = uconvert(conversion[dimension(value)], value) # convert them to proper unit
