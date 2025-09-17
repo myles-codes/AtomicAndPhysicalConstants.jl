@@ -122,10 +122,10 @@ macro APCdef(kwargs...)
   unitsystem::NTuple{7,Unitful.FreeUnits} = ACCELERATOR
   name::Symbol = :APC
   tupleflag::Bool = true # whether return the constants in a tuple or not
-  year::Int64 = 2022 # default release year
+  year::Int32 = 2022 # default release year
 
   # list of available release years: update as more come out
-  years::Vector{Int64} = [2002, 2006, 2010, 2014, 2018, 2022]
+  years::Vector{Int32} = [2002, 2006, 2010, 2014, 2018, 2022]
 
 
   # initialize wrapper
@@ -163,8 +163,11 @@ macro APCdef(kwargs...)
     end
   end
 
-  include("$year"*"_constants.jl")
-
+  include("src/$year"*"_constants.jl")
+  include("src/constructors.jl")
+  include("src/isotopes.jl")
+  include("src/subatomic_species.jl")
+  include("src/functions.jl")
 
 
 

@@ -9,10 +9,7 @@ include("units_definition.jl")
 include("prerelease.jl")
 include("types.jl")
 
-include("constructors.jl")
-include("isotopes.jl")
-include("subatomic_species.jl")
-include("functions.jl")
+
 include("APCdef.jl")
 
 include("showconst.jl")
