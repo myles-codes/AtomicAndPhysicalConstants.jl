@@ -1,3 +1,6 @@
+using Pkg
+srcdir = dirname(pathof(AtomicAndPhysicalConstants))
+
 # Declare specific systems of units
 
 #---------------------------------------------------------------------------------------------------
@@ -163,11 +166,11 @@ macro APCdef(kwargs...)
     end
   end
 
-  include("src/$year"*"_constants.jl")
-  include("src/constructors.jl")
-  include("src/isotopes.jl")
-  include("src/subatomic_species.jl")
-  include("src/functions.jl")
+  include(srcdir*"/$year"*"_constants.jl")
+  include(srcdir*"/constructors.jl")
+  include(srcdir*"/isotopes.jl")
+  include(srcdir*"/subatomic_species.jl")
+  include(srcdir*"/functions.jl")
 
 
 
