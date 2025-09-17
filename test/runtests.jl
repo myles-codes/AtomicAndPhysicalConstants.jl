@@ -1,5 +1,5 @@
 module DefaultAPCDef
-using AtomicAndPhysicalConstants.CODATA2022
+using AtomicAndPhysicalConstants
 using Test
 
 # test default APCdef settings
@@ -95,7 +95,7 @@ end
 end
 
 @testset "test Species parsing" begin
-  import AtomicAndPhysicalConstants.CODATA2022: create_atomic_species
+  import AtomicAndPhysicalConstants: create_atomic_species
   @test Species("¹H") == create_atomic_species("H", 0, 1)
   @test Species("H⁺") == create_atomic_species("H", 1, -1)
   @test Species("³H⁺") == create_atomic_species("H", 1, 3)
@@ -107,7 +107,7 @@ end
 end
 
 module APCdefWithChangedName
-using AtomicAndPhysicalConstants.CODATA2022
+using AtomicAndPhysicalConstants
 using Test
 
 # test default APCdef settings
@@ -131,7 +131,7 @@ end
 end
 
 module APCdefWithDifferentUnitSystem
-using AtomicAndPhysicalConstants.CODATA2022
+using AtomicAndPhysicalConstants
 using Test
 
 # test default APCdef settings
@@ -155,7 +155,7 @@ end
 end
 
 module APCdefWithoutTuple
-using AtomicAndPhysicalConstants.CODATA2022
+using AtomicAndPhysicalConstants
 using Test
 
 @APCdef tupleflag = false
