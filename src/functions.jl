@@ -39,7 +39,7 @@ function g_spin(species::Species; signed::Bool=false)
     end
     if lowercase(getfield(species, :name)) ∈ known
       valname = Symbol("__b_gspin_"*getfield(species, :name))
-      return eval(valname)
+      return abs(eval(valname))
     else
       m_s = uconvert(u"MeV/c^2", getfield(species, :mass))
       mu_s = uconvert(u"m^2 * C / s", getfield(species, :moment))

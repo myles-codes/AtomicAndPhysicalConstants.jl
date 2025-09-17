@@ -172,7 +172,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 
 
 
-const __b_RELEASE_YEAR = 2010
+const __b_RELEASE_YEAR::Int32 = 2010
 
 
 

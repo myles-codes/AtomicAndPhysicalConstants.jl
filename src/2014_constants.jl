@@ -178,7 +178,7 @@ const __b_mu_0_vac = 1.25663706127e-6 * u"N/A^2"
 # Vacuum permeability in [N/A^2] (newtons per ampere squared)
 
 
-const __b_RELEASE_YEAR = 2014
+const __b_RELEASE_YEAR::Int32 = 2014
 
 
 

@@ -155,10 +155,10 @@ macro APCdef(kwargs...)
       if kwargdict[:year] ∈ years
         year = kwargdict[:year]
       else
-        @error "$(kwargdict[:year]) isn't an available CODATA release: please choose from $years"
+        @error "$(kwargdict[:year]) isn't an available CODATA release: using the 2022 release instead"
       end
     else
-      @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`"
+      @error "$k is not a proper keyword argument for @APCdef, the only options are `unittype`, `unitsystem`, `name`, `year`"
       return
     end
   end
@@ -241,7 +241,7 @@ macro APCdef(kwargs...)
     !occursin("_gspin_", string(x)) # make sure the name doesn't include _gspin_, so constants generated from spin functions aren't included
   ), names(@__MODULE__, all=true))
 
-  constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
+  constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,Int32,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
 
   # create a dictionary that contains all the constants in the module
   # convert the constants to the proper unit
@@ -266,7 +266,7 @@ macro APCdef(kwargs...)
     constantsdict_float::constantdict_type = Dict()
 
     for (constantname, value) in constantsdict
-      if value isa Float64
+      if value isa Float64 || value isa Int32
         constantsdict_float[constantname] = value # If the value does not have unit, such as Avogadro's number
       else
         constantsdict_float[constantname] = value.val
