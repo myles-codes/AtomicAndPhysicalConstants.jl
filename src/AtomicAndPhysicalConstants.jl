@@ -41,9 +41,9 @@ export ACCELERATOR, MKS, CGS
 export Species
 export SubatomicSpecies
 export AtomicSpecies
-export SUBATOMIC_SPECIES
+# export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-export useCODATA
+# export useCODATA
 export NewUnits
 export showconst
 export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon, to_openPMD

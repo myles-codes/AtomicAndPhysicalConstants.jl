@@ -52,10 +52,11 @@ end
 
 
 function SpeciesN(speciesname::String)
+  # tv1 = (isdefined(parentmodule(@__MODULE__), :APCconsts) || isdefined(parentmodule(@__MODULE__), :RELEASE_YEAR))
+  # tv2 = (isdefined(@__MODULE__, :APCconsts) || isdefined(@__MODULE__, :RELEASE_YEAR))
+  println(@__MODULE__)
+  if 1==1#((tv1 == true) || (tv2 == true))
 
-  if !isdefined(Main, :APCconsts) && !isdefined(Main, :RELEASE_YEAR)
-    error("You must make a call to @APCdef before you can define a species object.")
-  else
     # if the name is "Null", return a null Species
     if speciesname == "Null" || speciesname == "null" || speciesname == ""
       return Species()
@@ -190,6 +191,9 @@ function SpeciesN(speciesname::String)
     else
       return create_atomic_species(atom, charge, iso)
     end
+
+  else
+    error("You must make a call to @APCdef before you can define a species object.")
   end
 end
 
