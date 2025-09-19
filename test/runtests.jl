@@ -4,11 +4,9 @@ using Test
 
 # test default APCdef settings
 @APCdef
-println("Is APC defined in the module?", isdefined(@__MODULE__, :APCconsts))
 
 @testset "test @APCdef" begin
-  println("Is APC defined in the testset?", isdefined(@__MODULE__, :APCconsts))
-  # @APCdef
+  
   #constants should be of type float in the right unit
   @test APC.C_LIGHT ≈ 2.99792458e8
   @test APC.H_PLANCK ≈ 2.0*pi #  4.135667696e-15
@@ -23,8 +21,9 @@ println("Is APC defined in the module?", isdefined(@__MODULE__, :APCconsts))
   @test APC.FINE_STRUCTURE ≈ 0.0072973525643
   @test APC.N_AVOGADRO ≈ 6.02214076e23
 
+
   #test massof() and chargeof()
-  H = DefaultAPCDef.Species("H")
+  H = Species("H")
 
   @test massof(H) ≈ 9.388908693006046e8
   @test chargeof(H) ≈ 0

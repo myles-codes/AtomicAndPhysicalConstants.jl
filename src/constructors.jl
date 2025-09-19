@@ -52,9 +52,9 @@ end
 
 
 function Species(speciesname::String)
-  println(parentmodule(@__MODULE__).@__MODULE__)
-  # if isdefined(Main, :SUBATOMIC_SPECIES)
-  if 1==1
+  
+  if isdefined(Main, :APCflag)
+    
     # if the name is "Null", return a null Species
     if speciesname == "Null" || speciesname == "null" || speciesname == ""
       return Species()

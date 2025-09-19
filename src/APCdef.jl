@@ -114,6 +114,8 @@ If `tupleflag = false` then it creates the constants as individual variables.
 """
 macro APCdef(kwargs...)
 
+  
+  
   # check whether @APCdef has been called by checking whether massof is in the namespace
   if names(Main, all=true) |> x -> :massof in x
     @error "You may only call @APCdef once"
@@ -183,11 +185,10 @@ macro APCdef(kwargs...)
   end
 
   # set the base values for subatomic particles
-  # the let block allows setting the global const 
-  # without mutating the APCdef space
-  let 
-    global SUBATOMIC_SPECIES = subatomic_species(release)    
-  end
+  # inside the APC module, so it doesn't pollute
+
+  Core.eval(AtomicAndPhysicalConstants, :(SUBATOMIC_SPECIES = subatomic_species($release)))  
+
   
 
 
@@ -324,7 +325,10 @@ macro APCdef(kwargs...)
     end
   end
 
+  # APCflag::Bool = true
+
   return quote
+
 
     const $(esc(:APCconsts)) = $wrapper
 
@@ -332,6 +336,13 @@ macro APCdef(kwargs...)
 
     $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit, energy_unit, field_unit))
 
+
+    # this statement puts a flag in whatever the "Main" scope is
+    # which APC functions can test to see if @APCdef has been run
+    Core.eval(Main, :(APCflag::Bool = true))
+
+
+    
     $(tuple_statement)
 
   end

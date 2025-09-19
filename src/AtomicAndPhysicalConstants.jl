@@ -32,6 +32,8 @@ include("APCdef.jl")
 include("showconst.jl")
 include("docstrings.jl")
 
+# global APCflag::Bool = false
+# export APCflag;
 
 @reexport using .PreRelease
 # @reexport using .CODATA2022
