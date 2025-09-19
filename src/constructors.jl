@@ -51,12 +51,10 @@ end
 #####################################################################
 
 
-function SpeciesN(speciesname::String)
-  # tv1 = (isdefined(parentmodule(@__MODULE__), :APCconsts) || isdefined(parentmodule(@__MODULE__), :RELEASE_YEAR))
-  # tv2 = (isdefined(@__MODULE__, :APCconsts) || isdefined(@__MODULE__, :RELEASE_YEAR))
-  println(@__MODULE__)
-  if 1==1#((tv1 == true) || (tv2 == true))
-
+function Species(speciesname::String)
+  println(parentmodule(@__MODULE__).@__MODULE__)
+  # if isdefined(Main, :SUBATOMIC_SPECIES)
+  if 1==1
     # if the name is "Null", return a null Species
     if speciesname == "Null" || speciesname == "null" || speciesname == ""
       return Species()

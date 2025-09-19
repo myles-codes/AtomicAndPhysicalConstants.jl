@@ -21,9 +21,6 @@ end
 
 Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
-function Species(speciesname::String)
-  return SpeciesN(speciesname)
-end
 
 
 

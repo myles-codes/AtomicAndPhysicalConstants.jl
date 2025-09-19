@@ -43,7 +43,7 @@ export SubatomicSpecies
 export AtomicSpecies
 # export SUBATOMIC_SPECIES
 export ATOMIC_SPECIES
-# export useCODATA
+# export useCODATAm
 export NewUnits
 export showconst
 export full_name, atomicnumber, g_spin, gyromagnetic_anomaly, g_nucleon, to_openPMD
