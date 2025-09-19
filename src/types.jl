@@ -1,6 +1,7 @@
 # types.Julia
 
 
+
 # kind enum stores the kind of particle
 # NULL is for null species (placeholder species)
 @enumx Kind ATOM HADRON LEPTON PHOTON NULL
@@ -14,15 +15,12 @@ struct Species
   mass::typeof(1.0u"MeV/c^2") # mass of the particle in [eV/c^2]
   spin::typeof(1.0u"h_bar") # spin of the particle in [ħ]
   moment::typeof(1.0u"J/T") # magnetic moment of the particle (for now it's 0 unless we have a recorded value)
-  iso::Float64 # if the particle is an atomic isotope, this is the mass number, otherwise 0
+  iso::Float64 # if the particle is an atomic isotope this is the mass number, otherwise 0
   kind::Kind.T
 end
 
 Species() = Species("Null", 0.0u"e", 0.0u"MeV/c^2", 0.0u"h_bar", 0.0u"J/T", 0, Kind.NULL)
 
-function Species(speciesname::String)
-  return SpeciesN(speciesname)
-end
 
 
 

@@ -76,7 +76,7 @@ const CGS = (
 # @APCdef
 
 """
-    @APCdef(unitsystem = ACCELERATOR, unittype = Float, name = :APC)
+    @APCdef(unitsystem = ACCELERATOR, unittype = Float, name = :APC, year = 2022)
 
 ## Description:
 It defines the physical constants and getter functions for species mass and charge with the proper unit and data.
@@ -114,6 +114,8 @@ If `tupleflag = false` then it creates the constants as individual variables.
 """
 macro APCdef(kwargs...)
 
+  
+  
   # check whether @APCdef has been called by checking whether massof is in the namespace
   if names(Main, all=true) |> x -> :massof in x
     @error "You may only call @APCdef once"
@@ -166,12 +168,28 @@ macro APCdef(kwargs...)
     end
   end
 
-  include(srcdir*"/$year"*"_constants.jl")
-  include(srcdir*"/constructors.jl")
-  include(srcdir*"/isotopes.jl")
-  include(srcdir*"/subatomic_species.jl")
-  include(srcdir*"/functions.jl")
 
+  # set the release year for the CODATA constants
+  release::CODATA = CODATA2022
+
+  if year == 2002
+    release = CODATA2002
+  elseif year == 2006
+    release = CODATA2006
+  elseif year == 2010
+    release = CODATA2010
+  elseif year == 2014
+    release = CODATA2014
+  elseif year == 2018
+    release = CODATA2018
+  end
+
+  # set the base values for subatomic particles
+  # inside the APC module, so it doesn't pollute
+
+  Core.eval(AtomicAndPhysicalConstants, :(SUBATOMIC_SPECIES = subatomic_species($release)))  
+
+  
 
 
   # extract the units from the unit system
@@ -237,12 +255,13 @@ macro APCdef(kwargs...)
     :spin => spin_unit
   )
   # this vector contains the names of the all the constants in the module in symbols
-  constants::Vector{Symbol} = filter(x -> (
+  constants::NTuple{16, Symbol} = filter(x -> (
     startswith(string(x), "__b_") && # the name starts with __b_
     !occursin("_m_", string(x)) && # the name does not contain _m_, so that it is not a mass
     (!occursin("_mu_", string(x)) || occursin("__b_mu_0_vac", string(x))) && # the name does not contain _mu_, so that it is not a magnetic moment
-    !occursin("_gspin_", string(x)) # make sure the name doesn't include _gspin_, so constants generated from spin functions aren't included
-  ), names(@__MODULE__, all=true))
+    !occursin("_gspin_", string(x)) && 
+    !occursin("_gyro_", string(x)) # make sure the name doesn't include _gspin_, so constants generated from spin functions aren't included
+  ), fieldnames(CODATA))
 
   constantdict_type::Type = Dict{Symbol,Union{Unitful.Quantity,Float64,Int32,DynamicQuantities.Quantity{Float64,DynamicQuantities.Dimensions{DynamicQuantities.FixedRational{Int32,25200}}}}}
 
@@ -250,7 +269,7 @@ macro APCdef(kwargs...)
   # convert the constants to the proper unit
   constantsdict::constantdict_type = Dict()
   for sym in constants
-    value = getfield(@__MODULE__, sym) # the value of the constant
+    value = getfield(release, sym) # the value of the constant
     constantname = Symbol(uppercase(string(sym)[5:end])) # the name of the field by converting the name to upper case
     if haskey(conversion, dimension(value)) #if the dimension is one of the dimensions in the dictionary
       constantsdict[constantname] = uconvert(conversion[dimension(value)], value) # convert them to proper unit
@@ -306,7 +325,10 @@ macro APCdef(kwargs...)
     end
   end
 
+  # APCflag::Bool = true
+
   return quote
+
 
     const $(esc(:APCconsts)) = $wrapper
 
@@ -314,7 +336,15 @@ macro APCdef(kwargs...)
 
     $(generate_particle_property_functions(unittype, mass_unit, charge_unit, spin_unit, energy_unit, field_unit))
 
+
+    # this statement puts a flag in whatever the "Main" scope is
+    # which APC functions can test to see if @APCdef has been run
+    Core.eval(Main, :(APCflag::Bool = true))
+
+
+    
     $(tuple_statement)
+
   end
 
 end

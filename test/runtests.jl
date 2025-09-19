@@ -4,7 +4,9 @@ using Test
 
 # test default APCdef settings
 @APCdef
+
 @testset "test @APCdef" begin
+  
   #constants should be of type float in the right unit
   @test APC.C_LIGHT ≈ 2.99792458e8
   @test APC.H_PLANCK ≈ 2.0*pi #  4.135667696e-15
@@ -18,6 +20,7 @@ using Test
   @test APC.CLASSICAL_RADIUS_FACTOR ≈ 1.4399645468825422e-9
   @test APC.FINE_STRUCTURE ≈ 0.0072973525643
   @test APC.N_AVOGADRO ≈ 6.02214076e23
+
 
   #test massof() and chargeof()
   H = Species("H")
