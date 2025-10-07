@@ -38,8 +38,8 @@ The package is compatible with Julia's `Unitful.jl` and `DynamicQuantities.jl`
 `AtomicAndPhysicalConstants.jl` has the following main features and advantages:
 
 1. **Simple Unit Manipulation**: Users can define the units they want to use in a simple and consistent way. `Unitful.jl` provides a simple way to do unit conversion and calculations.
-2. **Rigorous and Up-to-Date Data**: We uses the most updated values from creditable sources. We also provided the option to use past data for specific purposes.
-3. **Simple usage**: Users can access data of a wide range of particles and physic constants by simply defining a species with their name or call a variable in the namespace. 
+2. **Rigorous and Up-to-Date Data**: We used the most updated values from creditable sources. We also provided the option to use past data for specific purposes.
+3. **Simple usage**: Users can access data of a wide range of particles and physical constants by simply defining a species with their name or call a variable in the namespace. 
 
 ## Documentation
 
